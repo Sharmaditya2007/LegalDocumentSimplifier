@@ -8,6 +8,6 @@
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
     "build:client": "npm run build --prefix client",
-    "build": "npm run build --prefix client"
+    "build": "npm run build --prefix client && node -e \"const fs=require('fs'); fs.cpSync('client/dist', 'dist', {recursive: true});\""
   }
 }
