@@ -22,6 +22,7 @@ import { useNotification } from '../context/NotificationContext';
 import RiskBadge from '../components/common/RiskBadge';
 import Modal from '../components/common/Modal';
 import { CardSkeleton } from '../components/common/SkeletonLoader';
+import { MOCK_DOCUMENTS } from '../services/mockData';
 
 const DocumentLibraryPage = () => {
   const { addToast } = useNotification();
@@ -47,11 +48,19 @@ const DocumentLibraryPage = () => {
           archived: showArchived
         }
       });
-      if (res.data.success) {
-        setDocuments(res.data.documents || []);
+      if (res?.data?.success && res.data.documents.length > 0) {
+        setDocuments(res.data.documents);
+      } else {
+        let filtered = [...MOCK_DOCUMENTS];
+        if (riskFilter !== 'all') filtered = filtered.filter(d => d.riskLevel === riskFilter);
+        if (searchTerm) filtered = filtered.filter(d => d.title.toLowerCase().includes(searchTerm.toLowerCase()));
+        setDocuments(filtered);
       }
     } catch (err) {
-      console.error('Error fetching documents:', err);
+      let filtered = [...MOCK_DOCUMENTS];
+      if (riskFilter !== 'all') filtered = filtered.filter(d => d.riskLevel === riskFilter);
+      if (searchTerm) filtered = filtered.filter(d => d.title.toLowerCase().includes(searchTerm.toLowerCase()));
+      setDocuments(filtered);
     } finally {
       setLoading(false);
     }

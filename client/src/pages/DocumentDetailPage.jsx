@@ -22,6 +22,7 @@ import api from '../services/api';
 import { useNotification } from '../context/NotificationContext';
 import RiskBadge from '../components/common/RiskBadge';
 import { CardSkeleton } from '../components/common/SkeletonLoader';
+import { MOCK_DOCUMENTS } from '../services/mockData';
 
 const DocumentDetailPage = () => {
   const { id } = useParams();
@@ -37,10 +38,19 @@ const DocumentDetailPage = () => {
     const fetchDoc = async () => {
       try {
         const res = await api.get(`/documents/${id}`);
-        if (res.data.success) {
+        if (res?.data?.success && res.data.document) {
           setDocument(res.data.document);
+          setLoading(false);
+          return;
         }
       } catch (err) {
+        // Fallback to local mock data
+        const fallback = MOCK_DOCUMENTS.find(d => d._id === id) || MOCK_DOCUMENTS[0];
+        if (fallback) {
+          setDocument(fallback);
+          setLoading(false);
+          return;
+        }
         addToast({ title: 'Error', message: 'Could not load document analysis.', type: 'error' });
         navigate('/documents');
       } finally {

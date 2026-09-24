@@ -20,16 +20,17 @@ import api from '../services/api';
 import { useNotification } from '../context/NotificationContext';
 import RiskBadge from '../components/common/RiskBadge';
 import { CardSkeleton } from '../components/common/SkeletonLoader';
+import { MOCK_DOCUMENTS, MOCK_COMPARISONS } from '../services/mockData';
 
 const ContractComparisonPage = () => {
   const [searchParams] = useSearchParams();
   const { addToast } = useNotification();
 
-  const [documents, setDocuments] = useState([]);
-  const [docAId, setDocAId] = useState(searchParams.get('docA') || '');
-  const [docBId, setDocBId] = useState(searchParams.get('docB') || '');
-  const [comparison, setComparison] = useState(null);
-  const [comparisonsList, setComparisonsList] = useState([]);
+  const [documents, setDocuments] = useState(MOCK_DOCUMENTS);
+  const [docAId, setDocAId] = useState(searchParams.get('docA') || MOCK_DOCUMENTS[0]?._id || '');
+  const [docBId, setDocBId] = useState(searchParams.get('docB') || MOCK_DOCUMENTS[1]?._id || '');
+  const [comparison, setComparison] = useState(MOCK_COMPARISONS[0]);
+  const [comparisonsList, setComparisonsList] = useState(MOCK_COMPARISONS);
   const [loading, setLoading] = useState(false);
   const [filterType, setFilterType] = useState('all'); // 'all', 'added', 'modified', 'critical_risk'
 
@@ -37,8 +38,8 @@ const ContractComparisonPage = () => {
     // Fetch available documents
     api.get('/documents')
       .then(res => {
-        if (res.data.success) {
-          setDocuments(res.data.documents || []);
+        if (res.data?.success && res.data.documents?.length > 0) {
+          setDocuments(res.data.documents);
         }
       })
       .catch(() => {});
@@ -46,10 +47,9 @@ const ContractComparisonPage = () => {
     // Fetch existing comparisons
     api.get('/comparisons')
       .then(res => {
-        if (res.data.success && res.data.comparisons.length > 0) {
+        if (res.data?.success && res.data.comparisons?.length > 0) {
           setComparisonsList(res.data.comparisons);
-          // Set default to first comparison if no params
-          if (!searchParams.get('docA') && !comparison) {
+          if (!searchParams.get('docA')) {
             setComparison(res.data.comparisons[0]);
           }
         }

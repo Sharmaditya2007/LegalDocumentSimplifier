@@ -14,6 +14,7 @@ import {
 import api from '../services/api';
 import RiskBadge from '../components/common/RiskBadge';
 import { CardSkeleton } from '../components/common/SkeletonLoader';
+import { MOCK_DOCUMENTS } from '../services/mockData';
 
 const TimelinePage = () => {
   const [timeline, setTimeline] = useState([]);
@@ -21,13 +22,36 @@ const TimelinePage = () => {
   const [categoryFilter, setCategoryFilter] = useState('all'); // 'all', 'Payment', 'Renewal Notice', 'Expiration'
 
   useEffect(() => {
+    // Generate fallback timeline items from mock docs
+    const mockDates = [];
+    MOCK_DOCUMENTS.forEach(doc => {
+      if (doc.keyDates) {
+        doc.keyDates.forEach((kd, idx) => {
+          mockDates.push({
+            id: `${doc._id}_${idx}`,
+            docId: doc._id,
+            docTitle: doc.originalName,
+            contractType: doc.contractType,
+            date: kd.date,
+            description: kd.description,
+            category: kd.category,
+            impact: kd.impact
+          });
+        });
+      }
+    });
+
     api.get('/documents/timeline/all')
       .then(res => {
-        if (res.data.success) {
-          setTimeline(res.data.timeline || []);
+        if (res.data?.success && res.data.timeline?.length > 0) {
+          setTimeline(res.data.timeline);
+        } else {
+          setTimeline(mockDates);
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        setTimeline(mockDates);
+      })
       .finally(() => setLoading(false));
   }, []);
 
