@@ -209,12 +209,12 @@ const DocumentDetailPage = () => {
       {/* Tab Navigation */}
       <div className="flex border-b border-slate-800 overflow-x-auto space-x-2">
         {[
-          { id: 'summary', label: 'Plain-English & Summary', icon: Sparkles },
-          { id: 'risks', label: `Risk Sentinel Engine (${risks.length})`, icon: ShieldAlert },
-          { id: 'clauses', label: `Important Clauses (${clauses.length})`, icon: FileText },
-          { id: 'obligations', label: `Obligations & Duties (${obligations.length})`, icon: Scale },
-          { id: 'timeline', label: `Deadlines & Timeline (${deadlines.length})`, icon: Calendar },
-          { id: 'raw', label: 'Original Extracted Text', icon: Search }
+          { id: 'summary', label: 'Summary', icon: Sparkles },
+          { id: 'risks', label: `Risks (${risks.length})`, icon: ShieldAlert },
+          { id: 'clauses', label: `Clauses (${clauses.length})`, icon: FileText },
+          { id: 'obligations', label: `Duties (${obligations.length})`, icon: Scale },
+          { id: 'timeline', label: `Timeline (${deadlines.length})`, icon: Calendar },
+          { id: 'raw', label: 'Raw Text', icon: Search }
         ].map((tab) => {
           const Icon = tab.icon;
           const active = activeTab === tab.id;

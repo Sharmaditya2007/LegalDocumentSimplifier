@@ -65,15 +65,15 @@ const TimelinePage = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-400">
-            <CalendarClock className="w-4 h-4" />
-            <span>Obligation & Deadline Sentinel</span>
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amberAccent-400 font-mono">
+            <CalendarClock className="w-3.5 h-3.5" />
+            <span>Deadlines & Milestones</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading mt-0.5">
-            Contract Deadlines & Milestone Timeline
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight font-heading mt-0.5">
+            Contract Timeline
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Aggregated cross-contract timeline to prevent missed non-renewal windows and unexpected renewals.
+          <p className="text-xs text-slate-400 mt-1">
+            Track notice windows, expiration dates, and payment deadlines.
           </p>
         </div>
 
