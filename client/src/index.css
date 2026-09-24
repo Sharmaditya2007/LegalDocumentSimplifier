@@ -19,7 +19,7 @@
     letter-spacing: 0.015em;
   }
 
-  /* Atmospheric Viewport Vignette */
+  /* Atmospheric Viewport Vignette (behfar.dev edge aura) */
   body::before {
     content: '';
     position: fixed;
@@ -31,52 +31,8 @@
   
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Syne', 'Outfit', sans-serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
   }
-}
-
-/* ============================================================
-   MOONSWORTH-STYLE LUNAR ECLIPSE ARC & RETICLE FRAMING
-   ============================================================ */
-.lunar-eclipse-arc {
-  position: absolute;
-  top: -150px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 900px;
-  height: 450px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 0%, rgba(235, 184, 126, 0.18) 0%, rgba(0, 210, 255, 0.12) 45%, rgba(74, 0, 224, 0.05) 70%, transparent 100%);
-  filter: blur(40px);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.lunar-horizon-ring {
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 700px;
-  height: 350px;
-  border-radius: 50%;
-  border-top: 1px solid rgba(235, 184, 126, 0.4);
-  box-shadow: 0 -10px 40px rgba(235, 184, 126, 0.2);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.reticle-corner {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  pointer-events: none;
-  opacity: 0.65;
-  transition: opacity 0.3s ease;
-}
-
-.reticle-corner:hover {
-  opacity: 1;
 }
 
 /* ============================================================
