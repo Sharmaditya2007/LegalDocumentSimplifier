@@ -8,23 +8,21 @@ import {
   MessageSquareText,
   CalendarClock,
   ShieldCheck,
-  Moon,
-  Sun,
   Bell,
   LogOut,
   User,
   ChevronDown,
   Menu,
   X,
-  Sparkles
+  Sparkles,
+  Zap,
+  Globe
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
 import api from '../../services/api';
 
 const Navbar = () => {
   const { user, isAuthenticated, isAdmin, logout, loginAsDemo } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -37,7 +35,7 @@ const Navbar = () => {
   const profileRef = useRef(null);
   const notifRef = useRef(null);
 
-  // Close menus on click outside
+  // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -51,7 +49,7 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch notifications if logged in
+  // Fetch notifications
   useEffect(() => {
     if (isAuthenticated) {
       api.get('/notifications')
@@ -74,15 +72,15 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Documents', path: '/documents', icon: FileText },
-    { name: 'Compare', path: '/compare', icon: GitCompare },
-    { name: 'AI Chat', path: '/chat', icon: MessageSquareText },
+    { name: 'Universe', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Contracts', path: '/documents', icon: FileText },
+    { name: 'Diff Engine', path: '/compare', icon: GitCompare },
+    { name: 'Copilot', path: '/chat', icon: MessageSquareText },
     { name: 'Timeline', path: '/timeline', icon: CalendarClock },
   ];
 
   if (isAdmin) {
-    navLinks.push({ name: 'Admin', path: '/admin', icon: ShieldCheck, badge: 'Staff' });
+    navLinks.push({ name: 'Control', path: '/admin', icon: ShieldCheck, badge: 'Staff' });
   }
 
   const isActive = (path) => {
@@ -92,261 +90,264 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full glass-panel border-b border-white/10 bg-[#07090E]/80 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Brand Logo */}
-          <div className="flex items-center gap-3">
-            <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-3 group">
-              <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center text-white shadow-glow-brand group-hover:scale-105 transition-all">
-                <Scale className="w-5 h-5" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-extrabold text-lg tracking-tight text-white flex items-center gap-1.5 font-heading">
-                  LegalEase <span className="gradient-text font-black">AI</span>
-                </span>
-                <span className="text-[9px] uppercase font-bold tracking-widest text-indigo-400/80 -mt-1 font-mono">
-                  Document Intelligence
-                </span>
-              </div>
-            </Link>
+    <header className="sticky top-0 z-50 w-full py-2.5 px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        
+        {/* Brand Logo with Laser Flare */}
+        <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2.5 group">
+          <div className="w-8 h-8 rounded-lg bg-obsidian-900 border border-amberAccent-500/30 flex items-center justify-center text-amberAccent-500 shadow-glow-amber group-hover:scale-105 transition-all">
+            <Scale className="w-4 h-4" />
           </div>
+          <div className="flex flex-col">
+            <span className="font-bold text-sm tracking-widest uppercase text-white font-display flex items-center gap-1.5">
+              LEGALEASE <span className="text-amberAccent-500 font-extrabold">AI</span>
+            </span>
+            <span className="text-[9px] uppercase tracking-[0.2em] text-slate-400 font-mono -mt-0.5">
+              Neural Legal Lens
+            </span>
+          </div>
+        </Link>
 
-          {/* Desktop Navigation Links */}
+        {/* Floating Center Pill Navigation (Behfar SceneNav style) */}
+        {isAuthenticated ? (
+          <nav className="hidden md:flex items-center p-1 rounded-full behfar-nav-pill border border-white/10 shadow-glass">
+            {navLinks.map((link) => {
+              const active = isActive(link.path);
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 flex items-center gap-1.5 ${
+                    active
+                      ? 'text-amberAccent-500 font-bold behfar-nav-item-active'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <span>{link.name}</span>
+                  {link.badge && (
+                    <span className="px-1.5 py-0.2 text-[8px] font-mono uppercase rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                      {link.badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+        ) : (
+          <nav className="hidden md:flex items-center p-1 rounded-full behfar-nav-pill border border-white/10 shadow-glass">
+            <a
+              href="#sandbox"
+              className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide text-slate-300 hover:text-amberAccent-500 transition-colors"
+            >
+              Clause Lens
+            </a>
+            <a
+              href="#features"
+              className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide text-slate-300 hover:text-amberAccent-500 transition-colors"
+            >
+              Constellations
+            </a>
+            <a
+              href="#free-access"
+              className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide text-emerald-400 hover:text-emerald-300 transition-colors"
+            >
+              100% Free
+            </a>
+            <a
+              href="#faq"
+              className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide text-slate-300 hover:text-amberAccent-500 transition-colors"
+            >
+              FAQ
+            </a>
+          </nav>
+        )}
+
+        {/* Right Section / Controls */}
+        <div className="flex items-center gap-2.5">
           {isAuthenticated ? (
-            <nav className="hidden md:flex items-center space-x-1 lg:space-x-1.5">
-              {navLinks.map((link) => {
-                const Icon = link.icon;
+            <>
+              {/* Notification Bell */}
+              <div className="relative" ref={notifRef}>
+                <button
+                  onClick={() => setNotificationsOpen(!notificationsOpen)}
+                  className="w-8 h-8 rounded-full bg-obsidian-900 border border-white/10 hover:border-amberAccent-500/40 text-slate-400 hover:text-white flex items-center justify-center transition-all relative"
+                  aria-label="Notifications"
+                >
+                  <Bell className="w-3.5 h-3.5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-amberAccent-500 animate-pulse" />
+                  )}
+                </button>
+
+                {notificationsOpen && (
+                  <div className="absolute right-0 mt-2.5 w-80 glass-card bg-obsidian-950/95 rounded-2xl shadow-2xl border border-white/10 py-3 z-50">
+                    <div className="px-4 pb-2 border-b border-white/10 flex items-center justify-between">
+                      <span className="font-semibold text-xs text-white uppercase tracking-wider font-mono">Telemetry Alerts</span>
+                      <span className="text-[10px] text-amberAccent-500 font-mono">{unreadCount} unread</span>
+                    </div>
+                    <div className="max-h-72 overflow-y-auto divide-y divide-white/5">
+                      {notifications.length === 0 ? (
+                        <div className="p-4 text-center text-xs text-slate-400 font-mono">No new alerts</div>
+                      ) : (
+                        notifications.map((n) => (
+                          <div
+                            key={n._id}
+                            onClick={() => markNotifRead(n._id)}
+                            className={`p-3 text-xs cursor-pointer hover:bg-white/5 transition-colors ${
+                              !n.read ? 'bg-amberAccent-500/10' : ''
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-slate-200">{n.title}</span>
+                              {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-amberAccent-500" />}
+                            </div>
+                            <p className="text-slate-400 text-[11px] mt-0.5">{n.message}</p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Profile Dropdown */}
+              <div className="relative" ref={profileRef}>
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="flex items-center gap-2 p-1 pr-2.5 rounded-full border border-white/10 bg-obsidian-900 hover:border-amberAccent-500/40 transition-all"
+                >
+                  <div className="w-6 h-6 rounded-full bg-amberAccent-500/20 text-amberAccent-500 border border-amberAccent-500/40 flex items-center justify-center text-xs font-bold font-mono">
+                    {user?.name?.[0] || 'U'}
+                  </div>
+                  <span className="hidden sm:inline text-xs font-medium text-slate-200">
+                    {user?.name?.split(' ')[0] || 'User'}
+                  </span>
+                  <ChevronDown className="w-3 h-3 text-slate-400" />
+                </button>
+
+                {profileOpen && (
+                  <div className="absolute right-0 mt-2.5 w-56 glass-card bg-obsidian-950/95 rounded-2xl shadow-2xl border border-white/10 py-2 z-50">
+                    <div className="px-4 py-2 border-b border-white/10">
+                      <p className="text-xs font-bold text-white truncate">{user?.name}</p>
+                      <p className="text-[10px] text-slate-400 truncate font-mono">{user?.email}</p>
+                      <span className="inline-block mt-1 px-2 py-0.5 text-[9px] font-bold rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                        100% Free Plan
+                      </span>
+                    </div>
+
+                    <div className="py-1">
+                      <Link
+                        to="/dashboard"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-xs text-slate-300 hover:text-white hover:bg-white/5"
+                      >
+                        <LayoutDashboard className="w-3.5 h-3.5 text-amberAccent-500" />
+                        <span>My Universe</span>
+                      </Link>
+                      {isAdmin && (
+                        <Link
+                          to="/admin"
+                          onClick={() => setProfileOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2 text-xs text-purple-300 hover:bg-purple-500/10"
+                        >
+                          <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+                          <span>Staff Console</span>
+                        </Link>
+                      )}
+                    </div>
+
+                    <div className="pt-1 border-t border-white/10">
+                      <button
+                        onClick={() => {
+                          setProfileOpen(false);
+                          logout();
+                          navigate('/');
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-xs text-rose-400 hover:bg-rose-500/10 text-left"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                to="/login"
+                className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-300 hover:text-white transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/register"
+                className="px-4 py-1.5 rounded-full bg-amberAccent-500 hover:bg-amberAccent-600 text-obsidian-950 font-bold text-xs shadow-glow-amber transition-all hover:scale-105"
+              >
+                Launch Free
+              </Link>
+            </div>
+          )}
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white border border-white/10 bg-obsidian-900"
+          >
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <div className="md:hidden mt-2 p-3 rounded-2xl glass-card bg-obsidian-950 border border-white/10">
+          <div className="flex flex-col space-y-1">
+            {isAuthenticated ? (
+              navLinks.map((link) => {
                 const active = isActive(link.path);
                 return (
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
-                      active
-                        ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 shadow-sm'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold ${
+                      active ? 'bg-amberAccent-500/15 text-amberAccent-500' : 'text-slate-300 hover:bg-white/5'
                     }`}
                   >
-                    <Icon className="w-4 h-4 opacity-80" />
                     <span>{link.name}</span>
-                    {link.badge && (
-                      <span className="px-1.5 py-0.2 text-[9px] font-bold rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/30 font-mono">
-                        {link.badge}
-                      </span>
-                    )}
                   </Link>
                 );
-              })}
-            </nav>
-          ) : (
-            <nav className="hidden md:flex items-center space-x-6">
-              <a href="/#sandbox" className="text-xs font-semibold text-slate-300 hover:text-indigo-400 transition-colors">
-                Interactive Lab
-              </a>
-              <a href="/#features" className="text-xs font-semibold text-slate-300 hover:text-indigo-400 transition-colors">
-                Features
-              </a>
-              <a href="/#faq" className="text-xs font-semibold text-slate-300 hover:text-indigo-400 transition-colors">
-                FAQ
-              </a>
-            </nav>
-          )}
-
-          {/* Right Action Icons & Profile */}
-          <div className="flex items-center gap-2.5">
-            {isAuthenticated ? (
+              })
+            ) : (
               <>
-                {/* Notification Dropdown */}
-                <div className="relative" ref={notifRef}>
-                  <button
-                    onClick={() => setNotificationsOpen(!notificationsOpen)}
-                    className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 border border-white/5 relative transition-colors"
-                    aria-label="Notifications"
-                  >
-                    <Bell className="w-4 h-4" />
-                    {unreadCount > 0 && (
-                      <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-                    )}
-                  </button>
-
-                  {notificationsOpen && (
-                    <div className="absolute right-0 mt-2 w-80 sm:w-96 glass-card bg-obsidian-900/95 rounded-2xl shadow-2xl border border-white/10 py-3 z-50">
-                      <div className="px-4 pb-2 border-b border-white/10 flex items-center justify-between">
-                        <span className="font-semibold text-xs text-white">Notifications</span>
-                        <span className="text-[10px] text-indigo-400 font-mono">{unreadCount} unread</span>
-                      </div>
-                      <div className="max-h-80 overflow-y-auto divide-y divide-white/5">
-                        {notifications.length === 0 ? (
-                          <div className="p-4 text-center text-xs text-slate-400 font-mono">No new notifications</div>
-                        ) : (
-                          notifications.map((n) => (
-                            <div
-                              key={n._id}
-                              onClick={() => markNotifRead(n._id)}
-                              className={`p-3 text-xs cursor-pointer hover:bg-white/5 transition-colors ${
-                                !n.read ? 'bg-indigo-500/10' : ''
-                              }`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="font-semibold text-slate-200">{n.title}</span>
-                                {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />}
-                              </div>
-                              <p className="text-slate-400 text-[11px] mt-0.5">{n.message}</p>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* User Profile Dropdown */}
-                <div className="relative" ref={profileRef}>
-                  <button
-                    onClick={() => setProfileOpen(!profileOpen)}
-                    className="flex items-center gap-2.5 p-1.5 pr-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
-                  >
-                    <img
-                      src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
-                      alt={user?.name || 'User'}
-                      className="w-7 h-7 rounded-lg object-cover ring-1 ring-indigo-500/50"
-                    />
-                    <div className="hidden lg:flex flex-col text-left">
-                      <span className="text-xs font-semibold text-white leading-none">
-                        {user?.name || 'User'}
-                      </span>
-                      <span className="text-[10px] text-indigo-300 font-mono capitalize mt-0.5">
-                        {user?.role} Tier
-                      </span>
-                    </div>
-                    <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-                  </button>
-
-                  {profileOpen && (
-                    <div className="absolute right-0 mt-2 w-64 glass-card bg-obsidian-900/95 rounded-2xl shadow-2xl border border-white/10 p-2 z-50">
-                      <div className="p-3 border-b border-white/10">
-                        <p className="font-semibold text-sm text-white">{user?.name}</p>
-                        <p className="text-xs text-slate-400 truncate font-mono">{user?.email}</p>
-                        <div className="mt-2 flex items-center gap-1.5 font-mono">
-                          <span className="px-2 py-0.5 text-[9px] font-bold rounded bg-indigo-500/20 text-indigo-300 uppercase border border-indigo-500/30">
-                            {user?.role}
-                          </span>
-                          <span className="px-2 py-0.5 text-[9px] font-bold rounded bg-emerald-500/20 text-emerald-300 uppercase border border-emerald-500/30">
-                            100% Free Plan
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Demo Role Switchers */}
-                      <div className="py-2 border-b border-white/10 font-mono text-xs">
-                        <span className="px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                          Switch Role View:
-                        </span>
-                        <button
-                          onClick={() => { loginAsDemo('user'); setProfileOpen(false); }}
-                          className="w-full text-left px-3 py-1.5 text-slate-300 hover:bg-white/5 rounded-lg flex items-center gap-2"
-                        >
-                          <User className="w-3.5 h-3.5 text-slate-400" /> Standard User
-                        </button>
-                        <button
-                          onClick={() => { loginAsDemo('premium'); setProfileOpen(false); }}
-                          className="w-full text-left px-3 py-1.5 text-amber-400 hover:bg-white/5 rounded-lg flex items-center gap-2"
-                        >
-                          <Sparkles className="w-3.5 h-3.5" /> Legal Counsel View
-                        </button>
-                        <button
-                          onClick={() => { loginAsDemo('admin'); setProfileOpen(false); }}
-                          className="w-full text-left px-3 py-1.5 text-purple-400 hover:bg-white/5 rounded-lg flex items-center gap-2"
-                        >
-                          <ShieldCheck className="w-3.5 h-3.5" /> Admin Console
-                        </button>
-                      </div>
-
-                      <button
-                        onClick={() => { logout(); setProfileOpen(false); navigate('/login'); }}
-                        className="w-full text-left px-3 py-2 text-xs text-rose-400 hover:bg-rose-500/10 rounded-lg flex items-center gap-2 transition-colors mt-1 font-mono"
-                      >
-                        <LogOut className="w-3.5 h-3.5" /> Sign Out
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </>
-            ) : (
-              <div className="flex items-center gap-3">
-                <Link
-                  to="/login"
-                  className="px-3.5 py-2 text-xs font-semibold text-slate-300 hover:text-white transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/register"
-                  className="px-4 py-2 text-xs font-bold rounded-xl gradient-bg text-white shadow-glow-brand transition-all hover:scale-[1.02] flex items-center gap-1.5"
-                >
-                  <span>Start Free</span>
-                  <Sparkles className="w-3 h-3" />
-                </Link>
-              </div>
-            )}
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl text-slate-400 hover:bg-white/5 border border-white/5"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation Drawer */}
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-white/10 space-y-3">
-            {isAuthenticated ? (
-              <div className="space-y-1">
-                {navLinks.map((link) => {
-                  const Icon = link.icon;
-                  const active = isActive(link.path);
-                  return (
-                    <Link
-                      key={link.path}
-                      to={link.path}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold ${
-                        active
-                          ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30'
-                          : 'text-slate-300 hover:bg-white/5'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      {link.name}
-                    </Link>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="flex flex-col space-y-2">
-                <Link
-                  to="/login"
+                <a
+                  href="#sandbox"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 rounded-xl border border-white/10 text-xs font-semibold text-white"
+                  className="p-2.5 rounded-xl text-xs text-slate-300 hover:bg-white/5"
                 >
-                  Sign In
-                </Link>
+                  Clause Lens
+                </a>
+                <a
+                  href="#features"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-xl text-xs text-slate-300 hover:bg-white/5"
+                >
+                  Constellations
+                </a>
                 <Link
                   to="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 rounded-xl gradient-bg text-white text-xs font-bold shadow-glow-brand"
+                  className="p-2.5 rounded-xl text-xs font-bold text-amberAccent-500 bg-amberAccent-500/10"
                 >
                   Get Started Free
                 </Link>
-              </div>
+              </>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   );
 };
