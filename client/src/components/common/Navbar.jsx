@@ -147,12 +147,6 @@ const Navbar = () => {
               <a href="/#features" className="text-xs font-semibold text-slate-300 hover:text-indigo-400 transition-colors">
                 Features
               </a>
-              <a href="/#comparison" className="text-xs font-semibold text-slate-300 hover:text-indigo-400 transition-colors">
-                Diff Engine
-              </a>
-              <a href="/#pricing" className="text-xs font-semibold text-slate-300 hover:text-indigo-400 transition-colors">
-                Pricing
-              </a>
               <a href="/#faq" className="text-xs font-semibold text-slate-300 hover:text-indigo-400 transition-colors">
                 FAQ
               </a>
@@ -239,7 +233,7 @@ const Navbar = () => {
                             {user?.role}
                           </span>
                           <span className="px-2 py-0.5 text-[9px] font-bold rounded bg-emerald-500/20 text-emerald-300 uppercase border border-emerald-500/30">
-                            {user?.subscription}
+                            100% Free Plan
                           </span>
                         </div>
                       </div>
@@ -247,7 +241,7 @@ const Navbar = () => {
                       {/* Demo Role Switchers */}
                       <div className="py-2 border-b border-white/10 font-mono text-xs">
                         <span className="px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                          Switch Demo Role:
+                          Switch Role View:
                         </span>
                         <button
                           onClick={() => { loginAsDemo('user'); setProfileOpen(false); }}
@@ -259,7 +253,7 @@ const Navbar = () => {
                           onClick={() => { loginAsDemo('premium'); setProfileOpen(false); }}
                           className="w-full text-left px-3 py-1.5 text-amber-400 hover:bg-white/5 rounded-lg flex items-center gap-2"
                         >
-                          <Sparkles className="w-3.5 h-3.5" /> Premium Lawyer
+                          <Sparkles className="w-3.5 h-3.5" /> Legal Counsel View
                         </button>
                         <button
                           onClick={() => { loginAsDemo('admin'); setProfileOpen(false); }}

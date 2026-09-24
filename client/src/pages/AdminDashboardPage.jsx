@@ -100,7 +100,7 @@ const AdminDashboardPage = () => {
           change="+18% MoM"
           icon={Users}
           color="brand"
-          subtitle="Enterprise & standard accounts"
+          subtitle="Active community accounts"
         />
         <StatCard
           title="Monitored Contracts"
@@ -111,12 +111,12 @@ const AdminDashboardPage = () => {
           subtitle="Processed through AI pipeline"
         />
         <StatCard
-          title="Active Paid Tiers"
-          value={analytics?.activeSubscribers || 2}
-          change="Pro & Enterprise"
+          title="Platform Access"
+          value="100% Free"
+          change="Open Tier"
           icon={TrendingUp}
           color="emerald"
-          subtitle="High conversion retention"
+          subtitle="Unrestricted community access"
         />
         <StatCard
           title="AI API Calls Today"
@@ -175,8 +175,8 @@ const AdminDashboardPage = () => {
               <thead className="bg-obsidian-950/80 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-800">
                 <tr>
                   <th className="px-6 py-3.5">User</th>
-                  <th className="px-6 py-3.5">Role</th>
-                  <th className="px-6 py-3.5">Subscription Tier</th>
+                  <th className="px-6 py-3.5">Role Permission</th>
+                  <th className="px-6 py-3.5">Access Tier</th>
                   <th className="px-6 py-3.5">Status</th>
                   <th className="px-6 py-3.5 text-right">Actions</th>
                 </tr>
@@ -204,20 +204,14 @@ const AdminDashboardPage = () => {
                         className="px-2.5 py-1 rounded-lg border border-slate-700 bg-obsidian-900 text-white text-xs font-semibold uppercase"
                       >
                         <option value="user">User</option>
-                        <option value="premium">Premium Lawyer</option>
+                        <option value="premium">Legal Counsel</option>
                         <option value="admin">Administrator</option>
                       </select>
                     </td>
                     <td className="px-6 py-4">
-                      <select
-                        value={u.subscription}
-                        onChange={(e) => handleUpdateUser(u._id, { subscription: e.target.value })}
-                        className="px-2.5 py-1 rounded-lg border border-slate-700 bg-obsidian-900 text-white text-xs font-semibold capitalize"
-                      >
-                        <option value="free">Free Starter</option>
-                        <option value="pro">Pro ($29/mo)</option>
-                        <option value="enterprise">Enterprise ($99/mo)</option>
-                      </select>
+                      <span className="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-xs font-semibold">
+                        Free Full Access
+                      </span>
                     </td>
                     <td className="px-6 py-4">
                       <span

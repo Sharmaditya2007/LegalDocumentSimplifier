@@ -301,102 +301,36 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-16 bg-obsidian-950/60 border-t border-slate-800">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-xl mx-auto mb-10">
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-heading">
-              Transparent Pricing
-            </h2>
-            <p className="mt-2 text-slate-400 text-xs sm:text-sm">
-              Simple plans for individuals, startups, and legal teams.
-            </p>
-
-            {/* Billing Switcher */}
-            <div className="mt-6 inline-flex items-center gap-2 p-1 rounded-xl bg-obsidian-900 border border-slate-800 text-xs">
-              <button
-                onClick={() => setBillingCycle('monthly')}
-                className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-                  billingCycle === 'monthly' ? 'bg-brand-600 text-white shadow-glow' : 'text-slate-400'
-                }`}
-              >
-                Monthly
-              </button>
-              <button
-                onClick={() => setBillingCycle('yearly')}
-                className={`px-3 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1 ${
-                  billingCycle === 'yearly' ? 'bg-brand-600 text-white shadow-glow' : 'text-slate-400'
-                }`}
-              >
-                <span>Annual</span>
-                <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">Save 20%</span>
-              </button>
-            </div>
+      {/* 100% Free & Open Access Banner */}
+      <section className="py-16 bg-obsidian-950/60 border-t border-slate-800">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-4">
+            <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+            <span>100% Free Platform — No Hidden Fees, No Subscriptions</span>
           </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-heading">
+            All Features Included Without Any Paywalls
+          </h2>
+          <p className="mt-2 text-slate-400 text-xs sm:text-sm max-w-xl mx-auto">
+            Enjoy full access to AI contract summaries, clause risk scoring, side-by-side version comparison, citation copilot, and milestone tracking without paying a dime.
+          </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Starter */}
-            <div className="glass-panel rounded-2xl p-6 border border-slate-800 flex flex-col justify-between">
-              <div>
-                <h3 className="text-lg font-bold text-white font-heading">Free Starter</h3>
-                <p className="text-xs text-slate-400 mt-0.5">For occasional contract review.</p>
-                <div className="mt-4 flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold text-white">$0</span>
-                  <span className="text-xs text-slate-400">/ forever</span>
-                </div>
-                <ul className="mt-6 space-y-2.5 text-xs text-slate-300">
-                  <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> 3 Contract Audits / month</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Plain-English Summaries</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Basic Risk Scoring</li>
-                </ul>
-              </div>
-              <Link to="/register" className="mt-6 w-full py-2.5 rounded-xl border border-slate-700 bg-obsidian-900 hover:bg-obsidian-800 text-center text-xs font-semibold text-white transition-all">
-                Get Started Free
-              </Link>
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto text-left">
+            <div className="p-4 rounded-xl bg-obsidian-900 border border-slate-800">
+              <span className="text-emerald-400 text-xs font-bold block mb-1">✓ Unlimited Audits</span>
+              <p className="text-[11px] text-slate-400">Analyze any number of contracts.</p>
             </div>
-
-            {/* Pro */}
-            <div className="glass-panel rounded-2xl p-6 border-2 border-brand-500 relative flex flex-col justify-between shadow-glow bg-gradient-to-b from-brand-950/30 to-obsidian-950">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-brand-600 text-white text-[10px] font-bold uppercase tracking-wider shadow-glow">
-                Most Popular
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-white font-heading">Professional</h3>
-                <p className="text-xs text-slate-300 mt-0.5">For founders & operators.</p>
-                <div className="mt-4 flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold text-white">{billingCycle === 'monthly' ? '$39' : '$31'}</span>
-                  <span className="text-xs text-slate-400">/ month</span>
-                </div>
-                <ul className="mt-6 space-y-2.5 text-xs text-slate-200">
-                  <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> 50 Contract Audits / month</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Side-by-Side Version Diff</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Citation Q&A Chat Copilot</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Deadline Sentinel</li>
-                </ul>
-              </div>
-              <Link to="/register" className="mt-6 w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-center text-xs font-semibold text-white transition-all shadow-glow">
-                Start Free Trial
-              </Link>
+            <div className="p-4 rounded-xl bg-obsidian-900 border border-slate-800">
+              <span className="text-emerald-400 text-xs font-bold block mb-1">✓ Full Diff Engine</span>
+              <p className="text-[11px] text-slate-400">Compare revisions side-by-side.</p>
             </div>
-
-            {/* Enterprise */}
-            <div className="glass-panel rounded-2xl p-6 border border-slate-800 flex flex-col justify-between">
-              <div>
-                <h3 className="text-lg font-bold text-white font-heading">Enterprise</h3>
-                <p className="text-xs text-slate-400 mt-0.5">For corporate teams & firms.</p>
-                <div className="mt-4 flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold text-white">{billingCycle === 'monthly' ? '$149' : '$119'}</span>
-                  <span className="text-xs text-slate-400">/ month</span>
-                </div>
-                <ul className="mt-6 space-y-2.5 text-xs text-slate-300">
-                  <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Unlimited Contract Audits</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Multi-Seat Team Access</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Priority Support & SLA</li>
-                </ul>
-              </div>
-              <Link to="/register" className="mt-6 w-full py-2.5 rounded-xl border border-slate-700 bg-obsidian-900 hover:bg-obsidian-800 text-center text-xs font-semibold text-white transition-all">
-                Contact Sales
-              </Link>
+            <div className="p-4 rounded-xl bg-obsidian-900 border border-slate-800">
+              <span className="text-emerald-400 text-xs font-bold block mb-1">✓ AI Citation Q&A</span>
+              <p className="text-[11px] text-slate-400">Ask questions with source citations.</p>
+            </div>
+            <div className="p-4 rounded-xl bg-obsidian-900 border border-slate-800">
+              <span className="text-emerald-400 text-xs font-bold block mb-1">✓ Deadline Sentinel</span>
+              <p className="text-[11px] text-slate-400">Track notice windows & milestones.</p>
             </div>
           </div>
         </div>
