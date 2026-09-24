@@ -32,36 +32,36 @@ const initializeSeedData = () => {
   memoryDb.users = [
     {
       _id: adminId,
-      name: 'Sarah Connor',
+      name: 'Admin User',
       email: 'admin@legalease.ai',
       password: hashedPassword,
       role: 'admin',
       subscription: 'enterprise',
-      company: 'OmniCorp Legal',
+      company: 'LegalEase Team',
       avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
       status: 'active',
       createdAt: new Date('2026-01-01').toISOString()
     },
     {
       _id: premiumId,
-      name: 'David Vance, Esq.',
+      name: 'Legal Counsel',
       email: 'premium@legalease.ai',
       password: hashedPassword,
       role: 'premium',
       subscription: 'pro',
-      company: 'Vance & Associates Law',
+      company: 'Advisory Legal Group',
       avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80',
       status: 'active',
       createdAt: new Date('2026-01-10').toISOString()
     },
     {
       _id: standardId,
-      name: 'Elena Rostova',
+      name: 'Demo User',
       email: 'user@legalease.ai',
       password: hashedPassword,
       role: 'user',
       subscription: 'free',
-      company: 'TechStart Ventures',
+      company: 'Acme Corp',
       avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
       status: 'active',
       createdAt: new Date('2026-01-15').toISOString()
