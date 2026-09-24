@@ -66,10 +66,10 @@ const AdminDashboardPage = () => {
 
   if (!isAdmin) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
-        <h2 className="text-xl font-bold">Unauthorized Access</h2>
-        <p className="text-sm text-slate-500 mt-2">
+      <div className="max-w-4xl mx-auto px-4 py-20 text-center font-sans">
+        <AlertTriangle className="w-12 h-12 text-rose-400 mx-auto mb-4" />
+        <h2 className="text-xl font-bold text-white font-heading">Unauthorized Access</h2>
+        <p className="text-sm text-slate-400 mt-2">
           Administrator privileges are required to view this console. Switch your role using the profile menu.
         </p>
       </div>
@@ -77,17 +77,17 @@ const AdminDashboardPage = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-sans">
       {/* Header */}
       <div>
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-purple-600 dark:text-purple-400">
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-purple-400 font-mono">
           <ShieldCheck className="w-4 h-4" />
           <span>Enterprise Staff Control Plane</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-0.5">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading mt-0.5">
           Admin Intelligence Console
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+        <p className="text-xs sm:text-sm text-slate-400 mt-1">
           Monitor platform user quotas, manage subscription tiers, audit processed contracts, and check AI engine health.
         </p>
       </div>
@@ -129,13 +129,13 @@ const AdminDashboardPage = () => {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 space-x-2">
+      <div className="flex border-b border-slate-800 space-x-2">
         <button
           onClick={() => setActiveTab('users')}
           className={`flex items-center gap-2 py-3 px-4 text-xs font-semibold border-b-2 transition-all ${
             activeTab === 'users'
-              ? 'border-purple-500 text-purple-600 dark:text-purple-400'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
+              ? 'border-purple-500 text-purple-300 bg-purple-500/10 rounded-t-xl'
+              : 'border-transparent text-slate-400 hover:text-white'
           }`}
         >
           <Users className="w-4 h-4" />
@@ -146,8 +146,8 @@ const AdminDashboardPage = () => {
           onClick={() => setActiveTab('documents')}
           className={`flex items-center gap-2 py-3 px-4 text-xs font-semibold border-b-2 transition-all ${
             activeTab === 'documents'
-              ? 'border-purple-500 text-purple-600 dark:text-purple-400'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
+              ? 'border-purple-500 text-purple-300 bg-purple-500/10 rounded-t-xl'
+              : 'border-transparent text-slate-400 hover:text-white'
           }`}
         >
           <FileText className="w-4 h-4" />
@@ -158,8 +158,8 @@ const AdminDashboardPage = () => {
           onClick={() => setActiveTab('system')}
           className={`flex items-center gap-2 py-3 px-4 text-xs font-semibold border-b-2 transition-all ${
             activeTab === 'system'
-              ? 'border-purple-500 text-purple-600 dark:text-purple-400'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
+              ? 'border-purple-500 text-purple-300 bg-purple-500/10 rounded-t-xl'
+              : 'border-transparent text-slate-400 hover:text-white'
           }`}
         >
           <Server className="w-4 h-4" />
@@ -169,10 +169,10 @@ const AdminDashboardPage = () => {
 
       {/* TAB 1: USERS MANAGEMENT */}
       {activeTab === 'users' && (
-        <div className="glass-card rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+        <div className="glass-panel rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50/70 dark:bg-slate-900/50 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-100 dark:border-slate-800">
+              <thead className="bg-obsidian-950/80 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-800">
                 <tr>
                   <th className="px-6 py-3.5">User</th>
                   <th className="px-6 py-3.5">Role</th>
@@ -181,18 +181,18 @@ const AdminDashboardPage = () => {
                   <th className="px-6 py-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+              <tbody className="divide-y divide-slate-800/60">
                 {users.map((u) => (
-                  <tr key={u._id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+                  <tr key={u._id} className="hover:bg-obsidian-850/50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <img
                           src={u.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'}
                           alt={u.name}
-                          className="w-8 h-8 rounded-lg object-cover"
+                          className="w-8 h-8 rounded-lg object-cover border border-slate-700"
                         />
                         <div>
-                          <p className="font-bold text-slate-900 dark:text-white">{u.name}</p>
+                          <p className="font-bold text-white">{u.name}</p>
                           <p className="text-[11px] text-slate-400">{u.email}</p>
                         </div>
                       </div>
@@ -201,7 +201,7 @@ const AdminDashboardPage = () => {
                       <select
                         value={u.role}
                         onChange={(e) => handleUpdateUser(u._id, { role: e.target.value })}
-                        className="px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-semibold uppercase"
+                        className="px-2.5 py-1 rounded-lg border border-slate-700 bg-obsidian-900 text-white text-xs font-semibold uppercase"
                       >
                         <option value="user">User</option>
                         <option value="premium">Premium Lawyer</option>
@@ -212,7 +212,7 @@ const AdminDashboardPage = () => {
                       <select
                         value={u.subscription}
                         onChange={(e) => handleUpdateUser(u._id, { subscription: e.target.value })}
-                        className="px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-semibold capitalize"
+                        className="px-2.5 py-1 rounded-lg border border-slate-700 bg-obsidian-900 text-white text-xs font-semibold capitalize"
                       >
                         <option value="free">Free Starter</option>
                         <option value="pro">Pro ($29/mo)</option>
@@ -223,8 +223,8 @@ const AdminDashboardPage = () => {
                       <span
                         className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                           u.status === 'blocked'
-                            ? 'bg-rose-500/20 text-rose-500'
-                            : 'bg-emerald-500/20 text-emerald-500'
+                            ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                            : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                         }`}
                       >
                         {u.status || 'Active'}
@@ -234,14 +234,14 @@ const AdminDashboardPage = () => {
                       {u.status === 'blocked' ? (
                         <button
                           onClick={() => handleUpdateUser(u._id, { status: 'active' })}
-                          className="px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 text-xs font-semibold"
+                          className="px-3 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 border border-emerald-500/30 text-xs font-semibold transition-colors"
                         >
                           Unblock User
                         </button>
                       ) : (
                         <button
                           onClick={() => handleUpdateUser(u._id, { status: 'blocked' })}
-                          className="px-3 py-1 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 text-xs font-semibold"
+                          className="px-3 py-1 rounded-lg bg-rose-500/15 text-rose-300 hover:bg-rose-500/25 border border-rose-500/30 text-xs font-semibold transition-colors"
                         >
                           Block Access
                         </button>
@@ -257,10 +257,10 @@ const AdminDashboardPage = () => {
 
       {/* TAB 2: DOCUMENTS AUDIT */}
       {activeTab === 'documents' && (
-        <div className="glass-card rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+        <div className="glass-panel rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50/70 dark:bg-slate-900/50 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-100 dark:border-slate-800">
+              <thead className="bg-obsidian-950/80 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-800">
                 <tr>
                   <th className="px-6 py-3.5">Contract Title</th>
                   <th className="px-6 py-3.5">User Owner ID</th>
@@ -269,10 +269,10 @@ const AdminDashboardPage = () => {
                   <th className="px-6 py-3.5 text-right">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+              <tbody className="divide-y divide-slate-800/60">
                 {documents.map((d) => (
-                  <tr key={d._id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
-                    <td className="px-6 py-4 font-bold text-slate-900 dark:text-white">
+                  <tr key={d._id} className="hover:bg-obsidian-850/50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-white">
                       {d.title}
                     </td>
                     <td className="px-6 py-4 font-mono text-[11px] text-slate-400">
@@ -285,7 +285,7 @@ const AdminDashboardPage = () => {
                       {new Date(d.createdAt).toLocaleString()}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 uppercase">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase">
                         Audited
                       </span>
                     </td>
@@ -300,54 +300,54 @@ const AdminDashboardPage = () => {
       {/* TAB 3: SYSTEM STATUS */}
       {activeTab === 'system' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Zap className="w-5 h-5 text-amber-500" />
+          <div className="glass-panel rounded-3xl p-6 border border-slate-800 space-y-4 shadow-xl">
+            <h3 className="text-base font-bold text-white flex items-center gap-2 font-heading">
+              <Zap className="w-5 h-5 text-amber-400" />
               <span>AI Processing Engine Pipeline</span>
             </h3>
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between py-2 border-b border-slate-800">
                 <span className="text-slate-400">Primary Classifier:</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200">
-                  {analytics?.processingEngine || 'Dual Hybrid'}
+                <span className="font-semibold text-white">
+                  {analytics?.processingEngine || 'Dual Hybrid LLM (Legal)'}
                 </span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between py-2 border-b border-slate-800">
                 <span className="text-slate-400">Average Turnaround:</span>
-                <span className="font-semibold text-emerald-500">{analytics?.averageTurnaroundSeconds || 1.8}s</span>
+                <span className="font-semibold text-emerald-400">{analytics?.averageTurnaroundSeconds || 1.8}s</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between py-2 border-b border-slate-800">
                 <span className="text-slate-400">Platform Uptime:</span>
-                <span className="font-semibold text-emerald-500">{analytics?.uptimePercentage || 99.98}%</span>
+                <span className="font-semibold text-emerald-400">{analytics?.uptimePercentage || 99.98}%</span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-slate-400">OCR Layer:</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200">Active (Multi-format PDF/DOCX)</span>
+                <span className="font-semibold text-white">Active (Multi-format PDF/DOCX)</span>
               </div>
             </div>
           </div>
 
-          <div className="glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-500" />
+          <div className="glass-panel rounded-3xl p-6 border border-slate-800 space-y-4 shadow-xl">
+            <h3 className="text-base font-bold text-white flex items-center gap-2 font-heading">
+              <ShieldCheck className="w-5 h-5 text-emerald-400" />
               <span>Security & Compliance Standard</span>
             </h3>
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between py-2 border-b border-slate-800">
                 <span className="text-slate-400">Data Encryption:</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200">AES-256 / TLS 1.3</span>
+                <span className="font-semibold text-white">AES-256 / TLS 1.3</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between py-2 border-b border-slate-800">
                 <span className="text-slate-400">Rate Limiter:</span>
-                <span className="font-semibold text-emerald-500">Enabled (300 req / 15m)</span>
+                <span className="font-semibold text-emerald-400">Enabled (300 req / 15m)</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between py-2 border-b border-slate-800">
                 <span className="text-slate-400">Data Retention:</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200">Zero Retention on Foundation AI</span>
+                <span className="font-semibold text-white">Zero Retention on Foundation AI</span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-slate-400">RBAC Enforcement:</span>
-                <span className="font-semibold text-emerald-500">Strict JWT Middleware</span>
+                <span className="font-semibold text-emerald-400">Strict JWT Middleware</span>
               </div>
             </div>
           </div>

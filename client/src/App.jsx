@@ -50,79 +50,85 @@ function App() {
       <NotificationProvider>
         <AuthProvider>
           <Router>
-            <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-navy-950 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-              <Navbar />
-              <main className="flex-1">
-                <Routes>
-                  {/* Public Pages */}
-                  <Route path="/" element={<LandingPage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />} />
-                  <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <div className="min-h-screen flex flex-col bg-[#07090E] text-slate-100 font-sans selection:bg-brand-500/30 selection:text-brand-200 relative overflow-x-hidden">
+              {/* Global Subtle Ambient Glows */}
+              <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-brand-500/10 blur-[140px] pointer-events-none rounded-full z-0" />
+              <div className="fixed bottom-0 right-0 w-96 h-96 bg-purple-600/5 blur-[120px] pointer-events-none rounded-full z-0" />
 
-                  {/* Protected SaaS App Pages */}
-                  <Route
-                    path="/dashboard"
-                    element={
-                      <ProtectedRoute>
-                        <DashboardPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/documents"
-                    element={
-                      <ProtectedRoute>
-                        <DocumentLibraryPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/documents/:id"
-                    element={
-                      <ProtectedRoute>
-                        <DocumentDetailPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/compare"
-                    element={
-                      <ProtectedRoute>
-                        <ContractComparisonPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/chat"
-                    element={
-                      <ProtectedRoute>
-                        <DocumentChatPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/timeline"
-                    element={
-                      <ProtectedRoute>
-                        <TimelinePage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin"
-                    element={
-                      <ProtectedRoute requireAdmin={true}>
-                        <AdminDashboardPage />
-                      </ProtectedRoute>
-                    }
-                  />
+              <div className="relative z-10 flex flex-col flex-1">
+                <Navbar />
+                <main className="flex-1">
+                  <Routes>
+                    {/* Public Pages */}
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-                  {/* Fallback */}
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </main>
-              <Footer />
+                    {/* Protected SaaS App Pages */}
+                    <Route
+                      path="/dashboard"
+                      element={
+                        <ProtectedRoute>
+                          <DashboardPage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/documents"
+                      element={
+                        <ProtectedRoute>
+                          <DocumentLibraryPage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/documents/:id"
+                      element={
+                        <ProtectedRoute>
+                          <DocumentDetailPage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/compare"
+                      element={
+                        <ProtectedRoute>
+                          <ContractComparisonPage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/chat"
+                      element={
+                        <ProtectedRoute>
+                          <DocumentChatPage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/timeline"
+                      element={
+                        <ProtectedRoute>
+                          <TimelinePage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/admin"
+                      element={
+                        <ProtectedRoute requireAdmin={true}>
+                          <AdminDashboardPage />
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    {/* Fallback */}
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </div>
             </div>
           </Router>
         </AuthProvider>
