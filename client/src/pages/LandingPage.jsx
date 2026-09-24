@@ -121,22 +121,19 @@ const LandingPage = () => {
                 stage >= 2 ? 'opacity-60 scale-100' : 'opacity-0 scale-75'
               }`}
             >
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <path d="M13.5 0H14.5V28H13.5V0Z" fill="currentColor" />
-                <path d="M28 13.5V14.5L0 14.5L0 13.5L28 13.5Z" fill="currentColor" />
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
+                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
               </svg>
             </div>
 
-            {/* STAGE 1: Main Bold Central Heading */}
+            {/* STAGE 1: Main Clean Heading */}
             <h1
-              className={`text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-none font-heading transition-all duration-1000 ${
+              className={`text-2xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white leading-tight font-heading transition-all duration-1000 ${
                 stage >= 1 ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4'
               }`}
             >
-              Building the Future of Legal.{' '}
-              <span className="block mt-2 title-laser-flare gradient-text-amber font-display">
-                Spot Hidden Risks.
-              </span>
+              Building the Future of Legal
             </h1>
 
             {/* STAGE 2: Right Crosshair Reticle */}
@@ -145,16 +142,16 @@ const LandingPage = () => {
                 stage >= 2 ? 'opacity-60 scale-100' : 'opacity-0 scale-75'
               }`}
             >
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <path d="M13.5 0H14.5V28H13.5V0Z" fill="currentColor" />
-                <path d="M28 13.5V14.5L0 14.5L0 13.5L28 13.5Z" fill="currentColor" />
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
+                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
               </svg>
             </div>
           </div>
 
           {/* STAGE 3: Monospace Subtitle */}
           <p
-            className={`mt-6 text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed font-mono transition-all duration-700 ${
+            className={`mt-4 text-xs sm:text-[13px] text-slate-300 max-w-lg mx-auto leading-relaxed font-mono transition-all duration-700 ${
               stage >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
           >
@@ -163,7 +160,7 @@ const LandingPage = () => {
 
           {/* STAGE 4: Action CTAs */}
           <div
-            className={`mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 transition-all duration-700 ${
+            className={`mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 transition-all duration-700 ${
               stage >= 4 ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
             }`}
           >
