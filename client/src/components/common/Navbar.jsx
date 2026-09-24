@@ -133,34 +133,7 @@ const Navbar = () => {
               );
             })}
           </nav>
-        ) : (
-          <nav className="hidden md:flex items-center p-1 rounded-full behfar-nav-pill border border-white/10 shadow-glass">
-            <a
-              href="#sandbox"
-              className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide text-slate-300 hover:text-amberAccent-500 transition-colors"
-            >
-              Clause Lens
-            </a>
-            <a
-              href="#features"
-              className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide text-slate-300 hover:text-amberAccent-500 transition-colors"
-            >
-              Constellations
-            </a>
-            <a
-              href="#free-access"
-              className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide text-emerald-400 hover:text-emerald-300 transition-colors"
-            >
-              100% Free
-            </a>
-            <a
-              href="#faq"
-              className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide text-slate-300 hover:text-amberAccent-500 transition-colors"
-            >
-              FAQ
-            </a>
-          </nav>
-        )}
+        ) : null}
 
         {/* Right Section / Controls */}
         <div className="flex items-center gap-2.5">
@@ -321,29 +294,22 @@ const Navbar = () => {
                 );
               })
             ) : (
-              <>
-                <a
-                  href="#sandbox"
+              <div className="flex flex-col gap-2 p-1">
+                <Link
+                  to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 rounded-xl text-xs text-slate-300 hover:bg-white/5"
+                  className="p-2.5 text-center rounded-xl text-xs font-semibold text-slate-300 bg-obsidian-900 border border-white/10"
                 >
-                  Clause Lens
-                </a>
-                <a
-                  href="#features"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 rounded-xl text-xs text-slate-300 hover:bg-white/5"
-                >
-                  Constellations
-                </a>
+                  Sign In
+                </Link>
                 <Link
                   to="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 rounded-xl text-xs font-bold text-amberAccent-500 bg-amberAccent-500/10"
+                  className="p-2.5 text-center rounded-xl text-xs font-bold text-obsidian-950 bg-amberAccent-500 shadow-glow-amber"
                 >
                   Get Started Free
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </div>
