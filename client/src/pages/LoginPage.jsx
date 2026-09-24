@@ -79,39 +79,15 @@ const LoginPage = () => {
           </div>
         )}
 
-        {/* 1-Click Demo Logins */}
-        <div className="mb-5 p-3.5 rounded-2xl bg-brand-500/10 border border-brand-500/30 text-center">
-          <div className="flex items-center justify-center gap-1 text-xs font-bold text-brand-400 mb-1">
-            <Zap className="w-3.5 h-3.5 fill-brand-400" />
-            <span>1-Click Instant Demo Login</span>
-          </div>
-          <p className="text-[11px] text-slate-400 mb-2.5">
-            Select a role to test the platform immediately:
-          </p>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => handleDemoLogin('user')}
-              disabled={loading}
-              className="py-1.5 px-2 rounded-lg bg-obsidian-900 text-xs font-semibold text-slate-200 border border-slate-700/80 hover:border-brand-500 transition-all"
-            >
-              Standard
-            </button>
-            <button
-              onClick={() => handleDemoLogin('premium')}
-              disabled={loading}
-              className="py-1.5 px-2 rounded-lg bg-amber-500/10 text-xs font-semibold text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 transition-all"
-            >
-              Pro User
-            </button>
-            <button
-              onClick={() => handleDemoLogin('admin')}
-              disabled={loading}
-              className="py-1.5 px-2 rounded-lg bg-purple-500/10 text-xs font-semibold text-purple-300 border border-purple-500/30 hover:bg-purple-500/20 transition-all"
-            >
-              Admin
-            </button>
-          </div>
-        </div>
+        {/* 1-Click Demo Login */}
+        <button
+          onClick={() => handleDemoLogin('user')}
+          disabled={loading}
+          className="w-full mb-4 py-2.5 px-4 rounded-xl bg-amberAccent-500/10 hover:bg-amberAccent-500/20 text-amberAccent-400 border border-amberAccent-500/30 text-xs font-semibold flex items-center justify-center gap-2 transition-all"
+        >
+          <Zap className="w-3.5 h-3.5 fill-amberAccent-400" />
+          <span>1-Click Instant Demo Login</span>
+        </button>
 
         {/* Form Card */}
         <div className="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl">

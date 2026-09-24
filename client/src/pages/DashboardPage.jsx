@@ -358,23 +358,16 @@ const DashboardPage = () => {
             <button
               onClick={() => handleLoadSample('saas')}
               disabled={uploading}
-              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/30 hover:bg-rose-500/20 transition-all flex items-center gap-1.5 shadow-sm"
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/30 hover:bg-rose-500/20 transition-all shadow-sm"
             >
-              <span>SaaS MSA (High Risk)</span>
+              Test SaaS MSA (High Risk)
             </button>
             <button
               onClick={() => handleLoadSample('nda')}
               disabled={uploading}
-              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20 transition-all flex items-center gap-1.5 shadow-sm"
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20 transition-all shadow-sm"
             >
-              <span>Mutual NDA (Low Risk)</span>
-            </button>
-            <button
-              onClick={() => handleLoadSample('emp_v2')}
-              disabled={uploading}
-              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 transition-all flex items-center gap-1.5 shadow-sm"
-            >
-              <span>CTO Agreement (Non-Compete)</span>
+              Test NDA (Low Risk)
             </button>
           </div>
         </div>
