@@ -58,8 +58,8 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'Plus Jakarta Sans', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        heading: ['Syne', 'Outfit', 'sans-serif'],
-        display: ['Audiowide', 'Syne', 'sans-serif'],
+        heading: ['Inter', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        display: ['Inter', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       boxShadow: {

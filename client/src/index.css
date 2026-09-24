@@ -30,8 +30,8 @@
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Syne', 'Outfit', sans-serif;
-    letter-spacing: -0.015em;
+    font-family: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
+    letter-spacing: -0.01em;
   }
 }
 

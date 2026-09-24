@@ -47,30 +47,30 @@ const RegisterPage = () => {
 
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-6">
-          <Link to="/" className="inline-flex items-center gap-2 mb-3 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
+          <Link to="/" className="inline-flex items-center gap-2.5 mb-3 group">
+            <div className="w-8 h-8 rounded-lg bg-obsidian-900 border border-amberAccent-500/30 flex items-center justify-center text-amberAccent-500 shadow-glow-amber group-hover:scale-105 transition-transform">
               <Scale className="w-4 h-4" />
             </div>
-            <span className="font-extrabold text-xl tracking-tight text-white font-heading">
-              LegalEase <span className="gradient-text font-black">AI</span>
+            <span className="font-bold text-sm tracking-widest uppercase text-white font-sans">
+              LEGALEASE <span className="text-[#EBB87E] font-extrabold">AI</span>
             </span>
           </Link>
-          <h2 className="text-xl font-bold text-white font-heading">Create an Account</h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <h2 className="text-xl font-semibold text-white font-sans">Create an Account</h2>
+          <p className="text-xs text-slate-400 mt-0.5 font-sans">
             Start auditing contracts with plain-English AI
           </p>
         </div>
 
-        <div className="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl">
+        <div className="glass-panel rounded-2xl p-6 border border-white/10 shadow-xl">
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-medium">
+            <div className="mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-medium font-sans">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1 font-sans">
                 Full Name
               </label>
               <div className="relative">
@@ -82,13 +82,13 @@ const RegisterPage = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Your Name"
-                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-700 bg-obsidian-950 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/20"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1 font-sans">
                 Email Address
               </label>
               <div className="relative">
@@ -100,13 +100,13 @@ const RegisterPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@company.com"
-                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-700 bg-obsidian-950 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/20"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1 font-sans">
                 Company / Organization (Optional)
               </label>
               <div className="relative">
@@ -117,13 +117,13 @@ const RegisterPage = () => {
                   value={formData.company}
                   onChange={handleChange}
                   placeholder="Your company or law firm"
-                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-700 bg-obsidian-950 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/20"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1 font-sans">
                 Password
               </label>
               <div className="relative">
@@ -135,7 +135,7 @@ const RegisterPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="At least 6 characters"
-                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-700 bg-obsidian-950 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/20"
                 />
               </div>
             </div>
@@ -143,7 +143,7 @@ const RegisterPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs sm:text-sm shadow-glow transition-all flex items-center justify-center gap-2 mt-2"
+              className="w-full py-2.5 rounded-xl bg-[#E85D36] hover:bg-[#ff6e47] text-white font-medium text-xs sm:text-sm shadow-glow transition-all flex items-center justify-center gap-2 mt-2 font-sans"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -156,9 +156,9 @@ const RegisterPage = () => {
             </button>
           </form>
 
-          <p className="mt-5 text-center text-xs text-slate-400">
+          <p className="mt-5 text-center text-xs text-slate-400 font-sans">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-brand-400 hover:underline">
+            <Link to="/login" className="font-semibold text-white hover:underline">
               Sign in
             </Link>
           </p>
