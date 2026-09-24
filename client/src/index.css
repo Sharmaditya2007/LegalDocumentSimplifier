@@ -225,6 +225,13 @@
   transform: translateY(-3px);
 }
 
+/* Moonsworth Reticle Corner Crosshairs */
+.reticle-corner {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+}
+
 /* Telescope HUD Viewfinder Circular Lens */
 .hud-lens-card {
   position: relative;

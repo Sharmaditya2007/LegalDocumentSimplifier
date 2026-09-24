@@ -66,70 +66,58 @@ const LandingPage = () => {
       <div className="max-w-4xl w-full mx-auto px-4 sm:px-6 text-center relative z-10 flex flex-col items-center justify-center">
         
         {/* Geometric Hero Framing Box */}
-        <div className="relative w-full p-6 sm:p-12 rounded-3xl transition-all duration-700 flex flex-col items-center justify-center">
+        <div className="relative w-full py-12 sm:py-20 px-6 sm:px-12 rounded-3xl transition-all duration-700 flex flex-col items-center justify-center">
           
-          {/* STAGE 3: 4-Corner Crosshair Reticles */}
+          {/* STAGE 3: 4-Corner Crosshair Reticles (Positioned at Box Corners) */}
           <div
-            className={`transition-opacity duration-700 ${
-              stage >= 3 ? 'opacity-60' : 'opacity-0'
+            className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${
+              stage >= 3 ? 'opacity-50' : 'opacity-0'
             }`}
           >
-            <div className="reticle-corner top-0 left-0 text-white">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
-                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
+            <div className="absolute top-2 left-2 text-white">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M10.5 0H11.5V22H10.5V0Z" fill="currentColor" />
+                <path d="M22 10.5V11.5L0 11.5L0 10.5L22 10.5Z" fill="currentColor" />
               </svg>
             </div>
-            <div className="reticle-corner top-0 right-0 text-white">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
-                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
+            <div className="absolute top-2 right-2 text-white">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M10.5 0H11.5V22H10.5V0Z" fill="currentColor" />
+                <path d="M22 10.5V11.5L0 11.5L0 10.5L22 10.5Z" fill="currentColor" />
               </svg>
             </div>
-            <div className="reticle-corner bottom-0 left-0 text-white">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
-                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
+            <div className="absolute bottom-2 left-2 text-white">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M10.5 0H11.5V22H10.5V0Z" fill="currentColor" />
+                <path d="M22 10.5V11.5L0 11.5L0 10.5L22 10.5Z" fill="currentColor" />
               </svg>
             </div>
-            <div className="reticle-corner bottom-0 right-0 text-white">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
-                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
+            <div className="absolute bottom-2 right-2 text-white">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M10.5 0H11.5V22H10.5V0Z" fill="currentColor" />
+                <path d="M22 10.5V11.5L0 11.5L0 10.5L22 10.5Z" fill="currentColor" />
               </svg>
-            </div>
-          </div>
-
-          {/* STAGE 4: Status Badge */}
-          <div
-            className={`transition-all duration-700 ${
-              stage >= 4 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
-            }`}
-          >
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amberAccent-500/30 bg-amberAccent-500/10 text-amberAccent-400 text-[11px] font-mono uppercase tracking-[0.2em] mb-6 shadow-glow-amber">
-              <span className="w-1.5 h-1.5 rounded-full bg-amberAccent-400 animate-pulse" />
-              <span>Neural Legal Intelligence Studio</span>
             </div>
           </div>
 
           {/* Title Area with Left & Right Side Crosshairs (Stage 2) */}
-          <div className="relative w-full flex items-center justify-center my-2">
+          <div className="relative w-full flex items-center justify-center my-4">
             
             {/* STAGE 2: Left Crosshair Reticle */}
             <div
-              className={`hidden sm:block absolute left-2 md:left-6 transition-all duration-700 text-white ${
-                stage >= 2 ? 'opacity-60 scale-100' : 'opacity-0 scale-75'
+              className={`hidden sm:block absolute left-2 md:left-8 transition-all duration-700 text-white ${
+                stage >= 2 ? 'opacity-50 scale-100' : 'opacity-0 scale-75'
               }`}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
-                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M10.5 0H11.5V22H10.5V0Z" fill="currentColor" />
+                <path d="M22 10.5V11.5L0 11.5L0 10.5L22 10.5Z" fill="currentColor" />
               </svg>
             </div>
 
             {/* STAGE 1: Main Clean Heading */}
             <h1
-              className={`text-2xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white leading-tight font-heading transition-all duration-1000 ${
+              className={`text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white leading-tight font-sans transition-all duration-1000 ${
                 stage >= 1 ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4'
               }`}
             >
@@ -138,35 +126,35 @@ const LandingPage = () => {
 
             {/* STAGE 2: Right Crosshair Reticle */}
             <div
-              className={`hidden sm:block absolute right-2 md:right-6 transition-all duration-700 text-white ${
-                stage >= 2 ? 'opacity-60 scale-100' : 'opacity-0 scale-75'
+              className={`hidden sm:block absolute right-2 md:right-8 transition-all duration-700 text-white ${
+                stage >= 2 ? 'opacity-50 scale-100' : 'opacity-0 scale-75'
               }`}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
-                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M10.5 0H11.5V22H10.5V0Z" fill="currentColor" />
+                <path d="M22 10.5V11.5L0 11.5L0 10.5L22 10.5Z" fill="currentColor" />
               </svg>
             </div>
           </div>
 
-          {/* STAGE 3: Monospace Subtitle */}
+          {/* STAGE 3: Clean Subtitle */}
           <p
-            className={`mt-4 text-xs sm:text-[13px] text-slate-300 max-w-lg mx-auto leading-relaxed font-mono transition-all duration-700 ${
+            className={`mt-4 text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed font-sans transition-all duration-700 ${
               stage >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
           >
-            LegalEase AI is a neural document studio crafting standout tools for contract clarity with precision, quality, and speed.
+            LegalEase AI is a software studio crafting standout tools and experiences for contract clarity with precision, quality, and speed.
           </p>
 
           {/* STAGE 4: Action CTAs */}
           <div
-            className={`mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 transition-all duration-700 ${
+            className={`mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 transition-all duration-700 ${
               stage >= 4 ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
             }`}
           >
             <Link
               to="/register"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-amberAccent-500 hover:bg-amberAccent-400 text-obsidian-950 font-bold text-xs shadow-glow-amber flex items-center justify-center gap-2 transition-all hover:scale-105 font-mono uppercase tracking-wider"
+              className="w-full sm:w-auto px-7 py-3 rounded-xl bg-[#E85D36] hover:bg-[#ff6e47] text-white font-medium text-xs sm:text-sm shadow-glow flex items-center justify-center gap-2 transition-all hover:scale-105 tracking-wide"
             >
               <span>Get Started Free</span>
               <ArrowRight className="w-4 h-4" />
@@ -177,9 +165,9 @@ const LandingPage = () => {
                 loginAsDemo('user');
                 navigate('/dashboard');
               }}
-              className="w-full sm:w-auto px-7 py-3.5 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-slate-200 hover:text-white text-xs font-semibold font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-sm"
+              className="w-full sm:w-auto px-7 py-3 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-slate-200 hover:text-white text-xs sm:text-sm font-medium transition-all flex items-center justify-center gap-2"
             >
-              <Zap className="w-4 h-4 text-amberAccent-400" />
+              <Zap className="w-4 h-4 text-amber-400" />
               <span>Instant Demo</span>
             </button>
           </div>
