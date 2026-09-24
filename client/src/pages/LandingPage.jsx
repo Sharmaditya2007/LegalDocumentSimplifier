@@ -78,10 +78,14 @@ const LandingPage = () => {
 
   return (
     <div className="relative min-h-screen bg-[#030508] text-slate-100 overflow-hidden font-sans">
-      {/* Starfield & Ambient Glow Background */}
+      {/* 3D Perspective Cosmic Grid & Starfield */}
+      <div className="cosmic-grid" />
       <div className="starfield-canvas" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[650px] h-[350px] bg-cyan-500/10 blur-[140px] pointer-events-none rounded-full" />
-      <div className="absolute top-1/3 left-1/3 w-[450px] h-[300px] bg-purple-600/10 blur-[150px] pointer-events-none rounded-full" />
+
+      {/* Floating Ambient Glowing Orbs */}
+      <div className="floating-orb absolute top-20 left-1/4 w-96 h-96 bg-cyan-500/10 blur-[130px] pointer-events-none rounded-full" />
+      <div className="floating-orb-delayed absolute top-1/3 right-1/4 w-[500px] h-[400px] bg-amberAccent-500/10 blur-[150px] pointer-events-none rounded-full" />
+      <div className="absolute top-2/3 left-1/3 w-[450px] h-[350px] bg-purple-600/10 blur-[160px] pointer-events-none rounded-full" />
 
       {/* Hero Section */}
       <section className="relative pt-16 pb-20 md:pt-28 md:pb-28">
@@ -197,10 +201,10 @@ const LandingPage = () => {
           </div>
 
           {/* Circular/HUD Display Card */}
-          <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/15 shadow-2xl relative overflow-hidden">
+          <div className="glow-laser-card hud-scanline rounded-3xl p-6 sm:p-8 border border-white/15 shadow-2xl relative overflow-hidden">
             {/* HUD Corner Accents */}
-            <div className="absolute top-3 left-3 text-[9px] font-mono text-cyan-400/60 uppercase tracking-widest">[HUD_LENS_01]</div>
-            <div className="absolute top-3 right-3 text-[9px] font-mono text-cyan-400/60 uppercase tracking-widest">[TARGET_LOCKED]</div>
+            <div className="absolute top-3 left-3 text-[9px] font-mono text-cyan-400/70 uppercase tracking-widest">[HUD_LENS_01]</div>
+            <div className="absolute top-3 right-3 text-[9px] font-mono text-amberAccent-400/80 uppercase tracking-widest">[ANALYSIS_ACTIVE]</div>
 
             <div className="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-white/10">
               <span className="font-bold text-base text-white flex items-center gap-2 font-heading">
