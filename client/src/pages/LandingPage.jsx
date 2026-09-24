@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   Zap,
   Check,
   Radio,
-  Scale,
-  Sparkles,
-  ShieldAlert,
-  GitCompare,
   FileText,
-  Activity,
+  Sparkles,
   Compass
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -18,12 +14,31 @@ import { useAuth } from '../context/AuthContext';
 const LandingPage = () => {
   const { loginAsDemo } = useAuth();
   const navigate = useNavigate();
+
+  // 4-Stage Timed Cinematic Reveal Sequence (Moonsworth Style)
+  // Stage 1 (0s): Just the bold central title
+  // Stage 2 (1.2s): Left & Right side crosshairs (+) appear
+  // Stage 3 (2.4s): 4 corner reticles, background visual bloom, and monospace subtitle appear
+  // Stage 4 (3.6s): Top navigation, action CTAs, and interactive telemetry card fully unlock
+  const [stage, setStage] = useState(1);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setStage(2), 1200);
+    const t2 = setTimeout(() => setStage(3), 2400);
+    const t3 = setTimeout(() => setStage(4), 3600);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, []);
 
   const handleMouseMove = (e) => {
     const card = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - card.left) / card.width - 0.5) * 16;
-    const y = ((e.clientY - card.top) / card.height - 0.5) * -16;
+    const x = ((e.clientX - card.left) / card.width - 0.5) * 14;
+    const y = ((e.clientY - card.top) / card.height - 0.5) * -14;
     setTilt({ x, y });
   };
 
@@ -32,60 +47,148 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-140px)] flex flex-col justify-center bg-[#030508] text-slate-100 overflow-hidden font-sans py-12 md:py-20">
-      {/* 3D Perspective Cosmic Grid */}
-      <div className="cosmic-grid" />
+    <div className="relative min-h-[calc(100vh-120px)] flex flex-col items-center justify-center bg-[#030508] text-slate-100 overflow-hidden font-sans py-12 md:py-16 select-none">
+      
+      {/* Background Visuals Bloom (Stage 3+) */}
+      <div
+        className={`transition-opacity duration-1000 ${
+          stage >= 3 ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <div className="lunar-eclipse-arc" />
+        <div className="lunar-horizon-ring" />
+        <div className="cosmic-grid" />
+        <div className="floating-orb absolute top-8 left-1/4 w-[450px] h-[450px] bg-cyan-500/10 blur-[160px] pointer-events-none rounded-full" />
+        <div className="floating-orb-delayed absolute top-1/4 right-1/4 w-[480px] h-[450px] bg-amberAccent-500/10 blur-[170px] pointer-events-none rounded-full" />
+      </div>
 
-      {/* Floating Ambient Glowing Orbs */}
-      <div className="floating-orb absolute top-10 left-1/4 w-[450px] h-[450px] bg-cyan-500/10 blur-[150px] pointer-events-none rounded-full" />
-      <div className="floating-orb-delayed absolute top-1/4 right-1/4 w-[500px] h-[450px] bg-amberAccent-500/10 blur-[160px] pointer-events-none rounded-full" />
-      <div className="absolute bottom-10 left-1/3 w-[420px] h-[350px] bg-purple-600/10 blur-[170px] pointer-events-none rounded-full" />
-
-      {/* Hero Container */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
+      {/* Main Container */}
+      <div className="max-w-4xl w-full mx-auto px-4 sm:px-6 text-center relative z-10 flex flex-col items-center justify-center">
         
-        {/* Status Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amberAccent-500/30 bg-amberAccent-500/10 text-amberAccent-400 text-xs font-mono uppercase tracking-widest mb-6 shadow-glow-amber">
-          <Radio className="w-3.5 h-3.5 animate-pulse text-amberAccent-400" />
-          <span>Neural Legal Intelligence • Space Edition</span>
+        {/* Geometric Hero Framing Box */}
+        <div className="relative w-full p-6 sm:p-12 rounded-3xl transition-all duration-700 flex flex-col items-center justify-center">
+          
+          {/* STAGE 3: 4-Corner Crosshair Reticles */}
+          <div
+            className={`transition-opacity duration-700 ${
+              stage >= 3 ? 'opacity-60' : 'opacity-0'
+            }`}
+          >
+            <div className="reticle-corner top-0 left-0 text-white">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
+                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
+              </svg>
+            </div>
+            <div className="reticle-corner top-0 right-0 text-white">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
+                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
+              </svg>
+            </div>
+            <div className="reticle-corner bottom-0 left-0 text-white">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
+                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
+              </svg>
+            </div>
+            <div className="reticle-corner bottom-0 right-0 text-white">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M11.5 0H12.5V24H11.5V0Z" fill="currentColor" />
+                <path d="M24 11.5V12.5L0 12.5L0 11.5L24 11.5Z" fill="currentColor" />
+              </svg>
+            </div>
+          </div>
+
+          {/* STAGE 4: Status Badge */}
+          <div
+            className={`transition-all duration-700 ${
+              stage >= 4 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
+            }`}
+          >
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amberAccent-500/30 bg-amberAccent-500/10 text-amberAccent-400 text-[11px] font-mono uppercase tracking-[0.2em] mb-6 shadow-glow-amber">
+              <span className="w-1.5 h-1.5 rounded-full bg-amberAccent-400 animate-pulse" />
+              <span>Neural Legal Intelligence Studio</span>
+            </div>
+          </div>
+
+          {/* Title Area with Left & Right Side Crosshairs (Stage 2) */}
+          <div className="relative w-full flex items-center justify-center my-2">
+            
+            {/* STAGE 2: Left Crosshair Reticle */}
+            <div
+              className={`hidden sm:block absolute left-2 md:left-6 transition-all duration-700 text-white ${
+                stage >= 2 ? 'opacity-60 scale-100' : 'opacity-0 scale-75'
+              }`}
+            >
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <path d="M13.5 0H14.5V28H13.5V0Z" fill="currentColor" />
+                <path d="M28 13.5V14.5L0 14.5L0 13.5L28 13.5Z" fill="currentColor" />
+              </svg>
+            </div>
+
+            {/* STAGE 1: Main Bold Central Heading */}
+            <h1
+              className={`text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-none font-heading transition-all duration-1000 ${
+                stage >= 1 ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4'
+              }`}
+            >
+              Building the Future of Legal.{' '}
+              <span className="block mt-2 title-laser-flare gradient-text-amber font-display">
+                Spot Hidden Risks.
+              </span>
+            </h1>
+
+            {/* STAGE 2: Right Crosshair Reticle */}
+            <div
+              className={`hidden sm:block absolute right-2 md:right-6 transition-all duration-700 text-white ${
+                stage >= 2 ? 'opacity-60 scale-100' : 'opacity-0 scale-75'
+              }`}
+            >
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <path d="M13.5 0H14.5V28H13.5V0Z" fill="currentColor" />
+                <path d="M28 13.5V14.5L0 14.5L0 13.5L28 13.5Z" fill="currentColor" />
+              </svg>
+            </div>
+          </div>
+
+          {/* STAGE 3: Monospace Subtitle */}
+          <p
+            className={`mt-6 text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed font-mono transition-all duration-700 ${
+              stage >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
+          >
+            LegalEase AI is a neural document studio crafting standout tools for contract clarity with precision, quality, and speed.
+          </p>
+
+          {/* STAGE 4: Action CTAs */}
+          <div
+            className={`mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 transition-all duration-700 ${
+              stage >= 4 ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
+            }`}
+          >
+            <Link
+              to="/register"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-amberAccent-500 hover:bg-amberAccent-400 text-obsidian-950 font-bold text-xs shadow-glow-amber flex items-center justify-center gap-2 transition-all hover:scale-105 font-mono uppercase tracking-wider"
+            >
+              <span>Get Started Free</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+
+            <button
+              onClick={() => {
+                loginAsDemo('user');
+                navigate('/dashboard');
+              }}
+              className="w-full sm:w-auto px-7 py-3.5 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-slate-200 hover:text-white text-xs font-semibold font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-sm"
+            >
+              <Zap className="w-4 h-4 text-amberAccent-400" />
+              <span>Instant Demo</span>
+            </button>
+          </div>
         </div>
 
-        {/* Headline with Retro Sci-Fi Laser Flare */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-tight font-heading">
-          Review Contracts in Seconds.{' '}
-          <span className="block mt-2 title-laser-flare gradient-text-amber font-display">
-            Spot Hidden Risks.
-          </span>
-        </h1>
-
-        {/* Subtitle */}
-        <p className="mt-6 text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
-          Translate legalese into plain English, audit liabilities, compare contract revisions, and ask questions with clause citations.
-        </p>
-
-        {/* Action CTAs */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
-          <Link
-            to="/register"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-amberAccent-500 hover:bg-amberAccent-400 text-obsidian-950 font-bold text-xs shadow-glow-amber flex items-center justify-center gap-2 transition-all hover:scale-105 font-heading tracking-wide"
-          >
-            <span>Get Started Free</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-
-          <button
-            onClick={() => {
-              loginAsDemo('user');
-              navigate('/dashboard');
-            }}
-            className="w-full sm:w-auto px-7 py-3.5 rounded-full border border-white/15 bg-obsidian-900/90 hover:bg-obsidian-800 text-slate-200 text-xs font-semibold transition-all flex items-center justify-center gap-2 font-heading shadow-glass"
-          >
-            <Zap className="w-4 h-4 text-amberAccent-400" />
-            <span>Instant Demo</span>
-          </button>
-        </div>
-
-        {/* Interactive 3D HUD Telemetry Showcase Preview Card */}
+        {/* STAGE 4: 3D HUD Telemetry Showcase Preview Card */}
         <div
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
@@ -93,56 +196,56 @@ const LandingPage = () => {
             transform: `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`,
             transition: 'transform 0.15s ease-out',
           }}
-          className="mt-12 max-w-2xl mx-auto glow-laser-card hud-scanline p-6 sm:p-7 text-left rounded-3xl border border-white/15 shadow-2xl relative overflow-hidden group cursor-pointer"
+          className={`mt-6 max-w-2xl w-full glow-laser-card hud-scanline p-5 sm:p-6 text-left rounded-2xl border border-white/15 shadow-2xl relative overflow-hidden group cursor-pointer transition-all duration-1000 ${
+            stage >= 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+          }`}
           onClick={() => {
             loginAsDemo('user');
             navigate('/dashboard');
           }}
         >
-          {/* Cyber Corner HUD Brackets */}
-          <div className="absolute top-3 left-3 text-[9px] font-mono text-cyan-400/80 uppercase tracking-widest flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>[AI_PIPELINE: ACTIVE]</span>
-          </div>
-          <div className="absolute top-3 right-3 text-[9px] font-mono text-amberAccent-400/80 uppercase tracking-widest">
-            <span>[MODEL: NEURAL_LEGAL_V2]</span>
+          <div className="flex items-center justify-between text-[9px] font-mono text-cyan-400/80 uppercase tracking-widest pb-3 border-b border-white/10">
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>[AI_PIPELINE: ACTIVE]</span>
+            </span>
+            <span className="text-amberAccent-400/80">[MODEL: NEURAL_LEGAL_V2]</span>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10">
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-amberAccent-500/10 border border-amberAccent-500/30 flex items-center justify-center text-amberAccent-400">
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-md bg-amberAccent-500/10 border border-amberAccent-500/30 flex items-center justify-center text-amberAccent-400">
                 <FileText className="w-3.5 h-3.5" />
               </div>
               <div>
                 <span className="text-xs font-bold text-white block">Standard SaaS Master Agreement</span>
-                <span className="text-[10px] text-slate-400 font-mono">24-Month Cloud Term • 3 Risk Flags</span>
+                <span className="text-[10px] text-slate-400 font-mono">24-Month Cloud Term</span>
               </div>
             </div>
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono bg-rose-500/20 text-rose-300 border border-rose-500/40">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-rose-500/20 text-rose-300 border border-rose-500/40">
               HIGH RISK (78/100)
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 text-xs">
-            <div className="p-3 rounded-xl bg-obsidian-950/90 border border-white/10">
-              <span className="text-[10px] font-mono text-slate-400 block mb-1">Detected Unfair Term:</span>
-              <p className="text-slate-200 text-[11px] font-mono leading-relaxed">
-                "100% early termination liquidated damages penalty."
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 text-xs">
+            <div className="p-2.5 rounded-lg bg-obsidian-950/90 border border-white/10">
+              <span className="text-[10px] font-mono text-slate-400 block mb-0.5">Detected Penalty:</span>
+              <p className="text-slate-200 text-[11px] font-mono">
+                "100% early termination damages penalty."
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-amberAccent-500/10 border border-amberAccent-500/30">
-              <span className="text-[10px] font-mono text-amberAccent-400 block mb-1 flex items-center gap-1">
-                <Sparkles className="w-3 h-3" /> Plain English Translation:
+            <div className="p-2.5 rounded-lg bg-amberAccent-500/10 border border-amberAccent-500/30">
+              <span className="text-[10px] font-mono text-amberAccent-400 block mb-0.5 flex items-center gap-1">
+                <Sparkles className="w-3" /> Plain English:
               </span>
-              <p className="text-slate-200 text-[11px] font-medium leading-relaxed">
-                Cancelling early requires paying for all remaining months immediately.
+              <p className="text-slate-200 text-[11px] font-medium">
+                Cancelling early requires full payment of remaining term.
               </p>
             </div>
           </div>
 
-          {/* Prompt banner */}
-          <div className="mt-3 pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
-            <span className="flex items-center gap-1.5 text-cyan-400 font-mono text-[10px]">
+          <div className="mt-3 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-400 font-mono">
+            <span className="flex items-center gap-1 text-cyan-400">
               <Compass className="w-3 h-3 animate-spin" style={{ animationDuration: '8s' }} /> Click to explore live in interactive dashboard
             </span>
             <span className="text-amberAccent-400 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1">
@@ -151,12 +254,16 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Feature Badges */}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-2.5">
+        {/* STAGE 4: Minimal Badges */}
+        <div
+          className={`mt-8 flex flex-wrap items-center justify-center gap-2.5 transition-all duration-700 ${
+            stage >= 4 ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
           <span className="tech-pill"><Check className="w-3 h-3 text-emerald-400" /> Instant Analysis</span>
           <span className="tech-pill"><Check className="w-3 h-3 text-emerald-400" /> 1-Click Samples</span>
           <span className="tech-pill"><Check className="w-3 h-3 text-emerald-400" /> Private & Secure</span>
-          <span className="tech-pill"><Check className="w-3 h-3 text-emerald-400" /> Free Open Access</span>
+          <span className="tech-pill"><Check className="w-3 h-3 text-emerald-400" /> 100% Free</span>
         </div>
       </div>
     </div>
