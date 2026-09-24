@@ -353,3 +353,53 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #EBB87E;
 }
+
+/* ============================================================
+   7. SMOOTH TRANSITIONS & ULTRA-FLUID PAGE ANIMATIONS
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Universal Smooth Micro-Interactions */
+a, button, input, select, textarea {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Page Entry Fade & Gentle Rise */
+.page-fade-in {
+  animation: pageFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Interactive Card Hover Elevation */
+.interactive-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.interactive-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -10px rgba(0, 210, 255, 0.15);
+  border-color: rgba(235, 184, 126, 0.4) !important;
+}
+
+/* Subtle Shimmer Border on Focus/Hover */
+.focus-glow:focus-within {
+  box-shadow: 0 0 0 2px rgba(235, 184, 126, 0.3), 0 0 20px rgba(0, 210, 255, 0.2);
+  border-color: #EBB87E !important;
+}
