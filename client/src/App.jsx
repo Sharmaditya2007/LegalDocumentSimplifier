@@ -7,6 +7,7 @@ import { NotificationProvider } from './context/NotificationContext';
 // Components
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
+import StarfieldCanvas from './components/common/StarfieldCanvas';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -28,7 +29,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
   if (isLoading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-brand-500/20 border-t-brand-500 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-amberAccent-500/20 border-t-amberAccent-500 rounded-full animate-spin" />
       </div>
     );
   }
@@ -50,10 +51,14 @@ function App() {
       <NotificationProvider>
         <AuthProvider>
           <Router>
-            <div className="min-h-screen flex flex-col bg-[#07090E] text-slate-100 font-sans selection:bg-brand-500/30 selection:text-brand-200 relative overflow-x-hidden">
-              {/* Global Subtle Ambient Glows */}
-              <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-brand-500/10 blur-[140px] pointer-events-none rounded-full z-0" />
-              <div className="fixed bottom-0 right-0 w-96 h-96 bg-purple-600/5 blur-[120px] pointer-events-none rounded-full z-0" />
+            <div className="min-h-screen flex flex-col bg-[#030508] text-slate-100 font-sans selection:bg-amberAccent-500/30 selection:text-amberAccent-300 relative overflow-x-hidden">
+              {/* Global Interactive Constellation Starfield */}
+              <StarfieldCanvas />
+
+              {/* Global Cosmic Ambient Glows */}
+              <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-cyan-500/10 blur-[150px] pointer-events-none rounded-full z-0" />
+              <div className="fixed bottom-0 right-0 w-[500px] h-[500px] bg-purple-600/10 blur-[160px] pointer-events-none rounded-full z-0" />
+              <div className="fixed top-1/3 left-0 w-96 h-96 bg-amberAccent-500/5 blur-[140px] pointer-events-none rounded-full z-0" />
 
               <div className="relative z-10 flex flex-col flex-1">
                 <Navbar />
