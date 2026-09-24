@@ -42,33 +42,36 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center px-4 py-12 relative">
-      <div className="w-full max-w-md">
+    <div className="min-h-[85vh] flex items-center justify-center px-4 py-12 relative font-sans">
+      {/* Background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-500/10 blur-[130px] pointer-events-none rounded-full" />
+
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-4 group">
-            <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
               <Scale className="w-5 h-5" />
             </div>
-            <span className="font-extrabold text-2xl tracking-tight text-slate-900 dark:text-white">
+            <span className="font-extrabold text-2xl tracking-tight text-white font-heading">
               LegalEase <span className="gradient-text font-black">AI</span>
             </span>
           </Link>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Create your account</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Start auditing contracts with plain-English AI intelligence
+          <h2 className="text-2xl font-bold text-white font-heading">Create your workspace</h2>
+          <p className="text-xs text-slate-400 mt-1">
+            Start auditing contracts with plain-English legal AI
           </p>
         </div>
 
-        <div className="glass-card rounded-3xl p-7 border border-slate-200 dark:border-slate-800 shadow-2xl">
+        <div className="glass-panel rounded-3xl p-7 border border-slate-800 shadow-2xl">
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs font-medium">
+            <div className="mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-medium">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Full Name
               </label>
               <div className="relative">
@@ -80,13 +83,13 @@ const RegisterPage = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Elena Rostova"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 bg-obsidian-950/80 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Work Email Address
               </label>
               <div className="relative">
@@ -98,13 +101,13 @@ const RegisterPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="elena@company.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 bg-obsidian-950/80 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Company / Organization
               </label>
               <div className="relative">
@@ -115,13 +118,13 @@ const RegisterPage = () => {
                   value={formData.company}
                   onChange={handleChange}
                   placeholder="Vanguard Capital LLC"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 bg-obsidian-950/80 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Password
               </label>
               <div className="relative">
@@ -133,7 +136,7 @@ const RegisterPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="At least 6 characters"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 bg-obsidian-950/80 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
                 />
               </div>
             </div>
@@ -154,9 +157,9 @@ const RegisterPage = () => {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-6 text-center text-xs text-slate-400">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+            <Link to="/login" className="font-semibold text-brand-400 hover:underline">
               Sign in
             </Link>
           </p>

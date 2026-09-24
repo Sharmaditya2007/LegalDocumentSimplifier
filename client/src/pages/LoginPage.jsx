@@ -53,75 +53,78 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center px-4 py-12 relative">
-      <div className="w-full max-w-md">
+    <div className="min-h-[85vh] flex items-center justify-center px-4 py-12 relative font-sans">
+      {/* Background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-500/10 blur-[130px] pointer-events-none rounded-full" />
+
+      <div className="w-full max-w-md relative z-10">
         {/* Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-4 group">
-            <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
               <Scale className="w-5 h-5" />
             </div>
-            <span className="font-extrabold text-2xl tracking-tight text-slate-900 dark:text-white">
+            <span className="font-extrabold text-2xl tracking-tight text-white font-heading">
               LegalEase <span className="gradient-text font-black">AI</span>
             </span>
           </Link>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome back</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Access your secure legal document intelligence workspace
+          <h2 className="text-2xl font-bold text-white font-heading">Welcome back</h2>
+          <p className="text-xs text-slate-400 mt-1">
+            Access your secure legal document intelligence console
           </p>
         </div>
 
         {expired && (
-          <div className="mb-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-500 text-xs text-center font-medium">
+          <div className="mb-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs text-center font-medium">
             Your session expired. Please sign in again.
           </div>
         )}
 
         {/* Demo Fast Login Box */}
-        <div className="mb-6 p-4 rounded-2xl bg-brand-500/10 border border-brand-500/30 text-center">
-          <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-brand-600 dark:text-brand-400 mb-2">
-            <Zap className="w-3.5 h-3.5 fill-brand-500" />
+        <div className="mb-6 p-4 rounded-2xl bg-brand-500/10 border border-brand-500/30 text-center backdrop-blur-md">
+          <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-brand-400 mb-1.5 uppercase tracking-wider">
+            <Zap className="w-3.5 h-3.5 fill-brand-400" />
             <span>Instant One-Click Demo Access</span>
           </div>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-            Evaluate any user tier immediately with pre-loaded agreements:
+          <p className="text-[11px] text-slate-400 mb-3">
+            Evaluate any workspace role immediately with pre-loaded agreements:
           </p>
           <div className="grid grid-cols-3 gap-2">
             <button
               onClick={() => handleDemoLogin('user')}
               disabled={loading}
-              className="py-1.5 px-2 rounded-lg bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-brand-500 transition-all shadow-sm"
+              className="py-2 px-2 rounded-xl bg-obsidian-900 text-xs font-semibold text-slate-200 border border-slate-700/80 hover:border-brand-500 transition-all shadow-sm"
             >
               Standard
             </button>
             <button
               onClick={() => handleDemoLogin('premium')}
               disabled={loading}
-              className="py-1.5 px-2 rounded-lg bg-amber-500/10 text-xs font-semibold text-amber-600 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 transition-all shadow-sm"
+              className="py-2 px-2 rounded-xl bg-amber-500/10 text-xs font-semibold text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 transition-all shadow-sm"
             >
               Lawyer (Pro)
             </button>
             <button
               onClick={() => handleDemoLogin('admin')}
               disabled={loading}
-              className="py-1.5 px-2 rounded-lg bg-purple-500/10 text-xs font-semibold text-purple-600 dark:text-purple-400 border border-purple-500/30 hover:bg-purple-500/20 transition-all shadow-sm"
+              className="py-2 px-2 rounded-xl bg-purple-500/10 text-xs font-semibold text-purple-300 border border-purple-500/30 hover:bg-purple-500/20 transition-all shadow-sm"
             >
               Admin
             </button>
           </div>
         </div>
 
-        {/* Card */}
-        <div className="glass-card rounded-3xl p-7 border border-slate-200 dark:border-slate-800 shadow-2xl">
+        {/* Form Card */}
+        <div className="glass-panel rounded-3xl p-7 border border-slate-800 shadow-2xl">
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs font-medium">
+            <div className="mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-medium">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Work Email Address
               </label>
               <div className="relative">
@@ -132,19 +135,19 @@ const LoginPage = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="counsel@firm.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 bg-obsidian-950/80 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <label className="text-xs font-semibold text-slate-300">
                   Password
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-xs font-medium text-brand-600 dark:text-brand-400 hover:underline"
+                  className="text-xs font-medium text-brand-400 hover:underline"
                 >
                   Forgot password?
                 </Link>
@@ -157,7 +160,7 @@ const LoginPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 bg-obsidian-950/80 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
                 />
               </div>
             </div>
@@ -180,9 +183,9 @@ const LoginPage = () => {
 
           <div className="relative my-6 text-center">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200 dark:border-slate-800" />
+              <div className="w-full border-t border-slate-800" />
             </div>
-            <span className="relative px-3 bg-white dark:bg-navy-900 text-[11px] uppercase font-bold text-slate-400">
+            <span className="relative px-3 bg-obsidian-900 text-[11px] uppercase font-bold text-slate-400">
               Or continue with
             </span>
           </div>
@@ -190,7 +193,7 @@ const LoginPage = () => {
           <button
             onClick={handleGoogleAuth}
             disabled={loading}
-            className="w-full py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-all flex items-center justify-center gap-2"
+            className="w-full py-2.5 rounded-xl border border-slate-700 bg-obsidian-950/60 hover:bg-obsidian-900 text-xs font-semibold text-slate-300 transition-all flex items-center justify-center gap-2"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -213,9 +216,9 @@ const LoginPage = () => {
             <span>Google Workspace Single Sign-On</span>
           </button>
 
-          <p className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-6 text-center text-xs text-slate-400">
             Don't have an enterprise account?{' '}
-            <Link to="/register" className="font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+            <Link to="/register" className="font-semibold text-brand-400 hover:underline">
               Create an account
             </Link>
           </p>
