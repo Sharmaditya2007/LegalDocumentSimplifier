@@ -61,7 +61,7 @@ const initializeSeedData = () => {
       password: hashedPassword,
       role: 'user',
       subscription: 'free',
-      company: 'Acme Corp',
+      company: 'Enterprise Legal',
       avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
       status: 'active',
       createdAt: new Date('2026-01-15').toISOString()
@@ -77,8 +77,8 @@ const initializeSeedData = () => {
     {
       _id: doc1Id,
       userId: standardId,
-      title: 'CloudScale SaaS Master Services Agreement',
-      fileName: 'CloudScale_SaaS_MSA_2026.pdf',
+      title: 'Standard SaaS Master Services Agreement',
+      fileName: 'SaaS_Master_Services_Agreement.pdf',
       fileType: 'application/pdf',
       fileSize: 248500,
       fileUrl: '/uploads/sample_saas_msa.pdf',
@@ -89,12 +89,12 @@ const initializeSeedData = () => {
       overallRiskScore: 78,
       riskLevel: 'high',
       analysis: {
-        parties: ['CloudScale Solutions Inc. (Provider)', 'Apex Global Enterprises LLC (Customer)'],
+        parties: ['Service Provider Inc. (Provider)', 'Enterprise Customer LLC (Customer)'],
         contractType: 'Master Services Agreement (Software as a Service)',
         effectiveDate: '2026-01-15',
         expiryDate: '2028-01-15',
-        executiveSummary: 'This Agreement binds Apex Global Enterprises to a 24-month SaaS subscription with CloudScale Solutions. It features aggressive unilateral terms including an automatic 10% fee hike on auto-renewal, 100% early termination fee liability, strict Net 45 payment terms with 1.5% monthly late interest, and asymmetric indemnification favoring the Provider.',
-        plainEnglish: 'In simple terms: You are committed for at least 2 full years. If you want to cancel, you MUST give written notice at least 60 days before the contract ends, or it automatically renews for another year with a 10% price bump. If you break the contract early for any reason, you owe 100% of all remaining payments immediately. Furthermore, you must defend and pay for any lawsuits against the provider, but they do not protect you.',
+        executiveSummary: 'This Agreement binds Customer to a 24-month SaaS subscription. It features aggressive terms including an automatic 10% fee hike on auto-renewal, 100% early termination fee liability, strict Net 45 payment terms with 1.5% monthly late interest, and asymmetric indemnification favoring the Provider.',
+        plainEnglish: 'In simple terms: You are committed for at least 2 full years. If you want to cancel, you MUST give written notice at least 60 days before the contract ends, or it automatically renews for another year with a 10% price bump. If you break the contract early for any reason, you owe 100% of all remaining payments immediately.',
         risks: [
           {
             id: 'r1',
@@ -173,22 +173,22 @@ const initializeSeedData = () => {
         ],
         obligations: [
           {
-            party: 'Apex Global Enterprises LLC (Customer)',
+            party: 'Enterprise Customer LLC (Customer)',
             obligation: 'Pay all invoices within Net 45 days of issuance.',
             type: 'Financial'
           },
           {
-            party: 'Apex Global Enterprises LLC (Customer)',
+            party: 'Enterprise Customer LLC (Customer)',
             obligation: 'Provide written non-renewal notice at least 60 days prior to expiration to prevent automatic renewal.',
             type: 'Operational'
           },
           {
-            party: 'CloudScale Solutions Inc. (Provider)',
+            party: 'Service Provider Inc. (Provider)',
             obligation: 'Provide cloud subscription services with reasonable administrative safeguards.',
             type: 'Service Delivery'
           },
           {
-            party: 'CloudScale Solutions Inc. (Provider)',
+            party: 'Service Provider Inc. (Provider)',
             obligation: 'Notify Customer of verified security breaches within 5 business days.',
             type: 'Compliance'
           }
@@ -225,8 +225,8 @@ const initializeSeedData = () => {
     {
       _id: doc2Id,
       userId: standardId,
-      title: 'Horizon & Vanguard Mutual Non-Disclosure Agreement',
-      fileName: 'Horizon_Vanguard_Mutual_NDA.pdf',
+      title: 'Standard Mutual Non-Disclosure Agreement',
+      fileName: 'Mutual_Non_Disclosure_Agreement.pdf',
       fileType: 'application/pdf',
       fileSize: 112300,
       fileUrl: '/uploads/sample_mutual_nda.pdf',
@@ -237,11 +237,11 @@ const initializeSeedData = () => {
       overallRiskScore: 22,
       riskLevel: 'low',
       analysis: {
-        parties: ['Horizon BioTech Labs, Inc.', 'Vanguard Therapeutics Ltd.'],
+        parties: ['Disclosing Party Inc.', 'Receiving Party Ltd.'],
         contractType: 'Mutual Non-Disclosure Agreement (MNDA)',
         effectiveDate: '2026-03-01',
         expiryDate: '2028-03-01',
-        executiveSummary: 'A standard, balanced bilateral non-disclosure agreement to facilitate diagnostic assay joint venture discussions. Features standard exclusions, a 2-year contract duration, and a 3-year survival period for trade secret and confidential data protections.',
+        executiveSummary: 'A standard, balanced bilateral non-disclosure agreement to facilitate joint venture discussions. Features standard exclusions, a 2-year contract duration, and a 3-year survival period for trade secret and confidential data protections.',
         plainEnglish: 'Both parties agree to keep each other’s business and technical secrets confidential for 2 years, with protection surviving 3 years after the deal concludes. If requested, documents must be returned or destroyed within 10 days. Standard exceptions apply (e.g., publicly known data).',
         risks: [
           {
@@ -538,7 +538,7 @@ const initializeSeedData = () => {
       _id: 'notif_001',
       userId: standardId,
       title: 'High Risk Alert: Unilateral Indemnification',
-      message: 'CloudScale SaaS MSA contains a one-sided indemnification clause (Section 5).',
+      message: 'SaaS MSA contains a one-sided indemnification clause (Section 5).',
       type: 'warning',
       read: false,
       createdAt: new Date('2026-01-16T11:00:00').toISOString()
@@ -547,7 +547,7 @@ const initializeSeedData = () => {
       _id: 'notif_002',
       userId: standardId,
       title: 'Upcoming Renewal Notice Window',
-      message: 'Notice deadline for CloudScale SaaS contract is 60 days before Jan 15, 2028.',
+      message: 'Notice deadline for SaaS MSA contract is 60 days before Jan 15, 2028.',
       type: 'deadline',
       read: false,
       createdAt: new Date('2026-01-16T11:05:00').toISOString()
@@ -556,7 +556,7 @@ const initializeSeedData = () => {
       _id: 'notif_003',
       userId: standardId,
       title: 'Welcome to LegalEase AI',
-      message: 'Your workspace is pre-loaded with sample enterprise contracts for instant analysis.',
+      message: 'Your workspace is pre-loaded with sample contracts for instant analysis.',
       type: 'info',
       read: true,
       createdAt: new Date('2026-01-15T09:00:00').toISOString()

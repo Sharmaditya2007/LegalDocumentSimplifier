@@ -1,7 +1,7 @@
 // Pre-configured rich sample contracts for instant testing and demonstration
 
 const SAMPLE_SAAS_MSA = `MASTER SERVICES AGREEMENT (SaaS)
-This Master Services Agreement ("Agreement") is entered into as of January 15, 2026 ("Effective Date"), by and between CloudScale Solutions Inc., a Delaware corporation with its principal office at 100 Innovation Way, San Francisco, CA 94105 ("Vendor" or "Provider"), and Apex Global Enterprises LLC, a Delaware limited liability company with offices at 500 Market Plaza, New York, NY 10001 ("Customer").
+This Master Services Agreement ("Agreement") is entered into as of January 15, 2026 ("Effective Date"), by and between Cloud Services Provider Inc., a Delaware corporation ("Vendor" or "Provider"), and Enterprise Customer LLC, a Delaware limited liability company ("Customer").
 
 1. SCOPE OF SERVICES
 Provider agrees to deliver to Customer cloud-based software subscription services ("Subscription Services") as specified in Order Forms executed by both Parties. Provider grants Customer a non-exclusive, non-transferable right to access and use the platform during the Subscription Term.
@@ -28,10 +28,10 @@ Provider will maintain reasonable administrative and technical safeguards design
 This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to conflict of laws principles. Any dispute arising out of this Agreement shall be resolved through binding arbitration in Wilmington, Delaware.`;
 
 const SAMPLE_MUTUAL_NDA = `MUTUAL NON-DISCLOSURE AGREEMENT
-This Mutual Non-Disclosure Agreement ("Agreement") is made and entered into on March 1, 2026, by and between Horizon BioTech Labs, Inc. ("Horizon") and Vanguard Therapeutics Ltd. ("Vanguard").
+This Mutual Non-Disclosure Agreement ("Agreement") is made and entered into on March 1, 2026, by and between Disclosing Party Inc. ("Disclosing Party") and Receiving Party Ltd. ("Receiving Party").
 
 1. PURPOSE
-The Parties wish to explore potential business collaboration and joint venture opportunities regarding novel diagnostic assay technologies (the "Purpose").
+The Parties wish to explore potential business collaboration and commercial opportunities (the "Purpose").
 
 2. CONFIDENTIAL INFORMATION
 "Confidential Information" refers to any non-public proprietary information disclosed by one Party ("Disclosing Party") to the other Party ("Receiving Party"), whether orally, in writing, or electronically, that is designated as confidential or reasonably understood to be confidential.
@@ -48,8 +48,8 @@ This Agreement shall remain in effect for a period of two (2) years from the Eff
 6. REMEDIES
 Both Parties acknowledge that unauthorized disclosure or use of Confidential Information may cause irreparable harm for which monetary damages alone would be inadequate. Consequently, the Disclosing Party shall be entitled to seek injunctive relief in addition to any other remedies available at law.`;
 
-const SAMPLE_EMPLOYMENT_V1 = `EXECUTIVE EMPLOYMENT AGREEMENT (Version 1.0 - Original)
-This Employment Agreement is entered into on February 10, 2025, between Zenith Fintech Inc. ("Company") and Jane Doe ("Executive").
+const SAMPLE_EMPLOYMENT_V1 = `EXECUTIVE EMPLOYMENT AGREEMENT (Version 1.0 - Baseline)
+This Employment Agreement is entered into on February 10, 2025, between Employer Corporation ("Company") and Executive Employee ("Executive").
 
 1. POSITION AND DUTIES
 Executive is hired as Vice President of Engineering, reporting to the Chief Technology Officer.
@@ -70,7 +70,7 @@ During employment and for twelve (12) months thereafter, Executive agrees not to
 Governed by the laws of California.`;
 
 const SAMPLE_EMPLOYMENT_V2 = `EXECUTIVE EMPLOYMENT AGREEMENT (Version 2.0 - Revised)
-This Employment Agreement is entered into on January 20, 2026, between Zenith Fintech Inc. ("Company") and Jane Doe ("Executive").
+This Employment Agreement is entered into on January 20, 2026, between Employer Corporation ("Company") and Executive Employee ("Executive").
 
 1. POSITION AND DUTIES
 Executive is promoted to Chief Technology Officer (CTO), reporting directly to the Chief Executive Officer.
@@ -85,7 +85,7 @@ Executive is entitled to 25 days of paid time off (PTO) annually, executive heal
 Either party may terminate employment with sixty (60) days written notice. If Executive is terminated by the Company without Cause or resigns for Good Reason, Company will provide six (6) months of base salary plus accelerated vesting of 25% of unvested options as severance pay, conditioned on execution of a general release.
 
 5. NON-COMPETE & NON-SOLICITATION CLAUSES
-During employment and for twenty-four (24) months following termination, Executive shall not engage in, advise, invest in, or work for any direct competitor in fintech or high-frequency trading within North America and Europe. Non-solicitation of employees and customers extended to twenty-four (24) months.
+During employment and for twenty-four (24) months following termination, Executive shall not engage in, advise, invest in, or work for any direct competitor within North America and Europe. Non-solicitation of employees and customers extended to twenty-four (24) months.
 
 6. INTELLECTUAL PROPERTY ASSIGNMENT
 Executive assigns all inventions, patents, designs, and proprietary concepts developed during employment or within six (6) months after termination that relate directly or indirectly to the business of the Company.

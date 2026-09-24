@@ -1,26 +1,26 @@
 export const MOCK_DOCUMENTS = [
   {
     _id: 'doc_saas_001',
-    title: 'CloudScale SaaS Master Services Agreement',
-    fileName: 'CloudScale_SaaS_MSA.pdf',
+    title: 'Standard SaaS Master Services Agreement',
+    fileName: 'SaaS_Master_Services_Agreement.pdf',
     fileType: 'application/pdf',
     fileSize: 248500,
-    fileUrl: '/uploads/sample_saas_msa.pdf',
+    fileUrl: '/uploads/saas_master_services_agreement.pdf',
     status: 'completed',
     createdAt: new Date('2026-01-15').toISOString(),
     overallRiskScore: 78,
     riskLevel: 'high',
     isArchived: false,
     analysis: {
-      parties: ['CloudScale Solutions Inc. (Provider)', 'Apex Global Enterprises LLC (Customer)'],
+      parties: ['Service Provider', 'Enterprise Customer'],
       contractType: 'Master Services Agreement (SaaS)',
       effectiveDate: '2026-01-15',
       expiryDate: '2028-01-15',
-      executiveSummary: 'This 24-month SaaS Agreement commits the Customer to an inflexible term with aggressive liquidated damages, an automatic 10% fee hike on renewal, Net 45 payment terms with 1.5% monthly late interest, and unilateral indemnification.',
-      plainEnglish: 'You are locked in for 2 full years. If you cancel early, you owe 100% of remaining payments. You must give 60 days notice to prevent automatic renewal at a 10% price increase. You must defend the Provider in court, but they do not protect you against patent infringement.',
-      paymentTerms: 'Fees invoiced annually in advance. Net 45 payment terms with 1.5% compounding monthly interest for overdue invoices.',
+      executiveSummary: 'This 24-month SaaS Agreement commits the Customer to an inflexible term with liquidated damages, an automatic 10% fee hike on renewal, Net 45 payment terms with 1.5% monthly late interest, and unilateral indemnification.',
+      plainEnglish: 'You are committed for 2 full years. If you cancel early, you owe 100% of remaining payments. You must give 60 days notice to prevent automatic renewal at a 10% price increase. You must defend the Provider in court, but they do not protect you against patent infringement.',
+      paymentTerms: 'Fees invoiced annually in advance. Net 45 payment terms with 1.5% monthly late interest.',
       renewalConditions: 'Automatic successive 12-month renewal at +10% fee increase unless non-renewal notice is served 60 days prior.',
-      complianceRequirements: 'Governed under Delaware state jurisdiction with binding arbitration and class action waiver.',
+      complianceRequirements: 'Governed under Delaware jurisdiction with binding arbitration and class action waiver.',
       risks: [
         {
           id: 'r1',
@@ -74,22 +74,22 @@ export const MOCK_DOCUMENTS = [
         { title: 'Year 1 Subscription Payment Due', date: '2026-03-01', urgency: 'Medium', category: 'Payment', description: 'Net 45 invoice payment deadline.' }
       ]
     },
-    extractedText: `MASTER SERVICES AGREEMENT\n\nThis Master Services Agreement is entered into as of January 15, 2026 between CloudScale Solutions Inc. ("Provider") and Apex Global Enterprises LLC ("Customer").\n\n1. TERM AND RENEWAL: This Agreement shall commence on the Effective Date and continue for an Initial Term of 24 months. This Agreement shall automatically renew for successive 12-month periods at a 10% fee increase unless Customer provides written notice of non-renewal at least sixty (60) days prior to the expiration of the current term.\n\n2. TERMINATION: Customer may terminate for convenience prior to expiration only upon payment of liquidated damages equal to 100% of all remaining fees through the full 24-month term.\n\n3. INDEMNIFICATION: Customer agrees to defend, indemnify and hold harmless Provider from all third-party claims. Provider provides no reciprocal indemnification for intellectual property infringement.`
+    extractedText: `MASTER SERVICES AGREEMENT\n\nThis Master Services Agreement is entered into as of January 15, 2026 between Service Provider Inc. ("Provider") and Enterprise Customer LLC ("Customer").\n\n1. TERM AND RENEWAL: This Agreement shall commence on the Effective Date and continue for an Initial Term of 24 months. This Agreement shall automatically renew for successive 12-month periods at a 10% fee increase unless Customer provides written notice of non-renewal at least sixty (60) days prior to the expiration of the current term.\n\n2. TERMINATION: Customer may terminate for convenience prior to expiration only upon payment of liquidated damages equal to 100% of all remaining fees through the full 24-month term.\n\n3. INDEMNIFICATION: Customer agrees to defend, indemnify and hold harmless Provider from all third-party claims. Provider provides no reciprocal indemnification for intellectual property infringement.`
   },
   {
     _id: 'doc_nda_002',
-    title: 'Horizon & Vanguard Mutual Non-Disclosure Agreement',
-    fileName: 'Horizon_Mutual_NDA.pdf',
+    title: 'Standard Mutual Non-Disclosure Agreement',
+    fileName: 'Mutual_Non_Disclosure_Agreement.pdf',
     fileType: 'application/pdf',
     fileSize: 124000,
-    fileUrl: '/uploads/sample_nda.pdf',
+    fileUrl: '/uploads/mutual_non_disclosure_agreement.pdf',
     status: 'completed',
     createdAt: new Date('2026-01-20').toISOString(),
     overallRiskScore: 28,
     riskLevel: 'low',
     isArchived: false,
     analysis: {
-      parties: ['Horizon Technologies Inc.', 'Vanguard Partners LLC'],
+      parties: ['Disclosing Party', 'Receiving Party'],
       contractType: 'Mutual Non-Disclosure Agreement (MNDA)',
       effectiveDate: '2026-01-20',
       expiryDate: '2028-01-20',
@@ -125,7 +125,7 @@ export const MOCK_DOCUMENTS = [
         { title: 'NDA Term Expiration', date: '2028-01-20', urgency: 'Low', category: 'Expiration', description: '24-month confidentiality window concludes.' }
       ]
     },
-    extractedText: `MUTUAL NON-DISCLOSURE AGREEMENT\n\nThis Mutual Non-Disclosure Agreement is entered into as of January 20, 2026 between Horizon Technologies Inc. and Vanguard Partners LLC.\n\n1. OBLIGATIONS: Both parties agree to protect and maintain confidential all proprietary trade secrets and technical disclosures using reasonable care for a period of two (2) years.`
+    extractedText: `MUTUAL NON-DISCLOSURE AGREEMENT\n\nThis Mutual Non-Disclosure Agreement is entered into as of January 20, 2026 between Disclosing Party and Receiving Party.\n\n1. OBLIGATIONS: Both parties agree to protect and maintain confidential all proprietary trade secrets and technical disclosures using reasonable care for a period of two (2) years.`
   }
 ];
 
@@ -135,8 +135,8 @@ export const MOCK_COMPARISONS = [
     title: 'Employment Agreement v1.0 vs v2.0 (Executive Redline)',
     docAId: 'doc_emp_v1',
     docBId: 'doc_emp_v2',
-    docATitle: 'Zenith Employment Agreement (v1.0 Baseline)',
-    docBTitle: 'Zenith Employment Agreement (v2.0 Revised)',
+    docATitle: 'Executive Employment Agreement (v1.0 Baseline)',
+    docBTitle: 'Executive Employment Agreement (v2.0 Revised)',
     createdAt: new Date('2026-01-25').toISOString(),
     summary: 'Revision v2.0 introduces a 24-month non-compete covenant and weakens severance guarantees from 6 months to at-will.',
     keyMetrics: {
@@ -151,9 +151,9 @@ export const MOCK_COMPARISONS = [
         category: 'Restrictive Covenants',
         title: '24-Month Non-Compete Restriction Inserted',
         docAText: '(No non-compete restriction was present in initial draft)',
-        docBText: '"Executive shall not directly or indirectly engage with or advise any competitive fintech enterprise within North America for 24 months following termination."',
+        docBText: '"Executive shall not directly or indirectly engage with or advise any competitive enterprise within North America for 24 months following termination."',
         impact: 'critical_risk',
-        analysis: 'Substantially limits career mobility post-departure across all fintech sectors.'
+        analysis: 'Substantially limits career mobility post-departure across all competitive sectors.'
       },
       {
         type: 'modified',

@@ -85,7 +85,7 @@ const ContractComparisonPage = () => {
   const handleLoadDemoComparison = () => {
     if (comparisonsList.length > 0) {
       setComparison(comparisonsList[0]);
-      addToast({ title: 'Demo Comparison Loaded', message: 'Viewing Zenith Employment v1 vs v2 revision.', type: 'info' });
+      addToast({ title: 'Sample Comparison Loaded', message: 'Viewing Executive Employment Agreement v1 vs v2 revision.', type: 'info' });
     }
   };
 

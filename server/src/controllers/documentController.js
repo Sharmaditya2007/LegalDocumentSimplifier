@@ -63,21 +63,21 @@ const loadSampleContract = async (req, res) => {
     const { sampleType } = req.body; // 'saas', 'nda', 'emp_v1', 'emp_v2'
 
     let text = SAMPLE_SAAS_MSA;
-    let title = 'CloudScale SaaS Master Services Agreement';
-    let fileName = 'CloudScale_SaaS_MSA.pdf';
+    let title = 'Standard SaaS Master Services Agreement';
+    let fileName = 'SaaS_Master_Services_Agreement.pdf';
 
     if (sampleType === 'nda') {
       text = SAMPLE_MUTUAL_NDA;
-      title = 'Horizon & Vanguard Mutual NDA';
-      fileName = 'Horizon_Vanguard_NDA.pdf';
+      title = 'Standard Mutual Non-Disclosure Agreement';
+      fileName = 'Mutual_Non_Disclosure_Agreement.pdf';
     } else if (sampleType === 'emp_v1') {
       text = SAMPLE_EMPLOYMENT_V1;
-      title = 'Zenith Fintech Employment Agreement (v1.0)';
-      fileName = 'Zenith_Employment_v1.docx';
+      title = 'Executive Employment Agreement (v1.0 Baseline)';
+      fileName = 'Executive_Employment_v1.docx';
     } else if (sampleType === 'emp_v2') {
       text = SAMPLE_EMPLOYMENT_V2;
-      title = 'Zenith Fintech Employment Agreement (v2.0 Revised)';
-      fileName = 'Zenith_Employment_v2_Revised.docx';
+      title = 'Executive Employment Agreement (v2.0 Revised)';
+      fileName = 'Executive_Employment_v2_Revised.docx';
     }
 
     const aiResult = analyzeDocumentHeuristic(text, fileName);
