@@ -79,16 +79,6 @@ const LoginPage = () => {
           </div>
         )}
 
-        {/* 1-Click Demo Login */}
-        <button
-          onClick={() => handleDemoLogin('user')}
-          disabled={loading}
-          className="w-full mb-4 py-2.5 px-4 rounded-xl bg-amberAccent-500/10 hover:bg-amberAccent-500/20 text-amberAccent-400 border border-amberAccent-500/30 text-xs font-semibold flex items-center justify-center gap-2 transition-all font-sans"
-        >
-          <Zap className="w-3.5 h-3.5 fill-amberAccent-400" />
-          <span>1-Click Instant Demo Login</span>
-        </button>
-
         {/* Form Card */}
         <div className="glass-panel rounded-2xl p-6 border border-white/10 shadow-xl">
           {error && (
