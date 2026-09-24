@@ -215,7 +215,7 @@ const LandingPage = () => {
           ========================================================================= */}
       <section className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 border-t border-white/10 z-10">
         <div className="text-center max-w-xl mx-auto mb-14">
-          <span className="text-[11px] font-mono text-cyan-400 uppercase tracking-widest block mb-2">
+          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest block mb-2">
             [AI_CAPABILITIES]
           </span>
           <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
@@ -227,18 +227,18 @@ const LandingPage = () => {
           {capabilities.map((item, idx) => (
             <div
               key={idx}
-              className="glass-card p-6 rounded-2xl border border-white/10 hover:border-amberAccent-500/40 transition-all group flex flex-col justify-between"
+              className="glass-card p-6 rounded-2xl border border-white/10 hover:border-white/30 transition-all group flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-amberAccent-500/10 border border-amberAccent-500/30 flex items-center justify-center text-amberAccent-400 group-hover:scale-110 transition-transform">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/15 flex items-center justify-center text-white group-hover:scale-110 transition-transform">
                     <item.icon className="w-5 h-5" />
                   </div>
                   <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-400">
                     {item.badge}
                   </span>
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-amberAccent-400 transition-colors">
+                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-white transition-colors">
                   {item.title}
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
@@ -247,8 +247,8 @@ const LandingPage = () => {
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-400 font-mono">
-                <span className="text-slate-500">Autonomous Neural Engine</span>
-                <span className="text-amberAccent-400 font-medium group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                <span className="text-slate-400">Autonomous Neural Engine</span>
+                <span className="text-white font-medium group-hover:translate-x-1 transition-transform flex items-center gap-1">
                   Explore <ChevronRight className="w-3.5 h-3.5" />
                 </span>
               </div>
@@ -262,7 +262,7 @@ const LandingPage = () => {
           ========================================================================= */}
       <section className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 border-t border-white/10 z-10">
         <div className="text-center max-w-xl mx-auto mb-14">
-          <span className="text-[11px] font-mono text-amberAccent-400 uppercase tracking-widest block mb-2">
+          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest block mb-2">
             [WORKFLOW]
           </span>
           <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
@@ -276,7 +276,7 @@ const LandingPage = () => {
               key={idx}
               className="p-6 rounded-2xl bg-obsidian-900/60 border border-white/10 relative overflow-hidden"
             >
-              <div className="text-3xl font-mono font-bold text-white/10 mb-4">
+              <div className="text-3xl font-mono font-bold text-white/20 mb-4">
                 {step.num}
               </div>
               <h3 className="text-base font-semibold text-white mb-2">
@@ -300,15 +300,15 @@ const LandingPage = () => {
             <div className="text-xs text-slate-400 mt-1 font-mono">Contracts Decoded</div>
           </div>
           <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-            <div className="text-2xl sm:text-3xl font-bold text-amberAccent-400 font-mono">&lt; 2.4s</div>
+            <div className="text-2xl sm:text-3xl font-bold text-white font-mono">&lt; 2.4s</div>
             <div className="text-xs text-slate-400 mt-1 font-mono">Inference Speed</div>
           </div>
           <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-            <div className="text-2xl sm:text-3xl font-bold text-cyan-400 font-mono">99.2%</div>
+            <div className="text-2xl sm:text-3xl font-bold text-white font-mono">99.2%</div>
             <div className="text-xs text-slate-400 mt-1 font-mono">Accuracy Rating</div>
           </div>
           <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-            <div className="text-2xl sm:text-3xl font-bold text-emerald-400 font-mono">100%</div>
+            <div className="text-2xl sm:text-3xl font-bold text-white font-mono">100%</div>
             <div className="text-xs text-slate-400 mt-1 font-mono">Free Open Access</div>
           </div>
         </div>
