@@ -64,7 +64,7 @@ const { connectDB, getIsConnected } = require('./config/db');
 connectDB();
 
 // Health Check Endpoint
-app.get('/api/health', (req, res) => {
+const healthHandler = (req, res) => {
   res.json({
     status: 'healthy',
     platform: 'LegalEase AI Document Intelligence API',
@@ -73,15 +73,28 @@ app.get('/api/health', (req, res) => {
     database: getIsConnected() ? 'MongoDB Atlas (Connected)' : 'Local Zero-Config Persistent Store',
     aiEngine: process.env.OPENAI_API_KEY ? 'OpenAI Hybrid' : 'Built-in Neural Legal NLP'
   });
-});
+};
+app.get('/api/health', healthHandler);
+app.get('/health', healthHandler);
 
-// Mount Routes
+// Mount Routes (supports both /api/* and /*)
 app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+
 app.use('/api/documents', documentRoutes);
+app.use('/documents', documentRoutes);
+
 app.use('/api/comparisons', comparisonRoutes);
+app.use('/comparisons', comparisonRoutes);
+
 app.use('/api/chat', chatRoutes);
+app.use('/chat', chatRoutes);
+
 app.use('/api/admin', adminRoutes);
+app.use('/admin', adminRoutes);
+
 app.use('/api/notifications', notificationRoutes);
+app.use('/notifications', notificationRoutes);
 
 // 404 Handler
 app.use((req, res, next) => {

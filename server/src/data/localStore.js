@@ -664,7 +664,7 @@ const localStore = {
   findUserById: (id) => {
     return memoryDb.users.find(u => u._id === id);
   },
-  createUser: (userData) => {
+  createUser: async (userData) => {
     const newUser = {
       _id: 'usr_' + uuidv4().substring(0, 8),
       role: 'user',
@@ -677,20 +677,28 @@ const localStore = {
     memoryDb.users.push(newUser);
     saveDb();
     if (isMongoConnected()) {
-      User.create(newUser).catch(err => console.error('MongoDB User.create error:', err.message));
+      try {
+        await User.create(newUser);
+      } catch (err) {
+        console.error('MongoDB User.create error:', err.message);
+      }
     }
     return newUser;
   },
   getAllUsers: () => {
     return memoryDb.users.map(({ password, ...u }) => u);
   },
-  updateUser: (id, updates) => {
+  updateUser: async (id, updates) => {
     const idx = memoryDb.users.findIndex(u => u._id === id);
     if (idx === -1) return null;
     memoryDb.users[idx] = { ...memoryDb.users[idx], ...updates, updatedAt: new Date().toISOString() };
     saveDb();
     if (isMongoConnected()) {
-      User.findByIdAndUpdate(id, updates).catch(err => console.error('MongoDB User update error:', err.message));
+      try {
+        await User.findByIdAndUpdate(id, updates);
+      } catch (err) {
+        console.error('MongoDB User update error:', err.message);
+      }
     }
     const { password, ...safeUser } = memoryDb.users[idx];
     return safeUser;
@@ -718,7 +726,7 @@ const localStore = {
   getDocumentById: (id, userId = null) => {
     return memoryDb.documents.find(d => d._id === id && (!userId || d.userId === userId));
   },
-  createDocument: (docData) => {
+  createDocument: async (docData) => {
     const newDoc = {
       _id: 'doc_' + uuidv4().substring(0, 8),
       status: 'completed',
@@ -730,7 +738,11 @@ const localStore = {
     memoryDb.documents.unshift(newDoc);
     saveDb();
     if (isMongoConnected()) {
-      Document.create(newDoc).catch(err => console.error('MongoDB Document.create error:', err.message));
+      try {
+        await Document.create(newDoc);
+      } catch (err) {
+        console.error('MongoDB Document.create error:', err.message);
+      }
     }
     return newDoc;
   },

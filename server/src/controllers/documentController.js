@@ -23,7 +23,7 @@ const uploadDocument = async (req, res) => {
     const aiResult = analyzeDocumentHeuristic(extractedText, originalname);
 
     // 3. Save to database / local store
-    const newDoc = localStore.createDocument({
+    const newDoc = await localStore.createDocument({
       userId: req.user._id,
       title: documentTitle,
       fileName: originalname,
