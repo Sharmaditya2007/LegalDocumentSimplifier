@@ -58,38 +58,9 @@ export const AuthProvider = ({ children }) => {
         return { success: true };
       }
     } catch (err) {
-      // If server returned specific rejection (e.g. wrong password), show message
-      if (err.response && err.response.status === 401) {
-        const msg = err.response.data?.message || 'Invalid email or password.';
-        addToast({ title: 'Sign-in Failed', message: msg, type: 'error' });
-        return { success: false, message: msg };
-      }
-
-      // Offline / Static Preview Fallback (ensure user can always sign in)
-      const role = email.includes('admin') ? 'admin' : email.includes('prem') ? 'premium' : 'user';
-      const fallbackUser = {
-        _id: 'usr_' + Date.now(),
-        name: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        email,
-        role,
-        company: 'Legal Workspace',
-        subscription: 'free',
-        status: 'active',
-        createdAt: new Date().toISOString()
-      };
-      const fallbackToken = 'local_jwt_' + Date.now();
-
-      setToken(fallbackToken);
-      setUser(fallbackUser);
-      localStorage.setItem('legalease_token', fallbackToken);
-      localStorage.setItem('legalease_user', JSON.stringify(fallbackUser));
-
-      addToast({
-        title: 'Signed In Successfully',
-        message: `Welcome, ${fallbackUser.name}!`,
-        type: 'success'
-      });
-      return { success: true };
+      const msg = err.response?.data?.message || (err.message === 'Network Error' ? 'Cannot connect to backend server. Please ensure the backend is running.' : 'Invalid email or password.');
+      addToast({ title: 'Sign-in Failed', message: msg, type: 'error' });
+      return { success: false, message: msg };
     }
   };
 
@@ -109,37 +80,9 @@ export const AuthProvider = ({ children }) => {
         return { success: true };
       }
     } catch (err) {
-      // If server returned specific business error (e.g. email exists)
-      if (err.response && err.response.status === 400 && err.response.data?.message) {
-        const msg = err.response.data.message;
-        addToast({ title: 'Registration Notice', message: msg, type: 'warning' });
-        return { success: false, message: msg };
-      }
-
-      // Offline / Static Hosting Resilient Fallback: Create and authenticate immediately
-      const fallbackUser = {
-        _id: 'usr_' + Date.now(),
-        name: userData.name || 'Legal Professional',
-        email: userData.email,
-        role: 'user',
-        company: userData.company || 'Legal Workspace',
-        subscription: 'free',
-        status: 'active',
-        createdAt: new Date().toISOString()
-      };
-      const fallbackToken = 'local_jwt_' + Date.now();
-
-      setToken(fallbackToken);
-      setUser(fallbackUser);
-      localStorage.setItem('legalease_token', fallbackToken);
-      localStorage.setItem('legalease_user', JSON.stringify(fallbackUser));
-
-      addToast({
-        title: 'Account Created',
-        message: `Welcome to LegalEase AI, ${fallbackUser.name}!`,
-        type: 'success'
-      });
-      return { success: true };
+      const msg = err.response?.data?.message || (err.message === 'Network Error' ? 'Cannot connect to backend server. Please check API connection.' : 'Failed to create account.');
+      addToast({ title: 'Registration Failed', message: msg, type: 'error' });
+      return { success: false, message: msg };
     }
   };
 

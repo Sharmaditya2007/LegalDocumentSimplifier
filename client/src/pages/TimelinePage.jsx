@@ -43,14 +43,14 @@ const TimelinePage = () => {
 
     api.get('/documents/timeline/all')
       .then(res => {
-        if (res.data?.success && res.data.timeline?.length > 0) {
-          setTimeline(res.data.timeline);
+        if (res.data?.success) {
+          setTimeline(res.data.timeline || []);
         } else {
-          setTimeline(mockDates);
+          setTimeline([]);
         }
       })
       .catch(() => {
-        setTimeline(mockDates);
+        setTimeline([]);
       })
       .finally(() => setLoading(false));
   }, []);

@@ -36,6 +36,10 @@ const DeadlineItemSchema = new mongoose.Schema({
 }, { _id: false });
 
 const DocumentSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true
+  },
   userId: {
     type: String,
     required: true,

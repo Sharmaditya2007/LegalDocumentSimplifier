@@ -19,6 +19,10 @@ const DifferenceSchema = new mongoose.Schema({
 }, { _id: false });
 
 const ComparisonSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true
+  },
   userId: {
     type: String,
     required: true,

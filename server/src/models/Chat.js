@@ -19,6 +19,10 @@ const ChatMessageSchema = new mongoose.Schema({
 }, { _id: false });
 
 const ChatSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true
+  },
   userId: {
     type: String,
     required: true,

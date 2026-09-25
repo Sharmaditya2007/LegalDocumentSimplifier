@@ -48,19 +48,13 @@ const DocumentLibraryPage = () => {
           archived: showArchived
         }
       });
-      if (res?.data?.success && res.data.documents.length > 0) {
-        setDocuments(res.data.documents);
+      if (res?.data?.success) {
+        setDocuments(res.data.documents || []);
       } else {
-        let filtered = [...MOCK_DOCUMENTS];
-        if (riskFilter !== 'all') filtered = filtered.filter(d => d.riskLevel === riskFilter);
-        if (searchTerm) filtered = filtered.filter(d => d.title.toLowerCase().includes(searchTerm.toLowerCase()));
-        setDocuments(filtered);
+        setDocuments([]);
       }
     } catch (err) {
-      let filtered = [...MOCK_DOCUMENTS];
-      if (riskFilter !== 'all') filtered = filtered.filter(d => d.riskLevel === riskFilter);
-      if (searchTerm) filtered = filtered.filter(d => d.title.toLowerCase().includes(searchTerm.toLowerCase()));
-      setDocuments(filtered);
+      setDocuments([]);
     } finally {
       setLoading(false);
     }

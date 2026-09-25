@@ -73,25 +73,20 @@ const DashboardPage = () => {
         api.get('/documents/timeline/all').catch(() => null)
       ]);
 
-      if (docsRes?.data?.success && docsRes.data.documents.length > 0) {
-        setDocuments(docsRes.data.documents);
+      if (docsRes?.data?.success) {
+        setDocuments(docsRes.data.documents || []);
       } else {
-        setDocuments(MOCK_DOCUMENTS);
+        setDocuments([]);
       }
 
-      if (deadRes?.data?.success && deadRes.data.timeline.length > 0) {
-        setDeadlines(deadRes.data.timeline);
+      if (deadRes?.data?.success) {
+        setDeadlines(deadRes.data.timeline || []);
       } else {
-        const mockDeadlines = [];
-        MOCK_DOCUMENTS.forEach(d => {
-          (d.analysis?.deadlines || []).forEach(dl => {
-            mockDeadlines.push({ ...dl, documentId: d._id, documentTitle: d.title });
-          });
-        });
-        setDeadlines(mockDeadlines);
+        setDeadlines([]);
       }
     } catch (err) {
-      setDocuments(MOCK_DOCUMENTS);
+      setDocuments([]);
+      setDeadlines([]);
     } finally {
       setLoading(false);
     }
@@ -301,7 +296,7 @@ const DashboardPage = () => {
         <StatCard
           title="Total Documents"
           value={totalDocs}
-          change="+4 this week"
+          change={totalDocs > 0 ? `${totalDocs} active` : "0 uploaded"}
           icon={FileText}
           color="brand"
           subtitle="Monitored in secure repository"

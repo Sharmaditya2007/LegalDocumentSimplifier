@@ -588,11 +588,75 @@ const loadDb = () => {
   }
 };
 
+const mongoose = require('mongoose');
+const User = require('../models/User');
+const Document = require('../models/Document');
+const Comparison = require('../models/Comparison');
+const Chat = require('../models/Chat');
+const Notification = require('../models/Notification');
+
+const isMongoConnected = () => {
+  return mongoose.connection && mongoose.connection.readyState === 1;
+};
+
+const syncWithMongo = async () => {
+  if (!isMongoConnected()) return;
+  try {
+    const [dbUsers, dbDocs, dbCmps, dbChats, dbNotifs] = await Promise.all([
+      User.find({}).lean(),
+      Document.find({}).lean(),
+      Comparison.find({}).lean(),
+      Chat.find({}).lean(),
+      Notification.find({}).lean()
+    ]);
+
+    if (dbUsers && dbUsers.length > 0) {
+      memoryDb.users = dbUsers;
+    } else {
+      for (const u of memoryDb.users) {
+        await User.findOneAndUpdate({ _id: u._id }, u, { upsert: true }).catch(() => {});
+      }
+    }
+
+    if (dbDocs && dbDocs.length > 0) {
+      memoryDb.documents = dbDocs;
+    } else {
+      for (const d of memoryDb.documents) {
+        await Document.findOneAndUpdate({ _id: d._id }, d, { upsert: true }).catch(() => {});
+      }
+    }
+
+    if (dbCmps && dbCmps.length > 0) {
+      memoryDb.comparisons = dbCmps;
+    } else {
+      for (const c of memoryDb.comparisons) {
+        await Comparison.findOneAndUpdate({ _id: c._id }, c, { upsert: true }).catch(() => {});
+      }
+    }
+
+    if (dbChats && dbChats.length > 0) {
+      memoryDb.chats = dbChats;
+    }
+
+    if (dbNotifs && dbNotifs.length > 0) {
+      memoryDb.notifications = dbNotifs;
+    }
+
+    saveDb();
+    console.log(`📡 Synced ${memoryDb.users.length} users and ${memoryDb.documents.length} documents with MongoDB Atlas.`);
+  } catch (err) {
+    console.warn('⚠️ MongoDB sync note:', err.message);
+  }
+};
+
 // Initialize
 loadDb();
 
 // Local Store Data Access Methods
 const localStore = {
+  syncWithMongo,
+  isMongoConnected,
+
   // Users
   findUserByEmail: (email) => {
     return memoryDb.users.find(u => u.email.toLowerCase() === email.toLowerCase());
@@ -612,6 +676,9 @@ const localStore = {
     };
     memoryDb.users.push(newUser);
     saveDb();
+    if (isMongoConnected()) {
+      User.create(newUser).catch(err => console.error('MongoDB User.create error:', err.message));
+    }
     return newUser;
   },
   getAllUsers: () => {
@@ -622,6 +689,9 @@ const localStore = {
     if (idx === -1) return null;
     memoryDb.users[idx] = { ...memoryDb.users[idx], ...updates, updatedAt: new Date().toISOString() };
     saveDb();
+    if (isMongoConnected()) {
+      User.findByIdAndUpdate(id, updates).catch(err => console.error('MongoDB User update error:', err.message));
+    }
     const { password, ...safeUser } = memoryDb.users[idx];
     return safeUser;
   },
@@ -659,6 +729,9 @@ const localStore = {
     };
     memoryDb.documents.unshift(newDoc);
     saveDb();
+    if (isMongoConnected()) {
+      Document.create(newDoc).catch(err => console.error('MongoDB Document.create error:', err.message));
+    }
     return newDoc;
   },
   updateDocument: (id, updates) => {
@@ -666,6 +739,9 @@ const localStore = {
     if (idx === -1) return null;
     memoryDb.documents[idx] = { ...memoryDb.documents[idx], ...updates, updatedAt: new Date().toISOString() };
     saveDb();
+    if (isMongoConnected()) {
+      Document.findByIdAndUpdate(id, updates).catch(err => console.error('MongoDB Document update error:', err.message));
+    }
     return memoryDb.documents[idx];
   },
   deleteDocument: (id, userId) => {
@@ -673,6 +749,9 @@ const localStore = {
     if (idx === -1) return false;
     memoryDb.documents.splice(idx, 1);
     saveDb();
+    if (isMongoConnected()) {
+      Document.deleteOne({ _id: id, userId }).catch(err => console.error('MongoDB Document delete error:', err.message));
+    }
     return true;
   },
   getAllDocumentsAdmin: () => {
@@ -694,6 +773,9 @@ const localStore = {
     };
     memoryDb.comparisons.unshift(newCmp);
     saveDb();
+    if (isMongoConnected()) {
+      Comparison.create(newCmp).catch(err => console.error('MongoDB Comparison.create error:', err.message));
+    }
     return newCmp;
   },
 
@@ -709,23 +791,40 @@ const localStore = {
       };
       memoryDb.chats.push(chat);
       saveDb();
+      if (isMongoConnected()) {
+        Chat.create(chat).catch(err => console.error('MongoDB Chat.create error:', err.message));
+      }
     }
     return chat;
   },
   addChatMessage: (documentId, userId, message) => {
     const chat = localStore.getChatByDocId(documentId, userId);
-    chat.messages.push({
+    const msgObj = {
       id: 'msg_' + uuidv4().substring(0, 8),
       timestamp: new Date().toISOString(),
       ...message
-    });
+    };
+    chat.messages.push(msgObj);
     saveDb();
+    if (isMongoConnected()) {
+      Chat.findOneAndUpdate(
+        { documentId, userId },
+        { $push: { messages: msgObj } },
+        { upsert: true }
+      ).catch(err => console.error('MongoDB Chat message push error:', err.message));
+    }
     return chat;
   },
   clearChat: (documentId, userId) => {
     const chat = localStore.getChatByDocId(documentId, userId);
     chat.messages = [];
     saveDb();
+    if (isMongoConnected()) {
+      Chat.findOneAndUpdate(
+        { documentId, userId },
+        { $set: { messages: [] } }
+      ).catch(err => console.error('MongoDB Chat clear error:', err.message));
+    }
     return chat;
   },
 
@@ -738,6 +837,9 @@ const localStore = {
     if (notif) {
       notif.read = true;
       saveDb();
+      if (isMongoConnected()) {
+        Notification.updateOne({ _id: id, userId }, { $set: { read: true } }).catch(err => console.error('MongoDB Notification update error:', err.message));
+      }
     }
     return notif;
   },
@@ -753,6 +855,9 @@ const localStore = {
     };
     memoryDb.notifications.unshift(newNotif);
     saveDb();
+    if (isMongoConnected()) {
+      Notification.create(newNotif).catch(err => console.error('MongoDB Notification.create error:', err.message));
+    }
     return newNotif;
   },
 

@@ -26,6 +26,11 @@ const connectDB = async () => {
     console.log(`=======================================================`);
     console.log(`✅  MongoDB Atlas Connected: ${conn.connection.host}`);
     console.log(`=======================================================`);
+
+    // Sync in-memory / local store with MongoDB Atlas collections
+    const localStore = require('../data/localStore');
+    await localStore.syncWithMongo();
+
     return true;
   } catch (err) {
     console.warn(`⚠️  MongoDB connection error (${err.message}). Falling back to local store.`);
