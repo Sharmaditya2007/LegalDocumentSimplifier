@@ -19,7 +19,7 @@ const register = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please provide name, email, and password.' });
     }
 
-    const existingUser = localStore.findUserByEmail(email);
+    const existingUser = await localStore.findUserByEmail(email);
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'An account with this email already exists.' });
     }
@@ -60,7 +60,7 @@ const login = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please provide email and password.' });
     }
 
-    const user = localStore.findUserByEmail(email);
+    const user = await localStore.findUserByEmail(email);
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid email or password.' });
     }
@@ -92,7 +92,7 @@ const login = async (req, res) => {
 // @route   GET /api/auth/me
 const getMe = async (req, res) => {
   try {
-    const user = localStore.findUserById(req.user._id);
+    const user = await localStore.findUserById(req.user._id);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
@@ -112,13 +112,13 @@ const googleLogin = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Google account email is required.' });
     }
 
-    let user = localStore.findUserByEmail(email);
+    let user = await localStore.findUserByEmail(email);
     if (!user) {
       const salt = await bcrypt.genSalt(10);
       const randomPassword = Math.random().toString(36).slice(-8);
       const hashedPassword = await bcrypt.hash(randomPassword, salt);
 
-      user = localStore.createUser({
+      user = await localStore.createUser({
         name: name || 'Google Legal User',
         email,
         password: hashedPassword,

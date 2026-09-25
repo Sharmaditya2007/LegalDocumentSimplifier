@@ -658,11 +658,40 @@ const localStore = {
   isMongoConnected,
 
   // Users
-  findUserByEmail: (email) => {
-    return memoryDb.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+  findUserByEmail: async (email) => {
+    if (!email) return null;
+    const normalizedEmail = email.toLowerCase().trim();
+    if (isMongoConnected()) {
+      try {
+        const user = await User.findOne({ email: normalizedEmail }).lean();
+        if (!user) {
+          memoryDb.users = memoryDb.users.filter(u => u.email.toLowerCase().trim() !== normalizedEmail);
+          saveDb();
+          return null;
+        }
+        return user;
+      } catch (err) {
+        console.error('MongoDB findUserByEmail error:', err.message);
+      }
+    }
+    return memoryDb.users.find(u => u.email.toLowerCase().trim() === normalizedEmail) || null;
   },
-  findUserById: (id) => {
-    return memoryDb.users.find(u => u._id === id);
+  findUserById: async (id) => {
+    if (!id) return null;
+    if (isMongoConnected()) {
+      try {
+        const user = await User.findById(id).lean();
+        if (!user) {
+          memoryDb.users = memoryDb.users.filter(u => u._id !== id);
+          saveDb();
+          return null;
+        }
+        return user;
+      } catch (err) {
+        console.error('MongoDB findUserById error:', err.message);
+      }
+    }
+    return memoryDb.users.find(u => u._id === id) || null;
   },
   createUser: async (userData) => {
     const newUser = {

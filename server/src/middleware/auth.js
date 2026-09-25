@@ -3,7 +3,7 @@ const localStore = require('../data/localStore');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'legalease_super_secret_jwt_key_2026_production';
 
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -19,7 +19,7 @@ const protect = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = localStore.findUserById(decoded.id);
+    const user = await localStore.findUserById(decoded.id);
 
     if (!user) {
       return res.status(401).json({
