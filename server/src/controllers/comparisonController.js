@@ -25,7 +25,7 @@ const createComparison = async (req, res) => {
     // Run comparison engine
     const comparisonResult = compareDocumentsHeuristic(docA, docB);
 
-    const newComparison = localStore.createComparison({
+    const newComparison = await localStore.createComparison({
       userId: req.user._id,
       title: customTitle || comparisonResult.title,
       docAId: docA._id,
@@ -37,7 +37,7 @@ const createComparison = async (req, res) => {
       differences: comparisonResult.differences
     });
 
-    localStore.createNotification(req.user._id, {
+    await localStore.createNotification(req.user._id, {
       title: 'Contract Comparison Ready',
       message: `Comparison between "${docA.title}" and "${docB.title}" has been completed.`,
       type: 'info'

@@ -20,7 +20,7 @@ const getAllUsers = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { role, status, subscription } = req.body;
-    const targetUser = localStore.findUserById(req.params.id);
+    const targetUser = await localStore.findUserById(req.params.id);
 
     if (!targetUser) {
       return res.status(404).json({ success: false, message: 'User not found.' });
@@ -31,7 +31,7 @@ const updateUser = async (req, res) => {
     if (status && ['active', 'blocked'].includes(status)) updates.status = status;
     if (subscription && ['free', 'pro', 'enterprise'].includes(subscription)) updates.subscription = subscription;
 
-    const updated = localStore.updateUser(targetUser._id, updates);
+    const updated = await localStore.updateUser(targetUser._id, updates);
 
     res.json({
       success: true,

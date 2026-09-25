@@ -82,7 +82,7 @@ const loadSampleContract = async (req, res) => {
 
     const aiResult = analyzeDocumentHeuristic(text, fileName);
 
-    const doc = localStore.createDocument({
+    const doc = await localStore.createDocument({
       userId: req.user._id,
       title,
       fileName,
@@ -162,7 +162,7 @@ const updateDocument = async (req, res) => {
     if (isArchived !== undefined) updates.isArchived = isArchived;
     if (tags !== undefined) updates.tags = tags;
 
-    const updated = localStore.updateDocument(doc._id, updates);
+    const updated = await localStore.updateDocument(doc._id, updates);
     res.json({ success: true, document: updated });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -173,7 +173,7 @@ const updateDocument = async (req, res) => {
 // @route   DELETE /api/documents/:id
 const deleteDocument = async (req, res) => {
   try {
-    const success = localStore.deleteDocument(req.params.id, req.user._id);
+    const success = await localStore.deleteDocument(req.params.id, req.user._id);
     if (!success) {
       return res.status(404).json({ success: false, message: 'Document not found or permission denied.' });
     }

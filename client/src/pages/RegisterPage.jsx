@@ -143,10 +143,10 @@ const RegisterPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-xl bg-[#E85D36] hover:bg-[#ff6e47] text-white font-medium text-xs sm:text-sm shadow-glow transition-all flex items-center justify-center gap-2 mt-2 font-sans"
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amberAccent-500 via-amber-500 to-amberAccent-600 hover:from-amberAccent-400 hover:to-amber-500 text-obsidian-950 font-bold text-xs sm:text-sm shadow-glow-amber transition-all flex items-center justify-center gap-2 mt-2 font-sans"
             >
               {loading ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-obsidian-950/30 border-t-obsidian-950 rounded-full animate-spin" />
               ) : (
                 <>
                   <span>Create Account</span>
@@ -158,7 +158,7 @@ const RegisterPage = () => {
 
           <p className="mt-5 text-center text-xs text-slate-400 font-sans">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-white hover:underline">
+            <Link to="/login" className="font-semibold text-amberAccent-400 hover:text-amberAccent-300 hover:underline">
               Sign in
             </Link>
           </p>

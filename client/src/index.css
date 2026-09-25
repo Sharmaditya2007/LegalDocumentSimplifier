@@ -403,3 +403,72 @@ a, button, input, select, textarea {
   box-shadow: 0 0 0 2px rgba(235, 184, 126, 0.3), 0 0 20px rgba(0, 210, 255, 0.2);
   border-color: #EBB87E !important;
 }
+
+/* ============================================================
+   8. ULTRA-PREMIUM BUTTONS & GLOW UTILITIES
+   ============================================================ */
+.btn-glow-gold {
+  background: linear-gradient(135deg, #F59E0B 0%, #EBB87E 50%, #D97706 100%);
+  color: #030508;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(235, 184, 126, 0.35);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-glow-gold:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(235, 184, 126, 0.5), 0 0 20px rgba(245, 158, 11, 0.4);
+}
+
+.btn-glow-cyan {
+  background: linear-gradient(135deg, #00D2FF 0%, #0284C7 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(0, 210, 255, 0.35);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-glow-cyan:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(0, 210, 255, 0.55);
+}
+
+.glass-pill {
+  background: rgba(13, 18, 29, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.glass-pill:hover {
+  border-color: rgba(235, 184, 126, 0.4);
+  box-shadow: 0 6px 24px rgba(235, 184, 126, 0.15);
+}
+
+/* Gradient Text Presets */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FDE68A 50%, #EBB87E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #FFFFFF 0%, #67E8F9 50%, #00D2FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-purple {
+  background: linear-gradient(135deg, #FFFFFF 0%, #C084FC 50%, #9333EA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Mesh Background Accent */
+.ambient-glow-mesh {
+  background: radial-gradient(circle at 50% 0%, rgba(0, 210, 255, 0.08) 0%, transparent 60%),
+              radial-gradient(circle at 100% 100%, rgba(155, 81, 224, 0.06) 0%, transparent 50%),
+              radial-gradient(circle at 0% 50%, rgba(235, 184, 126, 0.04) 0%, transparent 50%);
+}
+
