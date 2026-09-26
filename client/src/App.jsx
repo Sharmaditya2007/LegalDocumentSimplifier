@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -8,6 +8,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import MinimalLuxuryBackground from './components/3d/MinimalLuxuryBackground';
+import CinematicPreloader from './components/3d/CinematicPreloader';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -46,16 +47,25 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
 };
 
 function App() {
+  const [introCompleted, setIntroCompleted] = useState(false);
+
   return (
     <ThemeProvider>
       <NotificationProvider>
         <AuthProvider>
           <Router>
             <div className="min-h-screen flex flex-col bg-[#030305] text-slate-100 font-sans selection:bg-white/20 selection:text-white relative overflow-x-hidden">
+              {/* 4-5s Cinematic 3D Preloader Experience */}
+              {!introCompleted && (
+                <CinematicPreloader onComplete={() => setIntroCompleted(true)} />
+              )}
+
               {/* Minimal Luxury Dark Background */}
               <MinimalLuxuryBackground />
 
-              <div className="relative z-10 flex flex-col flex-1">
+              <div className={`relative z-10 flex flex-col flex-1 transition-opacity duration-1000 ${
+                introCompleted ? 'opacity-100' : 'opacity-0'
+              }`}>
                 <Navbar />
                 <main className="flex-1">
                   <Routes>
