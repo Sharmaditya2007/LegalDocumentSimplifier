@@ -62,17 +62,7 @@ const LandingPage = () => {
       {/* =========================================================================
           HERO SECTION: 5-Step Cinematic Opening Experience & Translucent Glass Crystal
           ========================================================================= */}
-      <section className="relative max-w-7xl mx-auto px-6 sm:px-8 pt-12 lg:pt-16 flex flex-col items-center text-center">
-        
-        {/* Subtle Minimal Pill (Fades in with sequence) */}
-        <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full pill-luxury mb-8 transition-all duration-1000 ${
-          sequenceDone ? 'opacity-100 translate-y-0' : 'opacity-80 translate-y-0'
-        }`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-          <span className="text-xs tracking-wide text-slate-300 font-medium">
-            Legal Intelligence 2035
-          </span>
-        </div>
+      <section className="relative max-w-7xl mx-auto px-6 sm:px-8 pt-16 lg:pt-24 flex flex-col items-center text-center">
 
         {/* Massive Bold Headline: CONTRACTS. CLARIFIED. */}
         <h1 className="text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tight text-white max-w-4xl leading-[1.05] transition-all duration-1000">
