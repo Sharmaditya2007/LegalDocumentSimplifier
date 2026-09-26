@@ -12,12 +12,13 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import LuxuryCrystalHero from '../components/3d/LuxuryCrystalHero';
+import CinematicOpeningHero from '../components/3d/CinematicOpeningHero';
 
 const LandingPage = () => {
   const { loginAsDemo } = useAuth();
   const navigate = useNavigate();
   const [activeClause, setActiveClause] = useState(0);
+  const [sequenceDone, setSequenceDone] = useState(false);
 
   const sampleClauses = [
     {
@@ -59,31 +60,37 @@ const LandingPage = () => {
     <div className="relative min-h-screen text-slate-100 selection:bg-white/20 selection:text-white pb-32">
       
       {/* =========================================================================
-          HERO SECTION: Pure Luxury Centerpiece & Massive Minimal Typography
+          HERO SECTION: 5-Step Cinematic Opening Experience & Translucent Glass Crystal
           ========================================================================= */}
-      <section className="relative max-w-7xl mx-auto px-6 sm:px-8 pt-20 lg:pt-28 flex flex-col items-center text-center">
+      <section className="relative max-w-7xl mx-auto px-6 sm:px-8 pt-12 lg:pt-16 flex flex-col items-center text-center">
         
-        {/* Subtle Minimal Pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full pill-luxury mb-8">
+        {/* Subtle Minimal Pill (Fades in with sequence) */}
+        <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full pill-luxury mb-8 transition-all duration-1000 ${
+          sequenceDone ? 'opacity-100 translate-y-0' : 'opacity-80 translate-y-0'
+        }`}>
           <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
           <span className="text-xs tracking-wide text-slate-300 font-medium">
             Legal Intelligence 2035
           </span>
         </div>
 
-        {/* Massive Bold Headline */}
-        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tight text-white max-w-4xl leading-[1.05]">
+        {/* Massive Bold Headline: CONTRACTS. CLARIFIED. */}
+        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tight text-white max-w-4xl leading-[1.05] transition-all duration-1000">
           Contracts. <br />
           <span className="text-metallic">Clarified.</span>
         </h1>
 
         {/* Minimal Subhead */}
-        <p className="mt-8 text-lg sm:text-xl text-slate-400 max-w-2xl font-normal leading-relaxed">
+        <p className={`mt-8 text-lg sm:text-xl text-slate-400 max-w-2xl font-normal leading-relaxed transition-all duration-1000 ${
+          sequenceDone ? 'opacity-100 translate-y-0' : 'opacity-90 translate-y-0'
+        }`}>
           Autonomous AI that uncovers liability traps, strips away legalese, and delivers instant plain-English certainty.
         </p>
 
         {/* Action CTAs */}
-        <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+        <div className={`mt-10 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto transition-all duration-1000 ${
+          sequenceDone ? 'opacity-100 translate-y-0' : 'opacity-90 translate-y-0'
+        }`}>
           <Link
             to="/register"
             className="w-full sm:w-auto px-8 py-4 rounded-full btn-luxury-primary text-sm flex items-center justify-center gap-2"
@@ -104,16 +111,16 @@ const LandingPage = () => {
           </button>
         </div>
 
-        {/* Centerpiece: Floating Translucent Glass Crystal Sculpture */}
-        <div className="w-full max-w-4xl mt-4">
-          <LuxuryCrystalHero />
+        {/* Centerpiece 3D Canvas: Cinematic Opening Experience -> Luxury Crystal Sculpture */}
+        <div className="w-full max-w-5xl mt-2">
+          <CinematicOpeningHero onSequenceComplete={() => setSequenceDone(true)} />
         </div>
       </section>
 
       {/* =========================================================================
           SECTION 2: 3 CORE PILLARS (Linear / Apple Luxury Cards)
           ========================================================================= */}
-      <section className="max-w-6xl mx-auto px-6 sm:px-8 mt-24">
+      <section className="max-w-6xl mx-auto px-6 sm:px-8 mt-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Card 1 */}
