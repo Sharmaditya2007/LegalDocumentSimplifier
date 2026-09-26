@@ -7,8 +7,7 @@ import { NotificationProvider } from './context/NotificationContext';
 // Components
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
-import Cinematic3DWorld from './components/3d/Cinematic3DWorld';
-import CinematicCursor from './components/3d/CinematicCursor';
+import MinimalLuxuryBackground from './components/3d/MinimalLuxuryBackground';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -52,17 +51,9 @@ function App() {
       <NotificationProvider>
         <AuthProvider>
           <Router>
-            <div className="min-h-screen flex flex-col bg-[#030508] text-slate-100 font-sans selection:bg-amberAccent-500/30 selection:text-amberAccent-300 relative overflow-x-hidden">
-              {/* 2035 Immersive Cinematic 3D WebGL World */}
-              <Cinematic3DWorld />
-
-              {/* 2035 Cyber Reticle Cursor */}
-              <CinematicCursor />
-
-              {/* Global Cosmic Ambient Glows */}
-              <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-cyan-500/10 blur-[150px] pointer-events-none rounded-full z-0" />
-              <div className="fixed bottom-0 right-0 w-[500px] h-[500px] bg-purple-600/10 blur-[160px] pointer-events-none rounded-full z-0" />
-              <div className="fixed top-1/3 left-0 w-96 h-96 bg-amberAccent-500/5 blur-[140px] pointer-events-none rounded-full z-0" />
+            <div className="min-h-screen flex flex-col bg-[#030305] text-slate-100 font-sans selection:bg-white/20 selection:text-white relative overflow-x-hidden">
+              {/* Minimal Luxury Dark Background */}
+              <MinimalLuxuryBackground />
 
               <div className="relative z-10 flex flex-col flex-1">
                 <Navbar />

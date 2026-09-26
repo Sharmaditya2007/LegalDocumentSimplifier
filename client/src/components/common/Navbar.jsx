@@ -94,24 +94,21 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 w-full py-3 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         
-        {/* Brand Logo with 3D Laser Flare */}
+        {/* Brand Logo */}
         <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-obsidian-900 border border-amberAccent-500/40 flex items-center justify-center text-amberAccent-500 shadow-[0_0_20px_rgba(235,184,126,0.3)] group-hover:scale-105 group-hover:border-amberAccent-500 transition-all duration-300">
-            <Scale className="w-4.5 h-4.5" />
+          <div className="w-8 h-8 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-white group-hover:scale-105 group-hover:border-white/20 transition-all duration-300">
+            <Scale className="w-4 h-4" />
           </div>
           <div className="flex flex-col">
-            <span className="font-extrabold text-sm tracking-wider uppercase text-white font-heading flex items-center gap-1.5">
-              LEGALEASE <span className="text-amberAccent-500 font-black">AI</span>
-            </span>
-            <span className="text-[9px] uppercase tracking-[0.25em] text-slate-400 font-mono -mt-0.5">
-              Neural Legal Studio
+            <span className="font-semibold text-sm tracking-tight text-white flex items-center gap-1.5">
+              LegalEase <span className="text-slate-400 font-normal">AI</span>
             </span>
           </div>
         </Link>
 
-        {/* Floating Center Pill Navigation (Linear / Behfar SceneNav style) */}
+        {/* Floating Center Pill Navigation (Linear style) */}
         {isAuthenticated ? (
-          <nav className="hidden md:flex items-center p-1.5 rounded-full behfar-nav-pill border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-2xl">
+          <nav className="hidden md:flex items-center p-1 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-2xl">
             {navLinks.map((link) => {
               const active = isActive(link.path);
               const Icon = link.icon;
@@ -268,18 +265,18 @@ const Navbar = () => {
               </div>
             </>
           ) : (
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2">
               <Link
                 to="/login"
-                className="px-4 py-2 rounded-full text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
+                className="px-4 py-2 rounded-full text-xs font-medium text-slate-300 hover:text-white hover:bg-white/[0.04] transition-colors"
               >
                 Sign In
               </Link>
               <Link
                 to="/register"
-                className="px-5 py-2 rounded-full btn-glow-gold text-obsidian-950 font-bold text-xs shadow-glow-amber transition-all hover:scale-105"
+                className="px-5 py-2 rounded-full bg-white text-black font-semibold text-xs transition-all hover:bg-slate-200 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,255,255,0.2)]"
               >
-                Launch Free
+                Get Started
               </Link>
             </div>
           )}
