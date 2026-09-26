@@ -39,57 +39,46 @@ const LoginPage = () => {
     }
   };
 
-  const handleGoogleAuth = async () => {
-    setLoading(true);
-    const res = await googleLogin(
-      'user@legalease.ai',
-      'Demo User',
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-    );
-    setLoading(false);
-    if (res.success) {
-      navigate('/dashboard');
-    }
-  };
-
   return (
     <div className="min-h-[85vh] flex items-center justify-center px-4 py-12 relative font-sans page-fade-in">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-500/10 blur-[130px] pointer-events-none rounded-full" />
+      {/* Background ambient lighting */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-amberAccent-500/10 via-cyan-500/5 to-purple-600/10 blur-[150px] pointer-events-none rounded-full" />
 
       <div className="w-full max-w-md relative z-10">
+        
         {/* Header */}
         <div className="text-center mb-6">
           <Link to="/" className="inline-flex items-center gap-2.5 mb-3 group">
-            <div className="w-8 h-8 rounded-lg bg-obsidian-900 border border-amberAccent-500/30 flex items-center justify-center text-amberAccent-500 shadow-glow-amber group-hover:scale-105 transition-transform">
-              <Scale className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-xl bg-obsidian-900 border border-amberAccent-500/40 flex items-center justify-center text-amberAccent-500 shadow-[0_0_20px_rgba(235,184,126,0.25)] group-hover:scale-105 transition-transform">
+              <Scale className="w-4.5 h-4.5" />
             </div>
-            <span className="font-bold text-sm tracking-widest uppercase text-white font-sans">
-              LEGALEASE <span className="text-[#EBB87E] font-extrabold">AI</span>
+            <span className="font-extrabold text-base tracking-wider uppercase text-white font-heading">
+              LEGALEASE <span className="text-amberAccent-500 font-black">AI</span>
             </span>
           </Link>
-          <h2 className="text-xl font-semibold text-white font-sans">Sign In</h2>
-          <p className="text-xs text-slate-400 mt-0.5 font-sans">
-            Access your legal document workspace
+          <h2 className="text-2xl font-extrabold text-white font-heading tracking-tight">Sign In to Universe</h2>
+          <p className="text-xs text-slate-400 mt-1 font-sans">
+            Access your encrypted legal intelligence workspace
           </p>
         </div>
 
         {expired && (
-          <div className="mb-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs text-center font-medium font-sans">
+          <div className="mb-4 p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs text-center font-medium font-sans">
             Your session expired. Please sign in again.
           </div>
         )}
 
         {/* Form Card */}
-        <div className="glass-panel rounded-2xl p-6 border border-white/10 shadow-xl">
+        <div className="glass-panel rounded-3xl p-7 border border-white/15 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] relative overflow-hidden">
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-medium font-sans">
+            <div className="mb-4 p-3.5 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-medium font-sans">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-3.5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1 font-sans">
+              <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-1.5">
                 Email Address
               </label>
               <div className="relative">
@@ -99,20 +88,20 @@ const LoginPage = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@company.com"
-                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/20"
+                  placeholder="counsel@company.com"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-amberAccent-500/50 focus:ring-1 focus:ring-amberAccent-500/30"
                 />
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-semibold text-slate-300 font-sans">
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
                   Password
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-xs font-medium text-slate-400 hover:text-white"
+                  className="text-xs font-medium text-amberAccent-400 hover:text-amberAccent-300"
                 >
                   Forgot?
                 </Link>
@@ -125,7 +114,7 @@ const LoginPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/20"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-amberAccent-500/50 focus:ring-1 focus:ring-amberAccent-500/30"
                 />
               </div>
             </div>
@@ -133,58 +122,58 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amberAccent-500 via-amber-500 to-amberAccent-600 hover:from-amberAccent-400 hover:to-amber-500 text-obsidian-950 font-bold text-xs sm:text-sm shadow-glow-amber transition-all flex items-center justify-center gap-2 mt-2 font-sans"
+              className="w-full py-3 rounded-2xl btn-glow-gold text-obsidian-950 font-bold text-xs sm:text-sm shadow-glow-amber transition-all flex items-center justify-center gap-2 mt-3 font-sans hover:scale-[1.02]"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-obsidian-950/30 border-t-obsidian-950 rounded-full animate-spin" />
               ) : (
                 <>
                   <span>Sign In</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
 
           {/* Quick 1-Click Evaluation Demo Sessions */}
-          <div className="mt-6 pt-5 border-t border-slate-800/80">
-            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider text-center mb-3">
+          <div className="mt-6 pt-5 border-t border-white/10">
+            <p className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider text-center mb-3">
               ⚡ Instant 1-Click Evaluation Login
             </p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2.5">
               <button
                 type="button"
                 onClick={() => handleDemoLogin('user')}
                 disabled={loading}
-                className="px-2.5 py-2 rounded-xl bg-obsidian-950/80 hover:bg-obsidian-900 border border-slate-800 hover:border-amberAccent-500/40 text-[11px] font-semibold text-slate-300 hover:text-white transition-all flex flex-col items-center gap-1"
+                className="px-2.5 py-2.5 rounded-2xl bg-obsidian-950 border border-white/10 hover:border-amberAccent-500/40 text-[11px] font-semibold text-slate-300 hover:text-white transition-all flex flex-col items-center gap-1 shadow-sm hover:scale-105"
               >
-                <User className="w-3.5 h-3.5 text-amberAccent-400" />
+                <User className="w-4 h-4 text-amberAccent-400" />
                 <span>Demo User</span>
               </button>
               <button
                 type="button"
                 onClick={() => handleDemoLogin('premium')}
                 disabled={loading}
-                className="px-2.5 py-2 rounded-xl bg-obsidian-950/80 hover:bg-obsidian-900 border border-slate-800 hover:border-purple-500/40 text-[11px] font-semibold text-slate-300 hover:text-white transition-all flex flex-col items-center gap-1"
+                className="px-2.5 py-2.5 rounded-2xl bg-obsidian-950 border border-white/10 hover:border-purple-500/40 text-[11px] font-semibold text-slate-300 hover:text-white transition-all flex flex-col items-center gap-1 shadow-sm hover:scale-105"
               >
-                <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+                <Sparkles className="w-4 h-4 text-purple-400" />
                 <span>Legal Pro</span>
               </button>
               <button
                 type="button"
                 onClick={() => handleDemoLogin('admin')}
                 disabled={loading}
-                className="px-2.5 py-2 rounded-xl bg-obsidian-950/80 hover:bg-obsidian-900 border border-slate-800 hover:border-cyan-500/40 text-[11px] font-semibold text-slate-300 hover:text-white transition-all flex flex-col items-center gap-1"
+                className="px-2.5 py-2.5 rounded-2xl bg-obsidian-950 border border-white/10 hover:border-cyan-500/40 text-[11px] font-semibold text-slate-300 hover:text-white transition-all flex flex-col items-center gap-1 shadow-sm hover:scale-105"
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                <ShieldCheck className="w-4 h-4 text-cyan-400" />
                 <span>Admin Staff</span>
               </button>
             </div>
           </div>
 
-          <p className="mt-5 text-center text-xs text-slate-400 font-sans">
+          <p className="mt-6 text-center text-xs text-slate-400 font-sans">
             Don't have an account?{' '}
-            <Link to="/register" className="font-semibold text-amberAccent-400 hover:text-amberAccent-300 hover:underline">
+            <Link to="/register" className="font-bold text-amberAccent-400 hover:text-amberAccent-300 hover:underline">
               Create account
             </Link>
           </p>

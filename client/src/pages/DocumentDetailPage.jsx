@@ -16,7 +16,11 @@ import {
   HelpCircle,
   ExternalLink,
   Search,
-  Scale
+  Scale,
+  Copy,
+  Check,
+  Zap,
+  Info
 } from 'lucide-react';
 import api from '../services/api';
 import { useNotification } from '../context/NotificationContext';
@@ -33,6 +37,7 @@ const DocumentDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('summary'); // 'summary', 'risks', 'clauses', 'obligations', 'timeline', 'raw'
   const [rawSearch, setRawSearch] = useState('');
+  const [copiedSummary, setCopiedSummary] = useState(false);
 
   useEffect(() => {
     const fetchDoc = async () => {
@@ -83,20 +88,31 @@ const DocumentDetailPage = () => {
     window.open(`${apiBase}/documents/${document._id}/download-report`, '_blank');
   };
 
+  const copyPlainEnglish = () => {
+    if (analysis.plainEnglish) {
+      navigator.clipboard.writeText(analysis.plainEnglish);
+      setCopiedSummary(true);
+      setTimeout(() => setCopiedSummary(false), 2000);
+      addToast({ title: 'Copied to Clipboard', message: 'Plain-English summary copied.', type: 'success' });
+    }
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-sans">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-sans page-fade-in">
+      
       {/* Top Breadcrumb & Action Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3.5">
           <Link
             to="/documents"
-            className="p-2.5 rounded-xl bg-obsidian-900 border border-slate-700/80 text-slate-400 hover:text-white hover:border-brand-500/50 transition-all shadow-sm"
+            className="p-2.5 rounded-xl bg-obsidian-900 border border-white/10 text-slate-400 hover:text-white hover:border-amberAccent-500/40 transition-all shadow-sm hover:scale-105"
+            title="Back to Contract Library"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-brand-400 font-mono">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-amberAccent-400">
                 {analysis.contractType || 'Legal Agreement'}
               </span>
               <span className="text-slate-600">•</span>
@@ -112,7 +128,7 @@ const DocumentDetailPage = () => {
         <div className="flex flex-wrap items-center gap-2.5">
           <Link
             to={`/chat?doc=${document._id}`}
-            className="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-glow flex items-center gap-1.5 transition-all hover:scale-[1.02]"
+            className="px-4 py-2.5 rounded-xl btn-glow-cyan text-white text-xs font-bold shadow-glow-cyan flex items-center gap-1.5 transition-all hover:scale-105"
           >
             <MessageSquare className="w-4 h-4" />
             <span>Citation Copilot</span>
@@ -120,7 +136,7 @@ const DocumentDetailPage = () => {
 
           <Link
             to={`/compare?docA=${document._id}`}
-            className="px-3.5 py-2.5 rounded-xl border border-slate-700 bg-obsidian-900 hover:bg-obsidian-800 text-slate-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all hover:border-brand-500/40"
+            className="px-4 py-2.5 rounded-xl border border-white/10 bg-obsidian-900 hover:bg-obsidian-850 text-slate-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all hover:border-purple-500/40"
           >
             <GitCompare className="w-4 h-4 text-purple-400" />
             <span>Compare Revisions</span>
@@ -128,7 +144,7 @@ const DocumentDetailPage = () => {
 
           <button
             onClick={handleDownload}
-            className="px-3.5 py-2.5 rounded-xl border border-slate-700 bg-obsidian-900 hover:bg-obsidian-800 text-slate-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all"
+            className="px-4 py-2.5 rounded-xl border border-white/10 bg-obsidian-900 hover:bg-obsidian-850 text-slate-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all hover:border-emerald-500/40"
           >
             <Download className="w-4 h-4 text-emerald-400" />
             <span>Audit PDF Report</span>
@@ -137,13 +153,14 @@ const DocumentDetailPage = () => {
       </div>
 
       {/* High-Level Executive Risk Gauge & Metadata Banner */}
-      <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-slate-800 grid grid-cols-1 md:grid-cols-4 gap-6 items-center shadow-2xl">
+      <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 grid grid-cols-1 md:grid-cols-4 gap-6 items-center shadow-2xl relative overflow-hidden">
+        
         {/* Risk Gauge */}
-        <div className="md:col-span-1 flex flex-col items-center justify-center p-5 rounded-2xl bg-obsidian-950 border border-slate-800 text-center shadow-inner">
-          <span className="text-[11px] uppercase font-bold text-slate-400 tracking-wider mb-1">
+        <div className="md:col-span-1 flex flex-col items-center justify-center p-6 rounded-2xl bg-obsidian-950/90 border border-white/10 text-center shadow-inner relative">
+          <span className="text-[11px] font-mono uppercase font-bold text-slate-400 tracking-wider mb-1">
             Overall Risk Rating
           </span>
-          <div className="flex items-baseline gap-1 my-1">
+          <div className="flex items-baseline gap-1 my-1.5">
             <span
               className={`text-4xl font-extrabold font-mono ${
                 score >= 60 ? 'text-rose-400' : score >= 35 ? 'text-amber-400' : 'text-emerald-400'
@@ -156,10 +173,10 @@ const DocumentDetailPage = () => {
           <RiskBadge level={document.riskLevel} size="md" />
 
           {/* Mini progress bar */}
-          <div className="w-full bg-obsidian-900 border border-slate-800 h-2.5 rounded-full overflow-hidden mt-3.5 p-0.5">
+          <div className="w-full bg-obsidian-900 border border-white/10 h-2.5 rounded-full overflow-hidden mt-4 p-0.5">
             <div
               className={`h-full rounded-full transition-all duration-500 ${
-                score >= 60 ? 'bg-rose-500' : score >= 35 ? 'bg-amber-500' : 'bg-emerald-500'
+                score >= 60 ? 'bg-gradient-to-r from-rose-500 to-rose-400' : score >= 35 ? 'bg-gradient-to-r from-amber-500 to-amber-400' : 'bg-gradient-to-r from-emerald-500 to-emerald-400'
               }`}
               style={{ width: `${score}%` }}
             />
@@ -167,15 +184,15 @@ const DocumentDetailPage = () => {
         </div>
 
         {/* Metadata Details */}
-        <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+            <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block mb-2">
               Parties Bound
             </span>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               {(analysis.parties || []).map((party, i) => (
-                <div key={i} className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-                  <Building className="w-3.5 h-3.5 text-brand-400 shrink-0" />
+                <div key={i} className="text-xs font-semibold text-slate-200 flex items-center gap-2">
+                  <Building className="w-3.5 h-3.5 text-amberAccent-400 shrink-0" />
                   <span className="truncate">{party}</span>
                 </div>
               ))}
@@ -183,31 +200,31 @@ const DocumentDetailPage = () => {
           </div>
 
           <div>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+            <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block mb-2">
               Key Dates
             </span>
-            <div className="text-xs space-y-1 text-slate-300">
-              <p><span className="text-slate-400">Effective:</span> {analysis.effectiveDate || 'Upon execution'}</p>
-              <p><span className="text-slate-400">Expiration:</span> {analysis.expiryDate || 'Fixed term / At-will'}</p>
+            <div className="text-xs space-y-1.5 text-slate-300 font-sans">
+              <p><span className="text-slate-400 font-mono">Effective:</span> {analysis.effectiveDate || 'Upon execution'}</p>
+              <p><span className="text-slate-400 font-mono">Expiration:</span> {analysis.expiryDate || 'Fixed term / At-will'}</p>
             </div>
           </div>
 
           <div>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+            <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block mb-2">
               Risk Sentinel Flags
             </span>
             <div className="text-xs text-slate-300">
-              <span className="font-mono text-base font-bold text-rose-400">
+              <span className="font-mono text-xl font-black text-rose-400">
                 {risks.filter(r => r.level === 'high' || r.level === 'critical').length}
               </span>
-              <span className="text-slate-400 ml-1">High-Risk clauses requiring redlines</span>
+              <span className="text-slate-400 ml-1.5">High-Risk clauses flagged for redlines</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex border-b border-slate-800 overflow-x-auto space-x-2">
+      <div className="flex border-b border-white/10 overflow-x-auto space-x-2 pb-1">
         {[
           { id: 'summary', label: 'Summary', icon: Sparkles },
           { id: 'risks', label: `Risks (${risks.length})`, icon: ShieldAlert },
@@ -222,10 +239,10 @@ const DocumentDetailPage = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 py-3 px-4 text-xs font-semibold border-b-2 whitespace-nowrap transition-all ${
+              className={`flex items-center gap-2 py-3 px-4.5 text-xs font-semibold border-b-2 whitespace-nowrap transition-all rounded-t-xl ${
                 active
-                  ? 'border-brand-500 text-brand-400 bg-brand-500/10 rounded-t-xl'
-                  : 'border-transparent text-slate-400 hover:text-white'
+                  ? 'border-amberAccent-500 text-amberAccent-400 bg-amberAccent-500/10 font-bold shadow-sm'
+                  : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -239,26 +256,37 @@ const DocumentDetailPage = () => {
 
       {/* TAB 1: SUMMARY & PLAIN ENGLISH */}
       {activeTab === 'summary' && (
-        <div className="space-y-6">
+        <div className="space-y-6 page-fade-in">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
             {/* Plain English Translation */}
-            <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-brand-500/30 bg-gradient-to-br from-brand-950/40 via-obsidian-900 to-obsidian-950 shadow-xl">
-              <div className="flex items-center gap-2 text-brand-400 mb-4">
-                <Sparkles className="w-5 h-5" />
-                <h3 className="text-base font-bold font-heading">Plain-English Translation</h3>
+            <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-amberAccent-500/30 bg-gradient-to-br from-amberAccent-500/10 via-obsidian-950 to-obsidian-950 shadow-2xl relative">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 text-amberAccent-400">
+                  <Sparkles className="w-5 h-5" />
+                  <h3 className="text-base font-bold font-heading">Plain-English Translation</h3>
+                </div>
+                <button
+                  onClick={copyPlainEnglish}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-amberAccent-400 hover:bg-white/5 transition-colors flex items-center gap-1 text-[11px] font-mono"
+                  title="Copy Plain English"
+                >
+                  {copiedSummary ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedSummary ? 'Copied' : 'Copy'}</span>
+                </button>
               </div>
-              <p className="text-sm text-slate-100 leading-relaxed font-normal">
+              <p className="text-sm text-slate-100 leading-relaxed font-normal bg-white/[0.02] p-4 rounded-2xl border border-white/5">
                 {analysis.plainEnglish || 'No plain English translation generated.'}
               </p>
             </div>
 
             {/* Executive Legal Summary */}
-            <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl">
+            <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl">
               <div className="flex items-center gap-2 text-white mb-4">
                 <FileText className="w-5 h-5 text-indigo-400" />
                 <h3 className="text-base font-bold font-heading">Executive Legal Summary</h3>
               </div>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <p className="text-sm text-slate-300 leading-relaxed bg-white/[0.02] p-4 rounded-2xl border border-white/5">
                 {analysis.executiveSummary || 'No executive summary generated.'}
               </p>
             </div>
@@ -266,29 +294,29 @@ const DocumentDetailPage = () => {
 
           {/* Payment Terms & Renewal Conditions */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="glass-panel rounded-2xl p-5 border border-slate-800">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 font-heading">
+            <div className="glass-card rounded-2xl p-5 border border-white/10">
+              <h4 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider mb-2 font-heading">
                 Payment Terms & Invoicing
               </h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-300 leading-relaxed font-sans">
                 {analysis.paymentTerms || 'Standard invoicing terms apply.'}
               </p>
             </div>
 
-            <div className="glass-panel rounded-2xl p-5 border border-slate-800">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 font-heading">
+            <div className="glass-card rounded-2xl p-5 border border-white/10">
+              <h4 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider mb-2 font-heading">
                 Renewal & Cancellation Rules
               </h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-300 leading-relaxed font-sans">
                 {analysis.renewalConditions || 'Standard renewal terms apply.'}
               </p>
             </div>
 
-            <div className="glass-panel rounded-2xl p-5 border border-slate-800">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 font-heading">
+            <div className="glass-card rounded-2xl p-5 border border-white/10">
+              <h4 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider mb-2 font-heading">
                 Compliance & Jurisdiction
               </h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-300 leading-relaxed font-sans">
                 {analysis.complianceRequirements || 'Governed by designated state laws.'}
               </p>
             </div>
@@ -298,15 +326,15 @@ const DocumentDetailPage = () => {
 
       {/* TAB 2: RISK SENTINEL ENGINE */}
       {activeTab === 'risks' && (
-        <div className="space-y-6">
-          <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-3">
+        <div className="space-y-6 page-fade-in">
+          <div className="p-5 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-3.5 shadow-lg">
             <ShieldAlert className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
             <div>
               <h4 className="text-sm font-bold text-rose-300 font-heading">
                 Risk Engine Detected {risks.length} Clauses Requiring Attention
               </h4>
-              <p className="text-xs text-rose-200/80 mt-0.5">
-                Review these flagged risks carefully before signing. Each item includes a practical recommendation for redlining or counter-proposals.
+              <p className="text-xs text-rose-200/80 mt-0.5 leading-relaxed font-sans">
+                Review these flagged risks carefully before signing. Each item includes an actionable recommendation for counter-proposals or contract redlining.
               </p>
             </div>
           </div>
@@ -315,17 +343,17 @@ const DocumentDetailPage = () => {
             {risks.map((risk, index) => (
               <div
                 key={risk.id || index}
-                className="glass-panel rounded-3xl p-6 sm:p-7 border border-slate-800 hover:border-brand-500/40 transition-all shadow-xl"
+                className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 hover:border-amberAccent-500/40 transition-all shadow-xl"
               >
-                <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-3.5">
+                  <div className="flex items-center gap-2.5">
                     <RiskBadge level={risk.level} />
                     <span className="text-xs font-bold text-slate-400 font-mono">
                       {risk.category}
                     </span>
                   </div>
                   {risk.clauseRef && (
-                    <span className="px-2.5 py-1 rounded-md text-[11px] font-mono bg-obsidian-950 text-slate-300 border border-slate-800">
+                    <span className="px-3 py-1 rounded-full text-[11px] font-mono bg-white/5 text-slate-300 border border-white/10">
                       {risk.clauseRef}
                     </span>
                   )}
@@ -335,23 +363,23 @@ const DocumentDetailPage = () => {
                   {risk.title}
                 </h3>
 
-                <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Explanation */}
-                  <div className="p-4 rounded-xl bg-obsidian-950 border border-slate-800">
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
+                  <div className="p-4 rounded-2xl bg-obsidian-950 border border-white/10">
+                    <span className="text-[10px] uppercase font-mono font-bold text-slate-400 block mb-1">
                       Legal Impact & Why It's Risky:
                     </span>
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-xs text-slate-300 leading-relaxed font-sans">
                       {risk.explanation}
                     </p>
                   </div>
 
                   {/* Recommendation */}
-                  <div className="p-4 rounded-xl bg-brand-950/30 border border-brand-500/30">
-                    <span className="text-[10px] uppercase font-bold text-brand-400 block mb-1 flex items-center gap-1">
+                  <div className="p-4 rounded-2xl bg-amberAccent-500/10 border border-amberAccent-500/30">
+                    <span className="text-[10px] uppercase font-mono font-bold text-amberAccent-400 block mb-1 flex items-center gap-1">
                       <Sparkles className="w-3 h-3" /> Recommended Redline / Action:
                     </span>
-                    <p className="text-xs text-slate-100 leading-relaxed font-medium">
+                    <p className="text-xs text-slate-100 leading-relaxed font-medium font-sans">
                       {risk.recommendation}
                     </p>
                   </div>
@@ -364,24 +392,24 @@ const DocumentDetailPage = () => {
 
       {/* TAB 3: IMPORTANT CLAUSES */}
       {activeTab === 'clauses' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 page-fade-in">
           {clauses.map((clause, i) => (
             <div
               key={i}
-              className="glass-panel rounded-2xl p-6 border border-slate-800 shadow-lg"
+              className="card-3d glass-panel rounded-3xl p-6 border border-white/10 shadow-xl"
             >
               <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-xs font-mono font-semibold text-brand-400">
+                <span className="text-xs font-mono font-bold text-amberAccent-400">
                   {clause.section}
                 </span>
-                <span className="text-[11px] px-2.5 py-0.5 rounded bg-obsidian-950 border border-slate-800 text-slate-300 font-medium">
+                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-300 font-mono font-medium">
                   {clause.impact}
                 </span>
               </div>
               <h4 className="text-base font-bold text-white font-heading">
                 {clause.name}
               </h4>
-              <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+              <p className="text-xs text-slate-300 mt-2 leading-relaxed font-sans">
                 {clause.summary}
               </p>
             </div>
@@ -391,32 +419,32 @@ const DocumentDetailPage = () => {
 
       {/* TAB 4: OBLIGATIONS & DUTIES */}
       {activeTab === 'obligations' && (
-        <div className="glass-panel rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
-          <div className="p-6 border-b border-slate-800">
+        <div className="glass-panel rounded-3xl border border-white/10 overflow-hidden shadow-2xl page-fade-in">
+          <div className="p-6 border-b border-white/10">
             <h3 className="text-base font-bold text-white font-heading">Extracted Contractual Obligations</h3>
-            <p className="text-xs text-slate-400 mt-0.5">Categorized breakdown of binding covenants per party</p>
+            <p className="text-xs text-slate-400 mt-0.5 font-sans">Categorized breakdown of binding covenants per party</p>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-obsidian-950/80 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-800">
+              <thead className="bg-obsidian-950/90 text-slate-400 uppercase text-[10px] font-mono font-bold tracking-wider border-b border-white/10">
                 <tr>
-                  <th className="px-6 py-3.5">Obligated Party</th>
-                  <th className="px-6 py-3.5">Category</th>
-                  <th className="px-6 py-3.5">Covenant / Duty Description</th>
+                  <th className="px-6 py-4">Obligated Party</th>
+                  <th className="px-6 py-4">Category</th>
+                  <th className="px-6 py-4">Covenant / Duty Description</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-white/5">
                 {obligations.map((ob, idx) => (
-                  <tr key={idx} className="hover:bg-obsidian-850/50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-white whitespace-nowrap">
+                  <tr key={idx} className="hover:bg-white/[0.03] transition-colors">
+                    <td className="px-6 py-4.5 font-bold text-white whitespace-nowrap">
                       {ob.party}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-2.5 py-1 rounded-md text-[10px] font-semibold bg-brand-500/10 border border-brand-500/20 text-brand-400">
+                    <td className="px-6 py-4.5 whitespace-nowrap">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold bg-amberAccent-500/10 border border-amberAccent-500/20 text-amberAccent-400">
                         {ob.type}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-slate-300 leading-relaxed">
+                    <td className="px-6 py-4.5 text-slate-300 leading-relaxed font-sans">
                       {ob.obligation}
                     </td>
                   </tr>
@@ -429,14 +457,14 @@ const DocumentDetailPage = () => {
 
       {/* TAB 5: DEADLINES & TIMELINE */}
       {activeTab === 'timeline' && (
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl">
+        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl page-fade-in">
           <h3 className="text-base font-bold text-white mb-6 font-heading">Contract Milestone & Notice Timeline</h3>
-          <div className="relative border-l-2 border-brand-500/30 ml-4 space-y-8 pb-4">
+          <div className="relative border-l-2 border-amberAccent-500/30 ml-4 space-y-8 pb-4">
             {deadlines.map((dl, index) => (
-              <div key={index} className="relative pl-7 group">
+              <div key={index} className="relative pl-8 group">
                 {/* Dot */}
                 <div
-                  className={`absolute -left-[9px] top-1 w-4 h-4 rounded-full border-2 border-obsidian-950 ${
+                  className={`absolute -left-[9px] top-1.5 w-4 h-4 rounded-full border-2 border-obsidian-950 shadow-sm ${
                     dl.urgency === 'High'
                       ? 'bg-rose-500 animate-pulse'
                       : dl.urgency === 'Medium'
@@ -444,13 +472,13 @@ const DocumentDetailPage = () => {
                       : 'bg-emerald-500'
                   }`}
                 />
-                <div className="p-4 rounded-2xl bg-obsidian-950 border border-slate-800">
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-                    <span className="font-mono text-xs font-bold text-brand-400">
+                <div className="p-5 rounded-2xl bg-obsidian-950 border border-white/10 hover:border-amberAccent-500/30 transition-all shadow-md">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                    <span className="font-mono text-xs font-bold text-amberAccent-400">
                       {dl.date}
                     </span>
                     <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                         dl.urgency === 'High'
                           ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                           : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
@@ -462,7 +490,7 @@ const DocumentDetailPage = () => {
                   <h4 className="text-sm font-bold text-white font-heading">
                     {dl.title}
                   </h4>
-                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                  <p className="text-xs text-slate-300 mt-1 leading-relaxed font-sans">
                     {dl.description}
                   </p>
                 </div>
@@ -474,31 +502,31 @@ const DocumentDetailPage = () => {
 
       {/* TAB 6: RAW EXTRACTED TEXT */}
       {activeTab === 'raw' && (
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-slate-800 space-y-4 shadow-2xl">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-800">
+        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-4 shadow-2xl page-fade-in">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-white/10">
             <div>
               <h3 className="text-base font-bold text-white font-heading">Raw Extracted Contract Text</h3>
-              <p className="text-xs text-slate-400">Verbatim document text indexed by the parser</p>
+              <p className="text-xs text-slate-400 font-sans">Verbatim document text indexed by the parser</p>
             </div>
-            <div className="relative w-full sm:w-64">
+            <div className="relative w-full sm:w-72">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={rawSearch}
                 onChange={(e) => setRawSearch(e.target.value)}
                 placeholder="Search raw text..."
-                className="w-full pl-9 pr-3 py-1.5 rounded-xl text-xs bg-obsidian-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full pl-9 pr-3 py-2 rounded-xl text-xs bg-obsidian-950 border border-white/10 text-white focus:outline-none focus:ring-1 focus:ring-amberAccent-500 font-mono"
               />
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-obsidian-950 border border-slate-800 text-slate-300 font-mono text-xs overflow-x-auto max-h-[600px] overflow-y-auto leading-relaxed whitespace-pre-wrap select-text">
+          <div className="p-5 rounded-2xl bg-obsidian-950 border border-white/10 text-slate-300 font-mono text-xs overflow-x-auto max-h-[600px] overflow-y-auto leading-relaxed whitespace-pre-wrap select-text">
             {rawSearch ? (
               document.extractedText
                 ?.split(new RegExp(`(${rawSearch})`, 'gi'))
                 .map((part, i) =>
                   part.toLowerCase() === rawSearch.toLowerCase() ? (
-                    <mark key={i} className="bg-brand-500 text-white font-bold rounded px-0.5">
+                    <mark key={i} className="bg-amberAccent-500 text-obsidian-950 font-bold rounded px-1">
                       {part}
                     </mark>
                   ) : (

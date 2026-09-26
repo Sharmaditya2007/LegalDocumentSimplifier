@@ -1,56 +1,89 @@
 import React from 'react';
-import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Sparkles } from 'lucide-react';
 
 const StatCard = ({ title, value, change, changeType = 'positive', icon: Icon, color = 'brand', subtitle }) => {
   const colorMap = {
-    brand: 'text-brand-500 bg-brand-500/10 dark:text-brand-400 dark:bg-brand-500/15',
-    rose: 'text-rose-500 bg-rose-500/10 dark:text-rose-400 dark:bg-rose-500/15',
-    amber: 'text-amber-500 bg-amber-500/10 dark:text-amber-400 dark:bg-amber-500/15',
-    emerald: 'text-emerald-500 bg-emerald-500/10 dark:text-emerald-400 dark:bg-emerald-500/15',
-    indigo: 'text-indigo-500 bg-indigo-500/10 dark:text-indigo-400 dark:bg-indigo-500/15',
+    brand: {
+      iconBg: 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.25)]',
+      glow: 'from-indigo-500/10',
+      borderHover: 'hover:border-indigo-500/40',
+      accent: 'text-indigo-400'
+    },
+    rose: {
+      iconBg: 'bg-rose-500/10 border-rose-500/30 text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.25)]',
+      glow: 'from-rose-500/10',
+      borderHover: 'hover:border-rose-500/40',
+      accent: 'text-rose-400'
+    },
+    amber: {
+      iconBg: 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.25)]',
+      glow: 'from-amber-500/10',
+      borderHover: 'hover:border-amber-500/40',
+      accent: 'text-amber-400'
+    },
+    emerald: {
+      iconBg: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.25)]',
+      glow: 'from-emerald-500/10',
+      borderHover: 'hover:border-emerald-500/40',
+      accent: 'text-emerald-400'
+    },
+    indigo: {
+      iconBg: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400 shadow-[0_0_15px_rgba(0,210,255,0.25)]',
+      glow: 'from-cyan-500/10',
+      borderHover: 'hover:border-cyan-500/40',
+      accent: 'text-cyan-400'
+    },
   };
 
+  const scheme = colorMap[color] || colorMap.brand;
+
   return (
-    <div className="glass-card rounded-2xl p-5 relative overflow-hidden">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+    <div className={`card-3d glass-card rounded-2xl p-5 relative overflow-hidden group border border-white/10 ${scheme.borderHover}`}>
+      {/* Background Ambient Glow Gradient */}
+      <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${scheme.glow} to-transparent blur-2xl rounded-full pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity`} />
+      
+      {/* Top Bar with Title and Icon */}
+      <div className="flex items-center justify-between relative z-10">
+        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 group-hover:text-slate-300 transition-colors">
           {title}
         </span>
         {Icon && (
-          <div className={`p-2.5 rounded-xl ${colorMap[color] || colorMap.brand}`}>
-            <Icon className="w-5 h-5" />
+          <div className={`w-9 h-9 rounded-xl border flex items-center justify-center transition-transform group-hover:scale-110 ${scheme.iconBg}`}>
+            <Icon className="w-4 h-4" />
           </div>
         )}
       </div>
 
-      <div className="mt-3 flex items-baseline gap-2">
-        <span className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-mono">
+      {/* Main Metric Value & Trend */}
+      <div className="mt-3.5 flex items-baseline gap-2.5 relative z-10">
+        <span className="text-3xl font-extrabold tracking-tight text-white font-mono">
           {value}
         </span>
         {change && (
           <span
-            className={`inline-flex items-center text-xs font-medium ${
+            className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
               changeType === 'positive'
-                ? 'text-emerald-600 dark:text-emerald-400'
-                : 'text-rose-600 dark:text-rose-400'
+                ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.15)]'
+                : 'bg-rose-500/15 text-rose-300 border-rose-500/30 shadow-[0_0_10px_rgba(244,63,94,0.15)]'
             }`}
           >
             {changeType === 'positive' ? (
-              <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" />
+              <ArrowUpRight className="w-3 h-3 mr-0.5" />
             ) : (
-              <ArrowDownRight className="w-3.5 h-3.5 mr-0.5" />
+              <ArrowDownRight className="w-3 h-3 mr-0.5" />
             )}
             {change}
           </span>
         )}
       </div>
 
+      {/* Subtitle / Context */}
       {subtitle && (
-        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>
+        <p className="mt-1.5 text-xs text-slate-400 relative z-10 leading-relaxed font-sans">{subtitle}</p>
       )}
 
-      {/* Subtle background glow */}
-      <div className="absolute -bottom-8 -right-8 w-24 h-24 rounded-full bg-brand-500/5 blur-2xl pointer-events-none" />
+      {/* 3D bottom edge accent line */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:via-amberAccent-500/40 transition-colors" />
     </div>
   );
 };

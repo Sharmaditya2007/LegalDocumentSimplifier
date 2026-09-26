@@ -14,7 +14,8 @@ import {
   Download,
   Zap,
   Layers,
-  Scale
+  Scale,
+  Check
 } from 'lucide-react';
 import api from '../services/api';
 import { useNotification } from '../context/NotificationContext';
@@ -100,24 +101,25 @@ const ContractComparisonPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-sans page-fade-in">
+      
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-purple-400">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-purple-400">
             <GitCompare className="w-4 h-4" />
             <span>AI Semantic Diff Engine</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading mt-0.5">
             Contract Version Comparison
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Compare revisions, negotiate redlines, and detect newly slipped liabilities or non-competes.
+          <p className="text-xs sm:text-sm text-slate-400 mt-1 font-sans">
+            Compare revisions, negotiate redlines, and detect newly slipped liabilities or sneaky alterations.
           </p>
         </div>
 
         <button
           onClick={handleLoadDemoComparison}
-          className="px-4 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs font-semibold flex items-center gap-2 transition-all self-start sm:self-auto shadow-sm"
+          className="px-4 py-2.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 text-xs font-semibold flex items-center gap-2 transition-all self-start sm:self-auto shadow-sm hover:scale-105"
         >
           <Zap className="w-4 h-4 text-purple-400" />
           <span>Load Demo Comparison (v1 vs v2)</span>
@@ -125,17 +127,18 @@ const ContractComparisonPage = () => {
       </div>
 
       {/* Contract Selector Box */}
-      <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl">
+      <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl relative overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+          
           {/* Document A Selector */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+            <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">
               Contract A (Baseline / Prior Version)
             </label>
             <select
               value={docAId}
               onChange={(e) => setDocAId(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-700 bg-obsidian-950 text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full px-4 py-3 rounded-xl border border-white/10 bg-obsidian-950 text-white text-xs font-medium focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30"
             >
               <option value="">Select Contract A...</option>
               {documents.map((d) => (
@@ -147,21 +150,21 @@ const ContractComparisonPage = () => {
           </div>
 
           {/* Versus Icon */}
-          <div className="text-center flex justify-center items-center pt-4 md:pt-0">
-            <div className="w-10 h-10 rounded-full bg-obsidian-900 border border-slate-700 text-purple-400 flex items-center justify-center font-bold font-mono text-xs shadow-inner">
+          <div className="text-center flex justify-center items-center pt-2 md:pt-6">
+            <div className="w-11 h-11 rounded-2xl bg-obsidian-900 border border-purple-500/30 text-purple-400 flex items-center justify-center font-bold font-mono text-xs shadow-[0_0_20px_rgba(155,81,224,0.2)]">
               VS
             </div>
           </div>
 
           {/* Document B Selector */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+            <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">
               Contract B (Revised / Counterparty Markup)
             </label>
             <select
               value={docBId}
               onChange={(e) => setDocBId(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-700 bg-obsidian-950 text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full px-4 py-3 rounded-xl border border-white/10 bg-obsidian-950 text-white text-xs font-medium focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30"
             >
               <option value="">Select Contract B...</option>
               {documents.map((d) => (
@@ -177,7 +180,7 @@ const ContractComparisonPage = () => {
           <button
             onClick={handleRunComparison}
             disabled={loading}
-            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs shadow-glow transition-all flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-7 py-3 rounded-xl btn-glow-gold text-obsidian-950 font-bold text-xs shadow-glow-amber transition-all flex items-center justify-center gap-2 hover:scale-105"
           >
             {loading ? (
               <RefreshCw className="w-4 h-4 animate-spin" />
@@ -193,40 +196,45 @@ const ContractComparisonPage = () => {
 
       {/* Comparison Results */}
       {comparison && (
-        <div className="space-y-6">
+        <div className="space-y-6 page-fade-in">
+          
           {/* Executive Diff Banner */}
-          <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-purple-500/40 bg-gradient-to-b from-purple-950/20 via-obsidian-900 to-obsidian-950 shadow-2xl">
-            <h3 className="text-lg font-bold text-white font-heading">
+          <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-purple-500/30 bg-gradient-to-b from-purple-950/20 via-obsidian-950 to-obsidian-950 shadow-2xl">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-purple-400 uppercase tracking-wider mb-2">
+              <Sparkles className="w-4 h-4" />
+              Diff Engine Analysis
+            </div>
+            <h3 className="text-xl font-bold text-white font-heading">
               {comparison.title}
             </h3>
-            <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed font-sans">
               {comparison.summary}
             </p>
 
             {/* Key Metrics Strip */}
             {comparison.keyMetrics && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-800 text-center">
-                <div className="p-3.5 rounded-xl bg-obsidian-950 border border-slate-800">
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Clauses Added</span>
-                  <p className="text-xl font-bold font-mono text-purple-400">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/10 text-center">
+                <div className="p-4 rounded-2xl bg-obsidian-950 border border-white/10">
+                  <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Clauses Added</span>
+                  <p className="text-2xl font-bold font-mono text-purple-400 mt-1">
                     +{comparison.keyMetrics.clausesAdded}
                   </p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-obsidian-950 border border-slate-800">
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Clauses Removed</span>
-                  <p className="text-xl font-bold font-mono text-slate-300">
+                <div className="p-4 rounded-2xl bg-obsidian-950 border border-white/10">
+                  <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Clauses Removed</span>
+                  <p className="text-2xl font-bold font-mono text-slate-300 mt-1">
                     -{comparison.keyMetrics.clausesRemoved}
                   </p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-obsidian-950 border border-slate-800">
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Clauses Modified</span>
-                  <p className="text-xl font-bold font-mono text-amber-400">
+                <div className="p-4 rounded-2xl bg-obsidian-950 border border-white/10">
+                  <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Clauses Modified</span>
+                  <p className="text-2xl font-bold font-mono text-amber-400 mt-1">
                     {comparison.keyMetrics.clausesModified}
                   </p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-obsidian-950 border border-slate-800">
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Risk Delta</span>
-                  <p className="text-xs font-bold font-mono text-rose-400 mt-1">
+                <div className="p-4 rounded-2xl bg-obsidian-950 border border-white/10">
+                  <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Risk Delta</span>
+                  <p className="text-xs font-bold font-mono text-rose-400 mt-2">
                     {comparison.keyMetrics.riskScoreShift}
                   </p>
                 </div>
@@ -236,39 +244,39 @@ const ContractComparisonPage = () => {
 
           {/* Filter Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h4 className="text-sm font-bold text-white font-heading">
+            <h4 className="text-base font-bold text-white font-heading">
               Identified Structural Changes ({filteredDifferences.length})
             </h4>
 
-            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-obsidian-900 border border-slate-800 text-xs">
+            <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-obsidian-900 border border-white/10 text-xs">
               <button
                 onClick={() => setFilterType('all')}
-                className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-                  filterType === 'all' ? 'bg-brand-600 text-white shadow-glow' : 'text-slate-400 hover:text-slate-200'
+                className={`px-3 py-1.5 rounded-xl font-medium transition-all ${
+                  filterType === 'all' ? 'bg-amberAccent-500 text-obsidian-950 font-bold shadow-glow-amber' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 All Changes
               </button>
               <button
                 onClick={() => setFilterType('critical_risk')}
-                className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-                  filterType === 'critical_risk' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'text-slate-400 hover:text-slate-200'
+                className={`px-3 py-1.5 rounded-xl font-medium transition-all ${
+                  filterType === 'critical_risk' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 High Risk Diffs
               </button>
               <button
                 onClick={() => setFilterType('added')}
-                className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-                  filterType === 'added' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'text-slate-400 hover:text-slate-200'
+                className={`px-3 py-1.5 rounded-xl font-medium transition-all ${
+                  filterType === 'added' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Added Clauses
               </button>
               <button
                 onClick={() => setFilterType('modified')}
-                className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
-                  filterType === 'modified' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'
+                className={`px-3 py-1.5 rounded-xl font-medium transition-all ${
+                  filterType === 'modified' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Modified Terms
@@ -281,12 +289,12 @@ const ContractComparisonPage = () => {
             {filteredDifferences.map((diff, idx) => (
               <div
                 key={idx}
-                className="glass-panel rounded-3xl p-6 sm:p-7 border border-slate-800 shadow-xl"
+                className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 shadow-xl card-3d"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                   <div className="flex items-center gap-2">
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                      className={`px-3 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
                         diff.type === 'added'
                           ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
                           : diff.type === 'removed'
@@ -296,18 +304,18 @@ const ContractComparisonPage = () => {
                     >
                       {diff.type}
                     </span>
-                    <span className="text-xs font-semibold text-slate-400">
+                    <span className="text-xs font-mono font-semibold text-slate-400">
                       {diff.category}
                     </span>
                   </div>
 
                   {diff.impact === 'critical_risk' && (
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                    <span className="px-3 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
                       Critical Risk Slipped
                     </span>
                   )}
                   {diff.impact === 'positive' && (
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    <span className="px-3 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                       Favorable Shift
                     </span>
                   )}
@@ -319,8 +327,8 @@ const ContractComparisonPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   {/* Contract A Box */}
-                  <div className="p-4 rounded-2xl bg-obsidian-950 border border-slate-800">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                  <div className="p-4 rounded-2xl bg-obsidian-950 border border-white/10">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
                       {comparison.docATitle || 'Contract A'}
                     </span>
                     <p className="text-xs font-mono text-slate-300 leading-relaxed">
@@ -338,7 +346,7 @@ const ContractComparisonPage = () => {
                         : 'bg-amber-950/20 border-amber-500/40 text-amber-200'
                     }`}
                   >
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
                       {comparison.docBTitle || 'Contract B (Updated)'}
                     </span>
                     <p className="text-xs font-mono leading-relaxed font-semibold">
@@ -348,10 +356,10 @@ const ContractComparisonPage = () => {
                 </div>
 
                 {/* AI Semantic Legal Impact */}
-                <div className="mt-4 pt-3 border-t border-slate-800 flex items-start gap-2">
-                  <Sparkles className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    <span className="font-semibold text-white">Legal Analysis: </span>
+                <div className="mt-4 pt-3.5 border-t border-white/10 flex items-start gap-2.5">
+                  <Sparkles className="w-4 h-4 text-amberAccent-400 shrink-0 mt-0.5" />
+                  <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                    <strong className="font-semibold text-white">Legal Analysis: </strong>
                     {diff.analysis}
                   </p>
                 </div>

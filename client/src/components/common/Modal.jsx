@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Sparkles } from 'lucide-react';
 
 const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-2xl' }) => {
   useEffect(() => {
@@ -19,28 +19,36 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-2xl' }) => 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      {/* Dynamic Blurred Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-obsidian-950/80 backdrop-blur-md transition-opacity duration-300 animate-fadeIn"
         onClick={onClose}
       />
 
-      {/* Modal Dialog */}
+      {/* Modal Dialog Card with 3D Border & Glow */}
       <div
-        className={`relative w-full ${maxWidth} glass-card bg-white dark:bg-navy-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 z-10 overflow-hidden max-h-[90vh] flex flex-col`}
+        className={`relative w-full ${maxWidth} glass-panel bg-obsidian-950/90 rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] border border-white/15 z-10 overflow-hidden max-h-[90vh] flex flex-col page-fade-in`}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800/80">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>
+        {/* Top Header */}
+        <div className="flex items-center justify-between px-6 py-4.5 border-b border-white/10 bg-white/[0.02]">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-amberAccent-500 shadow-[0_0_8px_rgba(235,184,126,0.8)]" />
+            <h3 className="text-base font-bold text-white font-heading tracking-tight">{title}</h3>
+          </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
+        {/* Modal Body */}
         <div className="p-6 overflow-y-auto flex-1">{children}</div>
+
+        {/* Subtle Ambient Bottom Flare */}
+        <div className="h-1 bg-gradient-to-r from-transparent via-amberAccent-500/40 to-transparent pointer-events-none" />
       </div>
     </div>
   );

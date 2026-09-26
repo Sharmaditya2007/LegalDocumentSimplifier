@@ -18,7 +18,10 @@ import {
   Plus,
   Layers,
   Activity,
-  Check
+  Check,
+  Zap,
+  Scale,
+  Clock
 } from 'lucide-react';
 import {
   Chart as ChartJS,
@@ -249,10 +252,11 @@ const DashboardPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-sans page-fade-in">
+      
       {/* Top Welcome Header & Quick Action Buttons */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1.5">
             <span className="flex h-2 w-2 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -264,8 +268,8 @@ const DashboardPage = () => {
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading">
             Executive Document Command
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Welcome back, <span className="font-semibold text-slate-200">{user?.name}</span>. Here is your legal risk posture and contract timeline.
+          <p className="text-xs sm:text-sm text-slate-400 mt-1 font-sans">
+            Welcome back, <span className="font-bold text-slate-200">{user?.name}</span>. Here is your legal risk posture and contract timeline.
           </p>
         </div>
 
@@ -273,12 +277,12 @@ const DashboardPage = () => {
         <div className="flex flex-wrap items-center gap-3">
           <Link
             to="/compare"
-            className="px-4 py-2.5 rounded-xl border border-slate-700 bg-obsidian-900 hover:bg-obsidian-800 text-xs font-semibold text-slate-200 flex items-center gap-2 transition-all shadow-sm hover:border-brand-500/40"
+            className="px-4 py-2.5 rounded-xl border border-white/10 bg-obsidian-900 hover:bg-obsidian-850 text-xs font-semibold text-slate-200 flex items-center gap-2 transition-all shadow-sm hover:border-purple-500/40 hover:shadow-[0_0_15px_rgba(155,81,224,0.15)]"
           >
             <GitCompare className="w-3.5 h-3.5 text-purple-400" />
             <span>Compare Contracts</span>
           </Link>
-          <label className="cursor-pointer px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-glow flex items-center gap-2 transition-all hover:scale-[1.02]">
+          <label className="cursor-pointer px-5 py-2.5 rounded-xl btn-glow-gold text-obsidian-950 text-xs font-bold shadow-glow-amber flex items-center gap-2 transition-all hover:scale-[1.02]">
             <UploadCloud className="w-4 h-4" />
             <span>Upload Contract</span>
             <input
@@ -291,7 +295,7 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* KPI Stats Grid */}
+      {/* KPI Stats Grid with 3D Depth */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <StatCard
           title="Total Documents"
@@ -330,37 +334,37 @@ const DashboardPage = () => {
       </div>
 
       {/* 1-Click Sample Contracts Testing Bar */}
-      <div className="p-5 rounded-2xl glass-panel border border-brand-500/30 bg-gradient-to-r from-brand-950/40 via-obsidian-900 to-obsidian-950">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-brand-500/10 border border-brand-500/30 text-brand-400">
+      <div className="p-6 rounded-3xl glass-panel border border-amberAccent-500/30 bg-gradient-to-r from-amberAccent-500/10 via-obsidian-950 to-obsidian-950 relative overflow-hidden shadow-2xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-amberAccent-500/15 border border-amberAccent-500/40 text-amberAccent-400 flex items-center justify-center shadow-inner">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2 font-heading">
                 <span>Instant 1-Click Evaluation Contracts</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold uppercase tracking-wider">
-                  Ready
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold uppercase tracking-wider">
+                  Live Engine
                 </span>
               </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Click any contract to run the AI Risk Engine, Clause Extractor, and Plain-English Translator:
+              <p className="text-xs text-slate-400 mt-0.5 font-sans">
+                Click any sample to test AI Clause Extraction, Risk Sentinel, and Plain-English Translator:
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={() => handleLoadSample('saas')}
               disabled={uploading}
-              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/30 hover:bg-rose-500/20 transition-all shadow-sm"
+              className="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/30 hover:bg-rose-500/20 hover:scale-105 transition-all shadow-sm"
             >
               Test SaaS MSA (High Risk)
             </button>
             <button
               onClick={() => handleLoadSample('nda')}
               disabled={uploading}
-              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20 transition-all shadow-sm"
+              className="px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20 hover:scale-105 transition-all shadow-sm"
             >
               Test NDA (Low Risk)
             </button>
@@ -371,43 +375,43 @@ const DashboardPage = () => {
       {/* Main Visualizations: Risk Distribution & Audit Trends */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Doughnut Chart */}
-        <div className="glass-panel rounded-3xl p-6 border border-slate-800 flex flex-col justify-between">
+        <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 flex flex-col justify-between shadow-2xl">
           <div>
-            <h3 className="text-sm font-bold text-white font-heading">Risk Distribution</h3>
+            <h3 className="text-base font-bold text-white font-heading">Risk Distribution</h3>
             <p className="text-xs text-slate-400 mt-0.5">Categorization of monitored agreements</p>
           </div>
           <div className="h-56 mt-4 relative flex items-center justify-center">
             {totalDocs > 0 ? (
               <Doughnut data={doughnutData} options={chartOptions} />
             ) : (
-              <div className="text-center text-xs text-slate-400">No documents analyzed yet</div>
+              <div className="text-center text-xs text-slate-400 font-mono">No documents analyzed yet</div>
             )}
           </div>
-          <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-800 text-center">
+          <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-white/5 text-center">
             <div>
-              <span className="text-[10px] uppercase font-bold text-rose-400">High</span>
-              <p className="text-lg font-bold font-mono text-white">{highRiskDocs}</p>
+              <span className="text-[10px] uppercase font-bold text-rose-400 font-mono">High</span>
+              <p className="text-xl font-bold font-mono text-white mt-0.5">{highRiskDocs}</p>
             </div>
             <div>
-              <span className="text-[10px] uppercase font-bold text-amber-400">Medium</span>
-              <p className="text-lg font-bold font-mono text-white">{mediumRiskDocs}</p>
+              <span className="text-[10px] uppercase font-bold text-amber-400 font-mono">Medium</span>
+              <p className="text-xl font-bold font-mono text-white mt-0.5">{mediumRiskDocs}</p>
             </div>
             <div>
-              <span className="text-[10px] uppercase font-bold text-emerald-400">Low</span>
-              <p className="text-lg font-bold font-mono text-white">{lowRiskDocs}</p>
+              <span className="text-[10px] uppercase font-bold text-emerald-400 font-mono">Low</span>
+              <p className="text-xl font-bold font-mono text-white mt-0.5">{lowRiskDocs}</p>
             </div>
           </div>
         </div>
 
         {/* Volume & Risk Flag Trends Bar Chart */}
-        <div className="lg:col-span-2 glass-panel rounded-3xl p-6 border border-slate-800 flex flex-col justify-between">
+        <div className="lg:col-span-2 glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 flex flex-col justify-between shadow-2xl">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-white font-heading">Audit & Flagged Risk Activity</h3>
+              <h3 className="text-base font-bold text-white font-heading">Audit & Flagged Risk Activity</h3>
               <p className="text-xs text-slate-400 mt-0.5">Monthly processed contracts and detected clauses</p>
             </div>
-            <span className="text-[11px] px-2.5 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 font-semibold">
-              Live Engine
+            <span className="text-[11px] px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-mono font-semibold">
+              Live Telemetry
             </span>
           </div>
           <div className="h-64 mt-4">
@@ -418,29 +422,29 @@ const DashboardPage = () => {
 
       {/* Drag & Drop Upload Zone & Upcoming Deadlines */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Upload Dropzone */}
+        {/* Upload Dropzone with 3D Depth */}
         <div
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
-          className={`lg:col-span-2 rounded-3xl border-2 border-dashed p-8 text-center transition-all flex flex-col items-center justify-center min-h-[220px] ${
+          className={`lg:col-span-2 rounded-3xl border-2 border-dashed p-8 text-center transition-all flex flex-col items-center justify-center min-h-[230px] glass-panel ${
             dragActive
-              ? 'border-brand-500 bg-brand-500/10'
-              : 'border-slate-800 bg-obsidian-950/60 hover:border-brand-500/50'
+              ? 'border-amberAccent-500 bg-amberAccent-500/10 shadow-[0_0_40px_rgba(235,184,126,0.2)]'
+              : 'border-white/10 bg-obsidian-950/70 hover:border-amberAccent-500/40 hover:shadow-[0_0_25px_rgba(235,184,126,0.1)]'
           }`}
         >
-          <div className="w-14 h-14 rounded-2xl bg-brand-500/10 border border-brand-500/30 text-brand-400 flex items-center justify-center mb-3">
+          <div className="w-14 h-14 rounded-2xl bg-amberAccent-500/15 border border-amberAccent-500/30 text-amberAccent-400 flex items-center justify-center mb-3 shadow-inner">
             <UploadCloud className="w-7 h-7" />
           </div>
           <h3 className="text-base font-bold text-white font-heading">
             {uploading ? 'Processing Document with AI Engine...' : 'Drag and drop your legal contract here'}
           </h3>
-          <p className="text-xs text-slate-400 max-w-sm mt-1">
+          <p className="text-xs text-slate-400 max-w-sm mt-1 font-sans">
             Supports PDF (with OCR), DOCX, and TXT files up to 25MB. Instant plain-English translation & risk audit.
           </p>
 
-          <label className="mt-4 cursor-pointer px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-glow transition-all hover:scale-[1.02]">
+          <label className="mt-4 cursor-pointer px-6 py-2.5 rounded-xl btn-glow-gold text-obsidian-950 text-xs font-bold shadow-glow-amber transition-all hover:scale-105">
             <span>Browse Files</span>
             <input
               type="file"
@@ -453,33 +457,33 @@ const DashboardPage = () => {
         </div>
 
         {/* Upcoming Deadlines Widget */}
-        <div className="glass-panel rounded-3xl p-6 border border-slate-800 flex flex-col justify-between">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 flex flex-col justify-between shadow-2xl">
+          <div className="flex items-center justify-between pb-3.5 border-b border-white/10">
             <div className="flex items-center gap-2">
-              <CalendarClock className="w-4 h-4 text-brand-400" />
+              <CalendarClock className="w-4 h-4 text-amberAccent-400" />
               <h3 className="text-sm font-bold text-white font-heading">Critical Deadlines</h3>
             </div>
-            <Link to="/timeline" className="text-xs text-brand-400 hover:underline font-semibold">
-              View all
+            <Link to="/timeline" className="text-xs text-amberAccent-400 hover:underline font-semibold font-mono">
+              View all →
             </Link>
           </div>
 
           <div className="mt-4 space-y-3 flex-1 overflow-y-auto max-h-56">
             {deadlines.length === 0 ? (
-              <p className="text-xs text-slate-400 text-center py-6">No deadlines detected yet</p>
+              <p className="text-xs text-slate-400 text-center py-6 font-mono">No deadlines detected yet</p>
             ) : (
               deadlines.slice(0, 4).map((dl, i) => (
                 <div
                   key={i}
-                  className="p-3 rounded-xl bg-obsidian-950 border border-slate-800 text-xs"
+                  className="p-3.5 rounded-2xl bg-obsidian-950 border border-white/10 text-xs hover:border-amberAccent-500/30 transition-all"
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-mono font-bold text-brand-400">{dl.date}</span>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-mono font-bold text-amberAccent-400">{dl.date}</span>
                     <span
                       className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                         dl.urgency === 'High'
-                          ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                          : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                          : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
                       }`}
                     >
                       {dl.urgency}
@@ -495,15 +499,15 @@ const DashboardPage = () => {
       </div>
 
       {/* Recent Monitored Documents Table */}
-      <div className="glass-panel rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
-        <div className="p-6 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="glass-panel rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
+        <div className="p-6 sm:p-7 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h3 className="text-base font-bold text-white font-heading">Recently Monitored Contracts</h3>
-            <p className="text-xs text-slate-400 mt-0.5">Click any document to inspect clauses, plain-English summary, and risks</p>
+            <h3 className="text-lg font-bold text-white font-heading">Recently Monitored Contracts</h3>
+            <p className="text-xs text-slate-400 mt-0.5 font-sans">Click any document to inspect clauses, plain-English summary, and risks</p>
           </div>
           <Link
             to="/documents"
-            className="text-xs font-semibold text-brand-400 hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-amberAccent-400 hover:text-amberAccent-300 flex items-center gap-1.5 font-mono"
           >
             <span>Go to Document Library</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -516,68 +520,70 @@ const DashboardPage = () => {
             <CardSkeleton />
           </div>
         ) : documents.length === 0 ? (
-          <div className="p-12 text-center text-xs text-slate-400">
+          <div className="p-12 text-center text-xs text-slate-400 font-mono">
             No documents yet. Click "Upload Contract" or test with an instant sample contract above!
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-obsidian-950/80 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-800">
+              <thead className="bg-obsidian-950/90 text-slate-400 uppercase text-[10px] font-mono font-bold tracking-wider border-b border-white/10">
                 <tr>
-                  <th className="px-6 py-3.5">Contract Title</th>
-                  <th className="px-6 py-3.5">Type & Parties</th>
-                  <th className="px-6 py-3.5">Risk Rating</th>
-                  <th className="px-6 py-3.5">Flagged Risks</th>
-                  <th className="px-6 py-3.5 text-right">Actions</th>
+                  <th className="px-6 py-4">Contract Title</th>
+                  <th className="px-6 py-4">Type & Parties</th>
+                  <th className="px-6 py-4">Risk Rating</th>
+                  <th className="px-6 py-4">Flagged Risks</th>
+                  <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-white/5">
                 {documents.slice(0, 5).map((doc) => (
                   <tr
                     key={doc._id}
-                    className="hover:bg-obsidian-800/40 transition-colors group"
+                    className="hover:bg-white/[0.03] transition-colors group"
                   >
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4.5">
                       <Link
                         to={`/documents/${doc._id}`}
-                        className="font-semibold text-white hover:text-brand-400 transition-colors flex items-center gap-2"
+                        className="font-bold text-white hover:text-amberAccent-400 transition-colors flex items-center gap-2.5"
                       >
-                        <FileText className="w-4 h-4 text-brand-400 shrink-0" />
+                        <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-amberAccent-400 shrink-0">
+                          <FileText className="w-4 h-4" />
+                        </div>
                         <span className="truncate max-w-xs">{doc.title}</span>
                       </Link>
-                      <span className="text-[11px] text-slate-400 block mt-0.5">
+                      <span className="text-[11px] text-slate-400 block mt-1 font-mono">
                         {new Date(doc.createdAt).toLocaleDateString()} • {doc.fileName}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-slate-300 block truncate max-w-xs">
+                    <td className="px-6 py-4.5">
+                      <span className="font-semibold text-slate-300 block truncate max-w-xs">
                         {doc.analysis?.contractType || 'Commercial Agreement'}
                       </span>
                       <span className="text-[11px] text-slate-400 block truncate max-w-xs mt-0.5">
                         {doc.analysis?.parties?.join(' & ') || 'Bilateral'}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4.5">
                       <RiskBadge level={doc.riskLevel} score={doc.overallRiskScore} />
                     </td>
-                    <td className="px-6 py-4">
-                      <span className="font-semibold text-slate-200">
+                    <td className="px-6 py-4.5">
+                      <span className="font-mono font-bold text-slate-200 px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
                         {doc.analysis?.risks?.length || 0} items
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4.5 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <Link
                           to={`/documents/${doc._id}`}
-                          className="px-3 py-1.5 rounded-lg bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/20 font-semibold text-xs transition-colors flex items-center gap-1"
+                          className="px-3.5 py-1.5 rounded-xl bg-amberAccent-500/15 hover:bg-amberAccent-500/25 text-amberAccent-400 border border-amberAccent-500/30 font-bold text-xs transition-colors flex items-center gap-1.5"
                         >
                           <span>Analyze</span>
                           <ArrowRight className="w-3 h-3" />
                         </Link>
                         <Link
                           to={`/chat?doc=${doc._id}`}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-brand-400 hover:bg-obsidian-800 transition-colors"
-                          title="Chat with Document"
+                          className="p-2 rounded-xl text-slate-400 hover:text-cyan-400 hover:bg-white/5 transition-colors border border-transparent hover:border-white/10"
+                          title="Chat with Copilot"
                         >
                           <MessageSquare className="w-4 h-4" />
                         </Link>
