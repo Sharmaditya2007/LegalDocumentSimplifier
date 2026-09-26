@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Scale, Lock, Mail, User, Building, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Scale, Lock, Mail, User, Building, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const RegisterPage = () => {
@@ -42,43 +42,40 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center px-4 py-12 relative font-sans page-fade-in">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-amberAccent-500/10 via-cyan-500/5 to-purple-600/10 blur-[150px] pointer-events-none rounded-full" />
-
+    <div className="min-h-[85vh] flex items-center justify-center px-6 py-12 relative font-sans">
       <div className="w-full max-w-md relative z-10">
         
         {/* Header */}
-        <div className="text-center mb-6">
-          <Link to="/" className="inline-flex items-center gap-2.5 mb-3 group">
-            <div className="w-9 h-9 rounded-xl bg-obsidian-900 border border-amberAccent-500/40 flex items-center justify-center text-amberAccent-500 shadow-[0_0_20px_rgba(235,184,126,0.25)] group-hover:scale-105 transition-transform">
+        <div className="text-center mb-8">
+          <Link to="/" className="inline-flex items-center gap-2.5 mb-4 group">
+            <div className="w-9 h-9 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-white group-hover:scale-105 transition-transform">
               <Scale className="w-4.5 h-4.5" />
             </div>
-            <span className="font-extrabold text-base tracking-wider uppercase text-white font-heading">
-              LEGALEASE <span className="text-amberAccent-500 font-black">AI</span>
+            <span className="font-semibold text-base tracking-tight text-white">
+              LegalEase <span className="text-slate-400 font-normal">AI</span>
             </span>
           </Link>
-          <h2 className="text-2xl font-extrabold text-white font-heading tracking-tight">Create an Account</h2>
-          <p className="text-xs text-slate-400 mt-1 font-sans">
+          <h2 className="text-3xl font-bold text-white tracking-tight">Create Account</h2>
+          <p className="text-sm text-slate-400 mt-1 font-normal">
             Start auditing legal agreements with autonomous intelligence
           </p>
         </div>
 
         {/* Form Card */}
-        <div className="glass-panel rounded-3xl p-7 border border-white/15 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] relative overflow-hidden">
+        <div className="glass-luxury rounded-3xl p-8">
           {error && (
-            <div className="mb-4 p-3.5 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-medium font-sans">
+            <div className="mb-5 p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-medium">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                 Full Name
               </label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   required
@@ -86,17 +83,17 @@ const RegisterPage = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Sarah Jenkins, Esq."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-amberAccent-500/50 focus:ring-1 focus:ring-amberAccent-500/30"
+                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-white/10 bg-white/[0.03] text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-white/30"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   required
@@ -104,34 +101,34 @@ const RegisterPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="counsel@firm.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-amberAccent-500/50 focus:ring-1 focus:ring-amberAccent-500/30"
+                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-white/10 bg-white/[0.03] text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-white/30"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                Company / Law Firm (Optional)
+              <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
+                Company / Organization (Optional)
               </label>
               <div className="relative">
-                <Building className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Building className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   name="company"
                   value={formData.company}
                   onChange={handleChange}
                   placeholder="Acme Legal Group"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-amberAccent-500/50 focus:ring-1 focus:ring-amberAccent-500/30"
+                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-white/10 bg-white/[0.03] text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-white/30"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
                   required
@@ -139,7 +136,7 @@ const RegisterPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="At least 6 characters"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-white/10 bg-obsidian-950 text-white placeholder-slate-500 text-xs sm:text-sm font-sans focus:outline-none focus:border-amberAccent-500/50 focus:ring-1 focus:ring-amberAccent-500/30"
+                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-white/10 bg-white/[0.03] text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-white/30"
                 />
               </div>
             </div>
@@ -147,22 +144,22 @@ const RegisterPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-2xl btn-glow-gold text-obsidian-950 font-bold text-xs sm:text-sm shadow-glow-amber transition-all flex items-center justify-center gap-2 mt-3 font-sans hover:scale-[1.02]"
+              className="w-full py-3.5 rounded-full btn-luxury-primary text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 mt-4"
             >
               {loading ? (
-                <div className="w-4 h-4 border-2 border-obsidian-950/30 border-t-obsidian-950 rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>Launch Free Workspace</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>Create Account</span>
+                  <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-xs text-slate-400 font-sans">
+          <p className="mt-8 text-center text-xs text-slate-400">
             Already have an account?{' '}
-            <Link to="/login" className="font-bold text-amberAccent-400 hover:text-amberAccent-300 hover:underline">
+            <Link to="/login" className="font-semibold text-white hover:underline">
               Sign in
             </Link>
           </p>

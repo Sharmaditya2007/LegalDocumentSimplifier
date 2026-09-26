@@ -1,26 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   GitCompare,
-  ArrowRight,
   Sparkles,
-  ShieldAlert,
+  RefreshCw,
   PlusCircle,
   MinusCircle,
-  RefreshCw,
-  FileText,
-  AlertTriangle,
-  CheckCircle2,
-  Download,
-  Zap,
-  Layers,
-  Scale,
-  Check
+  Zap
 } from 'lucide-react';
 import api from '../services/api';
 import { useNotification } from '../context/NotificationContext';
-import RiskBadge from '../components/common/RiskBadge';
-import { CardSkeleton } from '../components/common/SkeletonLoader';
 import { MOCK_DOCUMENTS, MOCK_COMPARISONS } from '../services/mockData';
 
 const ContractComparisonPage = () => {
@@ -33,10 +22,9 @@ const ContractComparisonPage = () => {
   const [comparison, setComparison] = useState(MOCK_COMPARISONS[0]);
   const [comparisonsList, setComparisonsList] = useState(MOCK_COMPARISONS);
   const [loading, setLoading] = useState(false);
-  const [filterType, setFilterType] = useState('all'); // 'all', 'added', 'modified', 'critical_risk'
+  const [filterType, setFilterType] = useState('all');
 
   useEffect(() => {
-    // Fetch available documents
     api.get('/documents')
       .then(res => {
         if (res.data?.success && res.data.documents?.length > 0) {
@@ -45,7 +33,6 @@ const ContractComparisonPage = () => {
       })
       .catch(() => {});
 
-    // Fetch existing comparisons
     api.get('/comparisons')
       .then(res => {
         if (res.data?.success && res.data.comparisons?.length > 0) {
@@ -100,75 +87,71 @@ const ContractComparisonPage = () => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-sans page-fade-in">
+    <div className="max-w-7xl mx-auto px-6 sm:px-8 py-10 space-y-10 font-sans">
       
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-purple-400">
-            <GitCompare className="w-4 h-4" />
-            <span>AI Semantic Diff Engine</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading mt-0.5">
-            Contract Version Comparison
+          <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            Diff Engine
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1 font-sans">
-            Compare revisions, negotiate redlines, and detect newly slipped liabilities or sneaky alterations.
+          <p className="text-sm text-slate-400 mt-1 font-normal">
+            Compare revisions side-by-side, negotiate redlines, and detect newly slipped liabilities or sneaky alterations.
           </p>
         </div>
 
         <button
           onClick={handleLoadDemoComparison}
-          className="px-4 py-2.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 text-xs font-semibold flex items-center gap-2 transition-all self-start sm:self-auto shadow-sm hover:scale-105"
+          className="px-5 py-2.5 rounded-full btn-luxury-secondary text-xs font-medium flex items-center gap-2 self-start sm:self-auto"
         >
-          <Zap className="w-4 h-4 text-purple-400" />
-          <span>Load Demo Comparison (v1 vs v2)</span>
+          <Zap className="w-3.5 h-3.5 text-slate-400" />
+          <span>Load Demo Diff (v1 vs v2)</span>
         </button>
       </div>
 
       {/* Contract Selector Box */}
-      <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl relative overflow-hidden">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+      <div className="glass-luxury rounded-3xl p-6 sm:p-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
           
           {/* Document A Selector */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">
+            <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
               Contract A (Baseline / Prior Version)
             </label>
             <select
               value={docAId}
               onChange={(e) => setDocAId(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-white/10 bg-obsidian-950 text-white text-xs font-medium focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30"
+              className="w-full px-4 py-3 rounded-2xl border border-white/10 bg-white/[0.03] text-white text-xs font-medium focus:outline-none focus:border-white/30"
             >
-              <option value="">Select Contract A...</option>
+              <option value="" className="bg-[#0a0a10]">Select Contract A...</option>
               {documents.map((d) => (
-                <option key={d._id} value={d._id}>
+                <option key={d._id} value={d._id} className="bg-[#0a0a10]">
                   {d.title} ({d.riskLevel?.toUpperCase()} RISK)
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Versus Icon */}
+          {/* Versus Indicator */}
           <div className="text-center flex justify-center items-center pt-2 md:pt-6">
-            <div className="w-11 h-11 rounded-2xl bg-obsidian-900 border border-purple-500/30 text-purple-400 flex items-center justify-center font-bold font-mono text-xs shadow-[0_0_20px_rgba(155,81,224,0.2)]">
-              VS
+            <div className="w-10 h-10 rounded-full bg-white/[0.04] border border-white/10 text-slate-300 flex items-center justify-center font-medium text-xs">
+              vs
             </div>
           </div>
 
           {/* Document B Selector */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">
+            <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
               Contract B (Revised / Counterparty Markup)
             </label>
             <select
               value={docBId}
               onChange={(e) => setDocBId(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-white/10 bg-obsidian-950 text-white text-xs font-medium focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30"
+              className="w-full px-4 py-3 rounded-2xl border border-white/10 bg-white/[0.03] text-white text-xs font-medium focus:outline-none focus:border-white/30"
             >
-              <option value="">Select Contract B...</option>
+              <option value="" className="bg-[#0a0a10]">Select Contract B...</option>
               {documents.map((d) => (
-                <option key={d._id} value={d._id}>
+                <option key={d._id} value={d._id} className="bg-[#0a0a10]">
                   {d.title} ({d.riskLevel?.toUpperCase()} RISK)
                 </option>
               ))}
@@ -176,11 +159,11 @@ const ContractComparisonPage = () => {
           </div>
         </div>
 
-        <div className="mt-6 flex justify-end">
+        <div className="mt-8 flex justify-end">
           <button
             onClick={handleRunComparison}
             disabled={loading}
-            className="w-full sm:w-auto px-7 py-3 rounded-xl btn-glow-gold text-obsidian-950 font-bold text-xs shadow-glow-amber transition-all flex items-center justify-center gap-2 hover:scale-105"
+            className="w-full sm:w-auto px-8 py-3 rounded-full btn-luxury-primary text-xs font-semibold flex items-center justify-center gap-2"
           >
             {loading ? (
               <RefreshCw className="w-4 h-4 animate-spin" />
@@ -196,45 +179,45 @@ const ContractComparisonPage = () => {
 
       {/* Comparison Results */}
       {comparison && (
-        <div className="space-y-6 page-fade-in">
+        <div className="space-y-6">
           
           {/* Executive Diff Banner */}
-          <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-purple-500/30 bg-gradient-to-b from-purple-950/20 via-obsidian-950 to-obsidian-950 shadow-2xl">
-            <div className="flex items-center gap-2 text-xs font-mono font-bold text-purple-400 uppercase tracking-wider mb-2">
-              <Sparkles className="w-4 h-4" />
+          <div className="glass-luxury rounded-3xl p-6 sm:p-8">
+            <div className="flex items-center gap-2 text-xs font-medium text-indigo-400 uppercase tracking-wider mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
               Diff Engine Analysis
             </div>
-            <h3 className="text-xl font-bold text-white font-heading">
+            <h3 className="text-xl font-semibold text-white">
               {comparison.title}
             </h3>
-            <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed font-sans">
+            <p className="text-sm text-slate-300 mt-2 leading-relaxed font-normal">
               {comparison.summary}
             </p>
 
             {/* Key Metrics Strip */}
             {comparison.keyMetrics && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/10 text-center">
-                <div className="p-4 rounded-2xl bg-obsidian-950 border border-white/10">
-                  <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Clauses Added</span>
-                  <p className="text-2xl font-bold font-mono text-purple-400 mt-1">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-8 border-t border-white/[0.06] text-center">
+                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
+                  <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Clauses Added</span>
+                  <p className="text-2xl font-bold text-white mt-1">
                     +{comparison.keyMetrics.clausesAdded}
                   </p>
                 </div>
-                <div className="p-4 rounded-2xl bg-obsidian-950 border border-white/10">
-                  <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Clauses Removed</span>
-                  <p className="text-2xl font-bold font-mono text-slate-300 mt-1">
+                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
+                  <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Clauses Removed</span>
+                  <p className="text-2xl font-bold text-slate-400 mt-1">
                     -{comparison.keyMetrics.clausesRemoved}
                   </p>
                 </div>
-                <div className="p-4 rounded-2xl bg-obsidian-950 border border-white/10">
-                  <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Clauses Modified</span>
-                  <p className="text-2xl font-bold font-mono text-amber-400 mt-1">
+                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
+                  <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Clauses Modified</span>
+                  <p className="text-2xl font-bold text-amber-400 mt-1">
                     {comparison.keyMetrics.clausesModified}
                   </p>
                 </div>
-                <div className="p-4 rounded-2xl bg-obsidian-950 border border-white/10">
-                  <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Risk Delta</span>
-                  <p className="text-xs font-bold font-mono text-rose-400 mt-2">
+                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
+                  <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Risk Delta</span>
+                  <p className="text-xs font-semibold text-rose-400 mt-2">
                     {comparison.keyMetrics.riskScoreShift}
                   </p>
                 </div>
@@ -243,125 +226,122 @@ const ContractComparisonPage = () => {
           </div>
 
           {/* Filter Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h4 className="text-base font-bold text-white font-heading">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h4 className="text-base font-semibold text-white">
               Identified Structural Changes ({filteredDifferences.length})
             </h4>
 
-            <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-obsidian-900 border border-white/10 text-xs">
+            <div className="flex items-center gap-1.5 p-1 rounded-full bg-white/[0.03] border border-white/[0.08] text-xs">
               <button
                 onClick={() => setFilterType('all')}
-                className={`px-3 py-1.5 rounded-xl font-medium transition-all ${
-                  filterType === 'all' ? 'bg-amberAccent-500 text-obsidian-950 font-bold shadow-glow-amber' : 'text-slate-400 hover:text-white'
+                className={`px-4 py-1.5 rounded-full font-medium transition-all ${
+                  filterType === 'all' ? 'bg-white text-black font-semibold' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 All Changes
               </button>
               <button
-                onClick={() => setFilterType('critical_risk')}
-                className={`px-3 py-1.5 rounded-xl font-medium transition-all ${
-                  filterType === 'critical_risk' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                High Risk Diffs
-              </button>
-              <button
                 onClick={() => setFilterType('added')}
-                className={`px-3 py-1.5 rounded-xl font-medium transition-all ${
-                  filterType === 'added' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'text-slate-400 hover:text-white'
+                className={`px-4 py-1.5 rounded-full font-medium transition-all ${
+                  filterType === 'added' ? 'bg-white text-black font-semibold' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                Added Clauses
+                Added
               </button>
               <button
                 onClick={() => setFilterType('modified')}
-                className={`px-3 py-1.5 rounded-xl font-medium transition-all ${
-                  filterType === 'modified' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'text-slate-400 hover:text-white'
+                className={`px-4 py-1.5 rounded-full font-medium transition-all ${
+                  filterType === 'modified' ? 'bg-white text-black font-semibold' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                Modified Terms
+                Modified
+              </button>
+              <button
+                onClick={() => setFilterType('critical_risk')}
+                className={`px-4 py-1.5 rounded-full font-medium transition-all ${
+                  filterType === 'critical_risk' ? 'bg-rose-500 text-white font-semibold' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                High Risk
               </button>
             </div>
           </div>
 
-          {/* Side-by-Side Clause Alignment Cards */}
-          <div className="space-y-5">
-            {filteredDifferences.map((diff, idx) => (
+          {/* Diff Cards List */}
+          <div className="space-y-4">
+            {filteredDifferences.map((diff, index) => (
               <div
-                key={idx}
-                className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 shadow-xl card-3d"
+                key={index}
+                className="glass-luxury rounded-3xl p-6 sm:p-8"
               >
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-                  <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                  <div className="flex items-center gap-2.5">
                     <span
-                      className={`px-3 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
+                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border ${
                         diff.type === 'added'
-                          ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                          ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20'
                           : diff.type === 'removed'
-                          ? 'bg-slate-700/50 text-slate-300 border border-slate-700'
-                          : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                          ? 'bg-rose-500/10 text-rose-300 border-rose-500/20'
+                          : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
                       }`}
                     >
-                      {diff.type}
+                      {diff.type === 'added' ? (
+                        <PlusCircle className="w-3.5 h-3.5" />
+                      ) : diff.type === 'removed' ? (
+                        <MinusCircle className="w-3.5 h-3.5" />
+                      ) : (
+                        <GitCompare className="w-3.5 h-3.5" />
+                      )}
+                      <span className="capitalize">{diff.type}</span>
                     </span>
-                    <span className="text-xs font-mono font-semibold text-slate-400">
-                      {diff.category}
+
+                    <span className="text-xs font-semibold text-white">
+                      {diff.section}
                     </span>
                   </div>
 
-                  {diff.impact === 'critical_risk' && (
-                    <span className="px-3 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
-                      Critical Risk Slipped
-                    </span>
-                  )}
-                  {diff.impact === 'positive' && (
-                    <span className="px-3 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                      Favorable Shift
-                    </span>
-                  )}
+                  <span
+                    className={`text-xs px-3 py-1 rounded-full border ${
+                      diff.impact === 'critical_risk' || diff.impact === 'high_risk'
+                        ? 'bg-rose-500/10 text-rose-300 border-rose-500/20 font-medium'
+                        : 'bg-white/[0.03] text-slate-400 border-white/[0.06]'
+                    }`}
+                  >
+                    {diff.impact === 'critical_risk' ? 'Critical Risk' : diff.impact === 'high_risk' ? 'High Risk' : 'Moderate'}
+                  </span>
                 </div>
 
-                <h4 className="text-base font-bold text-white font-heading">
+                <h4 className="text-base font-semibold text-white mb-4">
                   {diff.title}
                 </h4>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                  {/* Contract A Box */}
-                  <div className="p-4 rounded-2xl bg-obsidian-950 border border-white/10">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
-                      {comparison.docATitle || 'Contract A'}
+                {/* Side-by-side Clause Diff Comparison */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Baseline Text */}
+                  <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
+                    <span className="text-[11px] uppercase font-medium text-slate-400 block mb-2">
+                      Original Clause (Contract A)
                     </span>
-                    <p className="text-xs font-mono text-slate-300 leading-relaxed">
-                      {diff.docAText || '(No equivalent clause present)'}
+                    <p className="text-xs text-slate-300 leading-relaxed font-normal">
+                      {diff.textA || '(Clause did not exist in Baseline)'}
                     </p>
                   </div>
 
-                  {/* Contract B Box */}
-                  <div
-                    className={`p-4 rounded-2xl border ${
-                      diff.impact === 'critical_risk'
-                        ? 'bg-rose-950/20 border-rose-500/40 text-rose-200'
-                        : diff.impact === 'positive'
-                        ? 'bg-emerald-950/20 border-emerald-500/40 text-emerald-200'
-                        : 'bg-amber-950/20 border-amber-500/40 text-amber-200'
-                    }`}
-                  >
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
-                      {comparison.docBTitle || 'Contract B (Updated)'}
+                  {/* Revised Text */}
+                  <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10">
+                    <span className="text-[11px] uppercase font-medium text-slate-300 block mb-2">
+                      Revised Clause (Contract B)
                     </span>
-                    <p className="text-xs font-mono leading-relaxed font-semibold">
-                      {diff.docBText}
+                    <p className="text-xs text-slate-100 leading-relaxed font-normal">
+                      {diff.textB || '(Clause removed in Markup)'}
                     </p>
                   </div>
                 </div>
 
-                {/* AI Semantic Legal Impact */}
-                <div className="mt-4 pt-3.5 border-t border-white/10 flex items-start gap-2.5">
-                  <Sparkles className="w-4 h-4 text-amberAccent-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-slate-300 leading-relaxed font-sans">
-                    <strong className="font-semibold text-white">Legal Analysis: </strong>
-                    {diff.analysis}
-                  </p>
+                {/* AI Diff Assessment */}
+                <div className="mt-4 p-4 rounded-2xl bg-indigo-500/[0.04] border border-indigo-500/20 text-xs text-slate-300 leading-relaxed">
+                  <span className="font-semibold text-indigo-300">AI Risk Assessment: </span>
+                  {diff.analysis}
                 </div>
               </div>
             ))}
