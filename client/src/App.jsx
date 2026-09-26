@@ -7,7 +7,7 @@ import { NotificationProvider } from './context/NotificationContext';
 // Components
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
-import StarfieldCanvas from './components/common/StarfieldCanvas';
+import Global3DBackground from './components/3d/Global3DBackground';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -52,8 +52,8 @@ function App() {
         <AuthProvider>
           <Router>
             <div className="min-h-screen flex flex-col bg-[#030508] text-slate-100 font-sans selection:bg-amberAccent-500/30 selection:text-amberAccent-300 relative overflow-x-hidden">
-              {/* Global Interactive Constellation Starfield */}
-              <StarfieldCanvas />
+              {/* Global Interactive 3D WebGL Neural Background */}
+              <Global3DBackground />
 
               {/* Global Cosmic Ambient Glows */}
               <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-cyan-500/10 blur-[150px] pointer-events-none rounded-full z-0" />

@@ -42,6 +42,7 @@ import { useNotification } from '../context/NotificationContext';
 import StatCard from '../components/common/StatCard';
 import RiskBadge from '../components/common/RiskBadge';
 import { CardSkeleton } from '../components/common/SkeletonLoader';
+import Card3DTilt from '../components/3d/Card3DTilt';
 
 import { MOCK_DOCUMENTS } from '../services/mockData';
 
@@ -334,168 +335,178 @@ const DashboardPage = () => {
       </div>
 
       {/* 1-Click Sample Contracts Testing Bar */}
-      <div className="p-6 rounded-3xl glass-panel border border-amberAccent-500/30 bg-gradient-to-r from-amberAccent-500/10 via-obsidian-950 to-obsidian-950 relative overflow-hidden shadow-2xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-2xl bg-amberAccent-500/15 border border-amberAccent-500/40 text-amberAccent-400 flex items-center justify-center shadow-inner">
-              <Sparkles className="w-5 h-5" />
+      <Card3DTilt maxTilt={4} scale={1.01}>
+        <div className="p-6 rounded-3xl glass-panel border border-amberAccent-500/30 bg-gradient-to-r from-amberAccent-500/10 via-obsidian-950 to-obsidian-950 relative overflow-hidden shadow-2xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-2xl bg-amberAccent-500/15 border border-amberAccent-500/40 text-amberAccent-400 flex items-center justify-center shadow-inner">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white flex items-center gap-2 font-heading">
+                  <span>Instant 1-Click Evaluation Contracts</span>
+                  <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold uppercase tracking-wider">
+                    Live Engine
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5 font-sans">
+                  Click any sample to test AI Clause Extraction, Risk Sentinel, and Plain-English Translator:
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-2 font-heading">
-                <span>Instant 1-Click Evaluation Contracts</span>
-                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold uppercase tracking-wider">
-                  Live Engine
-                </span>
-              </h3>
-              <p className="text-xs text-slate-400 mt-0.5 font-sans">
-                Click any sample to test AI Clause Extraction, Risk Sentinel, and Plain-English Translator:
-              </p>
-            </div>
-          </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            <button
-              onClick={() => handleLoadSample('saas')}
-              disabled={uploading}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/30 hover:bg-rose-500/20 hover:scale-105 transition-all shadow-sm"
-            >
-              Test SaaS MSA (High Risk)
-            </button>
-            <button
-              onClick={() => handleLoadSample('nda')}
-              disabled={uploading}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20 hover:scale-105 transition-all shadow-sm"
-            >
-              Test NDA (Low Risk)
-            </button>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                onClick={() => handleLoadSample('saas')}
+                disabled={uploading}
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/30 hover:bg-rose-500/20 hover:scale-105 transition-all shadow-sm"
+              >
+                Test SaaS MSA (High Risk)
+              </button>
+              <button
+                onClick={() => handleLoadSample('nda')}
+                disabled={uploading}
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20 hover:scale-105 transition-all shadow-sm"
+              >
+                Test NDA (Low Risk)
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </Card3DTilt>
 
       {/* Main Visualizations: Risk Distribution & Audit Trends */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Doughnut Chart */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 flex flex-col justify-between shadow-2xl">
-          <div>
-            <h3 className="text-base font-bold text-white font-heading">Risk Distribution</h3>
-            <p className="text-xs text-slate-400 mt-0.5">Categorization of monitored agreements</p>
-          </div>
-          <div className="h-56 mt-4 relative flex items-center justify-center">
-            {totalDocs > 0 ? (
-              <Doughnut data={doughnutData} options={chartOptions} />
-            ) : (
-              <div className="text-center text-xs text-slate-400 font-mono">No documents analyzed yet</div>
-            )}
-          </div>
-          <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-white/5 text-center">
+        <Card3DTilt maxTilt={6} scale={1.01} className="h-full">
+          <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 flex flex-col justify-between shadow-2xl h-full">
             <div>
-              <span className="text-[10px] uppercase font-bold text-rose-400 font-mono">High</span>
-              <p className="text-xl font-bold font-mono text-white mt-0.5">{highRiskDocs}</p>
+              <h3 className="text-base font-bold text-white font-heading">Risk Distribution</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Categorization of monitored agreements</p>
             </div>
-            <div>
-              <span className="text-[10px] uppercase font-bold text-amber-400 font-mono">Medium</span>
-              <p className="text-xl font-bold font-mono text-white mt-0.5">{mediumRiskDocs}</p>
+            <div className="h-56 mt-4 relative flex items-center justify-center">
+              {totalDocs > 0 ? (
+                <Doughnut data={doughnutData} options={chartOptions} />
+              ) : (
+                <div className="text-center text-xs text-slate-400 font-mono">No documents analyzed yet</div>
+              )}
             </div>
-            <div>
-              <span className="text-[10px] uppercase font-bold text-emerald-400 font-mono">Low</span>
-              <p className="text-xl font-bold font-mono text-white mt-0.5">{lowRiskDocs}</p>
+            <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-white/5 text-center">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-rose-400 font-mono">High</span>
+                <p className="text-xl font-bold font-mono text-white mt-0.5">{highRiskDocs}</p>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase font-bold text-amber-400 font-mono">Medium</span>
+                <p className="text-xl font-bold font-mono text-white mt-0.5">{mediumRiskDocs}</p>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase font-bold text-emerald-400 font-mono">Low</span>
+                <p className="text-xl font-bold font-mono text-white mt-0.5">{lowRiskDocs}</p>
+              </div>
             </div>
           </div>
-        </div>
+        </Card3DTilt>
 
         {/* Volume & Risk Flag Trends Bar Chart */}
-        <div className="lg:col-span-2 glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 flex flex-col justify-between shadow-2xl">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-base font-bold text-white font-heading">Audit & Flagged Risk Activity</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Monthly processed contracts and detected clauses</p>
+        <Card3DTilt maxTilt={6} scale={1.01} className="lg:col-span-2 h-full">
+          <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 flex flex-col justify-between shadow-2xl h-full">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold text-white font-heading">Audit & Flagged Risk Activity</h3>
+                <p className="text-xs text-slate-400 mt-0.5">Monthly processed contracts and detected clauses</p>
+              </div>
+              <span className="text-[11px] px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-mono font-semibold">
+                Live Telemetry
+              </span>
             </div>
-            <span className="text-[11px] px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-mono font-semibold">
-              Live Telemetry
-            </span>
+            <div className="h-64 mt-4">
+              <Bar data={barData} options={chartOptions} />
+            </div>
           </div>
-          <div className="h-64 mt-4">
-            <Bar data={barData} options={chartOptions} />
-          </div>
-        </div>
+        </Card3DTilt>
       </div>
 
       {/* Drag & Drop Upload Zone & Upcoming Deadlines */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Upload Dropzone with 3D Depth */}
-        <div
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
-          className={`lg:col-span-2 rounded-3xl border-2 border-dashed p-8 text-center transition-all flex flex-col items-center justify-center min-h-[230px] glass-panel ${
-            dragActive
-              ? 'border-amberAccent-500 bg-amberAccent-500/10 shadow-[0_0_40px_rgba(235,184,126,0.2)]'
-              : 'border-white/10 bg-obsidian-950/70 hover:border-amberAccent-500/40 hover:shadow-[0_0_25px_rgba(235,184,126,0.1)]'
-          }`}
-        >
-          <div className="w-14 h-14 rounded-2xl bg-amberAccent-500/15 border border-amberAccent-500/30 text-amberAccent-400 flex items-center justify-center mb-3 shadow-inner">
-            <UploadCloud className="w-7 h-7" />
-          </div>
-          <h3 className="text-base font-bold text-white font-heading">
-            {uploading ? 'Processing Document with AI Engine...' : 'Drag and drop your legal contract here'}
-          </h3>
-          <p className="text-xs text-slate-400 max-w-sm mt-1 font-sans">
-            Supports PDF (with OCR), DOCX, and TXT files up to 25MB. Instant plain-English translation & risk audit.
-          </p>
+        <Card3DTilt maxTilt={6} scale={1.01} className="lg:col-span-2 h-full">
+          <div
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+            className={`rounded-3xl border-2 border-dashed p-8 text-center transition-all flex flex-col items-center justify-center min-h-[230px] glass-panel h-full ${
+              dragActive
+                ? 'border-amberAccent-500 bg-amberAccent-500/10 shadow-[0_0_40px_rgba(235,184,126,0.2)]'
+                : 'border-white/10 bg-obsidian-950/70 hover:border-amberAccent-500/40 hover:shadow-[0_0_25px_rgba(235,184,126,0.1)]'
+            }`}
+          >
+            <div className="w-14 h-14 rounded-2xl bg-amberAccent-500/15 border border-amberAccent-500/30 text-amberAccent-400 flex items-center justify-center mb-3 shadow-inner">
+              <UploadCloud className="w-7 h-7" />
+            </div>
+            <h3 className="text-base font-bold text-white font-heading">
+              {uploading ? 'Processing Document with AI Engine...' : 'Drag and drop your legal contract here'}
+            </h3>
+            <p className="text-xs text-slate-400 max-w-sm mt-1 font-sans">
+              Supports PDF (with OCR), DOCX, and TXT files up to 25MB. Instant plain-English translation & risk audit.
+            </p>
 
-          <label className="mt-4 cursor-pointer px-6 py-2.5 rounded-xl btn-glow-gold text-obsidian-950 text-xs font-bold shadow-glow-amber transition-all hover:scale-105">
-            <span>Browse Files</span>
-            <input
-              type="file"
-              accept=".pdf,.docx,.doc,.txt"
-              className="hidden"
-              disabled={uploading}
-              onChange={(e) => handleFileUpload(e.target.files)}
-            />
-          </label>
-        </div>
+            <label className="mt-4 cursor-pointer px-6 py-2.5 rounded-xl btn-glow-gold text-obsidian-950 text-xs font-bold shadow-glow-amber transition-all hover:scale-105">
+              <span>Browse Files</span>
+              <input
+                type="file"
+                accept=".pdf,.docx,.doc,.txt"
+                className="hidden"
+                disabled={uploading}
+                onChange={(e) => handleFileUpload(e.target.files)}
+              />
+            </label>
+          </div>
+        </Card3DTilt>
 
         {/* Upcoming Deadlines Widget */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 flex flex-col justify-between shadow-2xl">
-          <div className="flex items-center justify-between pb-3.5 border-b border-white/10">
-            <div className="flex items-center gap-2">
-              <CalendarClock className="w-4 h-4 text-amberAccent-400" />
-              <h3 className="text-sm font-bold text-white font-heading">Critical Deadlines</h3>
+        <Card3DTilt maxTilt={6} scale={1.01} className="h-full">
+          <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-white/10 flex flex-col justify-between shadow-2xl h-full">
+            <div className="flex items-center justify-between pb-3.5 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <CalendarClock className="w-4 h-4 text-amberAccent-400" />
+                <h3 className="text-sm font-bold text-white font-heading">Critical Deadlines</h3>
+              </div>
+              <Link to="/timeline" className="text-xs text-amberAccent-400 hover:underline font-semibold font-mono">
+                View all →
+              </Link>
             </div>
-            <Link to="/timeline" className="text-xs text-amberAccent-400 hover:underline font-semibold font-mono">
-              View all →
-            </Link>
-          </div>
 
-          <div className="mt-4 space-y-3 flex-1 overflow-y-auto max-h-56">
-            {deadlines.length === 0 ? (
-              <p className="text-xs text-slate-400 text-center py-6 font-mono">No deadlines detected yet</p>
-            ) : (
-              deadlines.slice(0, 4).map((dl, i) => (
-                <div
-                  key={i}
-                  className="p-3.5 rounded-2xl bg-obsidian-950 border border-white/10 text-xs hover:border-amberAccent-500/30 transition-all"
-                >
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-mono font-bold text-amberAccent-400">{dl.date}</span>
-                    <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        dl.urgency === 'High'
-                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                          : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                      }`}
-                    >
-                      {dl.urgency}
-                    </span>
+            <div className="mt-4 space-y-3 flex-1 overflow-y-auto max-h-56">
+              {deadlines.length === 0 ? (
+                <p className="text-xs text-slate-400 text-center py-6 font-mono">No deadlines detected yet</p>
+              ) : (
+                deadlines.slice(0, 4).map((dl, i) => (
+                  <div
+                    key={i}
+                    className="p-3.5 rounded-2xl bg-obsidian-950 border border-white/10 text-xs hover:border-amberAccent-500/30 transition-all"
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-mono font-bold text-amberAccent-400">{dl.date}</span>
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                          dl.urgency === 'High'
+                            ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                        }`}
+                      >
+                        {dl.urgency}
+                      </span>
+                    </div>
+                    <h5 className="font-semibold text-slate-200 truncate">{dl.title}</h5>
+                    <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-1">{dl.documentTitle}</p>
                   </div>
-                  <h5 className="font-semibold text-slate-200 truncate">{dl.title}</h5>
-                  <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-1">{dl.documentTitle}</p>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
-        </div>
+        </Card3DTilt>
       </div>
 
       {/* Recent Monitored Documents Table */}
