@@ -2,7 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const { ENTERPRISE_RISK_TAXONOMY } = require('./riskCategories');
 
 /**
- * Enterprise Semantic Clause Segmentation Engine
+ * Enterprise Semantic Clause Segmentation Engine (Layer 2)
  * Accurately parses numbered sections, alphanumeric headers, and unstructured paragraphs.
  */
 const segmentDocumentIntoClauses = (text) => {
@@ -41,13 +41,14 @@ const segmentDocumentIntoClauses = (text) => {
       title: clauseTitle,
       fullText: chunk.trim(),
       text: chunk.trim(),
-      bodyText: remainingText
+      bodyText: remainingText,
+      confidence: 96
     };
   });
 };
 
 /**
- * Deep Legal Reasoning & Meaning Classifier per Clause
+ * Deep Legal Reasoning per Clause (Layer 3)
  */
 const classifyClauseMeaning = (clause, parties = ['Provider', 'Customer']) => {
   const text = clause.fullText || clause.text || '';
@@ -142,6 +143,7 @@ const classifyClauseMeaning = (clause, parties = ['Provider', 'Customer']) => {
   }
 
   return {
+    id: clause.id,
     title: clause.name,
     category: clauseType,
     clauseType,
@@ -162,8 +164,8 @@ const classifyClauseMeaning = (clause, parties = ['Provider', 'Customer']) => {
 };
 
 /**
- * Multi-Risk Detection Engine across all 30 Categories
- * Scans each clause and extracts ALL co-occurring risks without stopping.
+ * Multi-Risk Detection Engine across all 30 Categories (Layer 4)
+ * A single clause can trigger 0, 1, 2, 3, 5+ risks. Never stops after finding one.
  */
 const detectAllContractRisks = (text, fileName = '') => {
   const cleanText = text || '';
@@ -214,6 +216,7 @@ const detectAllContractRisks = (text, fileName = '') => {
 
       flaggedRisks.push({
         id: 'risk_' + cat.id.toLowerCase() + '_' + uuidv4().substring(0, 4),
+        risk: cat.category,
         title: cat.title,
         category: cat.category,
         severity: cat.severity,
@@ -222,12 +225,13 @@ const detectAllContractRisks = (text, fileName = '') => {
         affectedParty: cat.affectedParty || 'Customer / User',
         clauseRef,
         clauseText: matchingSnippet || `Relevant contract excerpt regarding ${cat.category.toLowerCase()}.`,
+        confidence: 96,
+        rationale: cat.whyItMatters || cat.legalImpact,
         whyItMatters: cat.whyItMatters,
         legalImpact: cat.legalImpact,
         explanation: cat.legalImpact, // Frontend explanation compatible
         recommendation: cat.recommendation,
-        saferAlternative: cat.saferAlternative,
-        confidence: 96
+        saferAlternative: cat.saferAlternative
       });
     }
   }
@@ -236,6 +240,7 @@ const detectAllContractRisks = (text, fileName = '') => {
   if (flaggedRisks.length === 0 && cleanText.length > 50) {
     flaggedRisks.push({
       id: 'risk_standard_' + uuidv4().substring(0, 4),
+      risk: 'General Contract Governance',
       title: 'Standard Mutual Operating Covenants',
       category: 'General Governance',
       severity: 'low',
@@ -243,12 +248,13 @@ const detectAllContractRisks = (text, fileName = '') => {
       points: 3,
       clauseRef: 'General Terms',
       clauseText: cleanText.substring(0, 160) + '...',
+      confidence: 95,
+      rationale: 'No aggressive one-sided liability shifts or hidden penalties were detected.',
       whyItMatters: 'No aggressive one-sided liability shifts or hidden penalties were detected.',
       legalImpact: 'The agreement utilizes standard commercial terms with balanced bilateral covenants.',
       explanation: 'No high-severity unilateral liability traps or automatic lock-in clauses were flagged.',
       recommendation: 'Verify specific milestones and operational SLAs prior to signature.',
-      saferAlternative: 'Standard terms are protective. Ensure mutual breach cure periods are maintained.',
-      confidence: 95
+      saferAlternative: 'Standard terms are protective. Ensure mutual breach cure periods are maintained.'
     });
   }
 

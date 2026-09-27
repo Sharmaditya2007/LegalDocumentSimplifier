@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
-const { calculateDynamicRiskScore } = require('./scoringEngine');
+const { extractDocumentStructure } = require('./documentUnderstandingEngine');
 const { segmentDocumentIntoClauses, classifyClauseMeaning, detectAllContractRisks } = require('./clauseExtractionEngine');
+const { calculateDynamicRiskScore } = require('./scoringEngine');
 const { extractContractTimeline } = require('./timelineEngine');
 const { extractContractObligations } = require('./obligationEngine');
 const { compareContracts } = require('./comparisonEngine');
@@ -8,7 +9,7 @@ const { generateExecutiveSummary } = require('./executiveSummaryEngine');
 const { answerLegalCopilotQuery } = require('./copilotEngine');
 
 /**
- * Enterprise Contract Intelligence Pipeline
+ * Enterprise 5-Layer Contract Intelligence Pipeline
  * Generalizes across all legal document types:
  * - NDA & Confidentiality Agreements
  * - SaaS & Cloud Subscription MSAs
@@ -51,63 +52,38 @@ const analyzeDocumentHeuristic = (text, fileName = '') => {
     contractType = 'Platform Terms of Service & Privacy Policy';
   }
 
-  // 2. Multi-Pattern Party Extraction
-  const parties = [];
-  const betweenMatch = cleanText.match(/between\s+([^\n,]+?)(?:,|\s+with|\s+and|\s*\(")/i);
-  const andMatch = cleanText.match(/and\s+([^\n,]+?)(?:,|\s+with|\s*\(")/i);
-  if (betweenMatch && betweenMatch[1] && betweenMatch[1].trim().length < 80) {
-    parties.push(betweenMatch[1].trim());
-  }
-  if (andMatch && andMatch[1] && andMatch[1].trim().length < 80 && !parties.includes(andMatch[1].trim())) {
-    parties.push(andMatch[1].trim());
-  }
-  if (parties.length === 0) {
-    parties.push('Disclosing Party / Provider', 'Receiving Party / Customer');
-  }
+  // LAYER 1: Document Understanding & Structuring
+  const docStructure = extractDocumentStructure(cleanText, fileName);
+  const parties = docStructure.parties;
+  const effectiveDate = docStructure.dates.effectiveDate;
+  const expiryDate = docStructure.dates.expirationDate;
 
-  // 3. Key Milestone Dates Extraction
-  let effectiveDate = '2026-01-15';
-  let expiryDate = '2028-01-15';
-  const effMatch = cleanText.match(/(?:effective date|as of|entered into as of|dated as of)\s+([A-Z][a-z]+ \d{1,2}, \d{4}|\d{4}-\d{2}-\d{2})/i);
-  if (effMatch && effMatch[1]) {
-    effectiveDate = effMatch[1];
-  }
-  const expMatch = cleanText.match(/(?:expiration date|term shall end on|expires on|terminates on)\s+([A-Z][a-z]+ \d{1,2}, \d{4}|\d{4}-\d{2}-\d{2})/i);
-  if (expMatch && expMatch[1]) {
-    expiryDate = expMatch[1];
-  }
+  // LAYER 2: Clause Segmentation
+  const rawSegments = segmentDocumentIntoClauses(cleanText);
 
-  // 4. Multi-Risk Detection across 30 Enterprise Risk Categories
+  // LAYER 3 & 4: Multi-Risk Legal Reasoning across 30 Enterprise Risk Categories
+  // SINGLE SOURCE OF TRUTH: Detected once, shared everywhere
   const detectedRisks = detectAllContractRisks(cleanText, fileName);
 
-  // 5. Dynamic Non-Hardcoded Risk Scoring Engine
+  // LAYER 5: Dynamic Risk Scoring & Profile
   const scoreResult = calculateDynamicRiskScore(detectedRisks, { contractType, parties });
   const { overallRiskScore, riskLevel, riskRating, exposureProfile, riskCounts, riskDistribution } = scoreResult;
 
-  // 6. Semantic Clause Segmentation & Classification
-  const rawSegments = segmentDocumentIntoClauses(cleanText);
+  // Classify Clauses with deep legal meaning
   const clauses = rawSegments.map(seg => classifyClauseMeaning(seg, parties));
 
-  // 7. Obligation Extraction (Who must do what)
+  // Extract Obligations
   const obligations = extractContractObligations(cleanText, parties);
 
-  // 8. Timeline & Notice Windows Extraction
+  // Extract Timeline Events & Milestones
   const deadlines = extractContractTimeline(cleanText, effectiveDate, expiryDate);
 
-  // 9. Payment Terms & Invoicing Dynamics
-  let paymentTerms = 'Payment due Net 30/45 days from invoice issuance date. Unpaid balances subject to compounding interest penalties.';
-  if (lower.includes('net 60')) paymentTerms = 'Payment due Net 60 days from invoice issuance date.';
-  if (lower.includes('net 15')) paymentTerms = 'Payment due Net 15 days from invoice issuance date.';
-  if (lower.includes('in advance')) paymentTerms = 'Annual subscription fees billed in advance; Net 30 for additional usage.';
+  // Commercial Terms
+  const paymentTerms = docStructure.financial_terms;
+  const renewalConditions = docStructure.renewal_terms;
+  const complianceRequirements = `${docStructure.governing_law}; ${docStructure.jurisdiction}; ${docStructure.confidentiality}`;
 
-  let renewalConditions = 'Automatic successive annual renewal unless formal written non-renewal notice is delivered 60 days before expiration.';
-  if (lower.includes('30 days') && lower.includes('renew')) {
-    renewalConditions = 'Automatic 12-month rollover unless 30-day written cancellation notice is received.';
-  }
-
-  let complianceRequirements = 'Governed by designated state laws with mandatory binding arbitration, confidential trade secret survival, and data protection compliance.';
-
-  // 10. Executive Summary & Plain-English Translation
+  // Synthesize Executive Summary from the canonical risk dataset
   const executiveSummaries = generateExecutiveSummary({
     contractType,
     parties,
@@ -135,10 +111,11 @@ const analyzeDocumentHeuristic = (text, fileName = '') => {
       paymentTerms,
       renewalConditions,
       complianceRequirements,
-      risks: detectedRisks,
+      risks: detectedRisks, // Single Source of Truth
       clauses,
       obligations,
-      deadlines
+      deadlines,
+      structuredContract: docStructure
     }
   };
 };
