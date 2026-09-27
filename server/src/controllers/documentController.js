@@ -194,15 +194,15 @@ const downloadReport = async (req, res) => {
 
     const analysis = doc.analysis || {};
     const reportContent = `================================================================================
-LEGALEASE AI - LEGAL INTELLIGENCE AUDIT REPORT
+LEGALEASE AI - LEGAL INTELLIGENCE AUDIT & REDLINE REPORT
 Document: ${doc.title}
 Generated: ${new Date().toISOString()}
-Risk Score: ${doc.overallRiskScore}/100 [Level: ${(doc.riskLevel || 'N/A').toUpperCase()}]
+Risk Score: ${doc.overallRiskScore}/100 [Rating: ${(doc.riskLevel || 'N/A').toUpperCase()}]
 Contract Type: ${analysis.contractType || 'N/A'}
 Parties Involved: ${(analysis.parties || []).join(' and ')}
 ================================================================================
 
-1. EXECUTIVE SUMMARY
+1. EXECUTIVE RISK SUMMARY
 ${analysis.executiveSummary || 'No summary available.'}
 
 --------------------------------------------------------------------------------
@@ -210,13 +210,15 @@ ${analysis.executiveSummary || 'No summary available.'}
 ${analysis.plainEnglish || 'No plain english translation available.'}
 
 --------------------------------------------------------------------------------
-3. IDENTIFIED RISKS & MITIGATION RECOMMENDATIONS (${(analysis.risks || []).length} Detected)
+3. IDENTIFIED RISKS & AI REDLINE COUNTER-PROPOSALS (${(analysis.risks || []).length} Detected)
 ${(analysis.risks || []).map((r, i) => `
-[${r.level.toUpperCase()} RISK] #${i + 1}: ${r.title}
+[${(r.level || r.severity || 'MEDIUM').toUpperCase()} RISK] #${i + 1}: ${r.title}
 Category: ${r.category}
-Clause Reference: ${r.clauseRef}
-Impact / Explanation: ${r.explanation}
+Clause Reference: ${r.clauseRef || 'Standard Section'}
+Confidence: ${r.confidence || 95}%
+Legal Exposure: ${r.legalImpact || r.explanation}
 Recommended Action: ${r.recommendation}
+${r.saferAlternative ? `Safer Contract Language: "${r.saferAlternative}"` : ''}
 `).join('\n')}
 
 --------------------------------------------------------------------------------
@@ -225,7 +227,7 @@ ${(analysis.obligations || []).map(o => `* [${o.type}] ${o.party}: ${o.obligatio
 
 --------------------------------------------------------------------------------
 5. CRITICAL DEADLINES & MILESTONES
-${(analysis.deadlines || []).map(d => `* [${d.date}] ${d.title} (Urgency: ${d.urgency}): ${d.description}`).join('\n')}
+${(analysis.deadlines || []).map(d => `* [${d.date}] ${d.title} (Urgency: ${d.urgency} • ${d.category}): ${d.description}`).join('\n')}
 
 --------------------------------------------------------------------------------
 6. FINANCIAL & RENEWAL CONDITIONS
