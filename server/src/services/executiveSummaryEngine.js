@@ -1,12 +1,12 @@
 /**
- * Executive Risk & Legal Summary Engine
+ * Enterprise Executive Legal Summary & Report Synthesizer
  * Generates:
- * - Contract Overview
- * - Major Risks breakdown
- * - Key Obligations
- * - Important Deadlines & Notice Windows
- * - Renewal & Invoicing Conditions
- * - Final Plain-English Translation & Strategic Recommendation
+ * - Contract Overview & Legal Characterization
+ * - Major Legal Concerns & Red Flags
+ * - Key Obligations Breakdown
+ * - Critical Deadlines & Renewal Traps
+ * - Strategic Negotiation Priorities
+ * - Plain-English Translation
  */
 
 const generateExecutiveSummary = ({
@@ -18,18 +18,23 @@ const generateExecutiveSummary = ({
   overallRiskScore,
   riskLevel
 }) => {
-  const highRisks = risks.filter(r => (r.level || r.severity || '').toLowerCase() === 'high' || (r.level || r.severity || '').toLowerCase() === 'critical');
+  const criticalRisks = risks.filter(r => (r.level || r.severity || '').toLowerCase() === 'critical');
+  const highRisks = risks.filter(r => (r.level || r.severity || '').toLowerCase() === 'high');
   const mediumRisks = risks.filter(r => (r.level || r.severity || '').toLowerCase() === 'medium');
 
-  const overview = `This document is a binding ${contractType || 'Commercial Legal Agreement'} between ${parties.join(' and ')}. It establishes mutual operating covenants, service deliverables, intellectual property boundaries, and risk allocations.`;
+  const overview = `This agreement is a legally binding ${contractType || 'Commercial Agreement'} executed between ${parties.join(' and ')}. It governs commercial deliverables, license grants, intellectual property boundaries, operational warranties, and financial obligations.`;
 
-  const riskNarrative = highRisks.length > 0
-    ? `The AI Risk Sentinel flagged ${highRisks.length} critical high-risk items, primarily concerning ${highRisks.map(r => r.category).slice(0, 3).join(', ')}. These terms present asymmetric liability exposure and operational disruption risks.`
-    : `The agreement exhibits balanced liability allocation with ${mediumRisks.length} moderate commercial points requiring standard review.`;
+  let riskNarrative = '';
+  if (criticalRisks.length > 0 || highRisks.length > 0) {
+    const topCategories = [...new Set([...criticalRisks, ...highRisks].map(r => r.category))].slice(0, 4);
+    riskNarrative = `The AI Risk Sentinel flagged ${criticalRisks.length + highRisks.length} severe legal risks across ${topCategories.join(', ')}. These provisions expose your organization to asymmetric liability, uncapped damages, or operational lock-in.`;
+  } else {
+    riskNarrative = `The document exhibits balanced bilateral commercial terms with ${mediumRisks.length} standard operational considerations.`;
+  }
 
-  const executiveSummary = `${overview} Overall portfolio risk score is ${overallRiskScore}/100 ([${riskLevel.toUpperCase()}]). ${riskNarrative} Key commitments encompass ${obligations.length} distinct contractual obligations across both parties and ${deadlines.length} critical timeline milestones. Counter-proposals are recommended for all flagged high-risk items before final signature.`;
+  const executiveSummary = `${overview} Overall portfolio risk score is assessed at ${overallRiskScore}/100 ([${riskLevel.toUpperCase()}]). ${riskNarrative} Key commitments encompass ${obligations.length} distinct contractual covenants across both parties and ${deadlines.length} critical timeline milestones. Pre-signature redline counter-proposals are strongly recommended for all flagged high-risk items.`;
 
-  const plainEnglish = `In plain English: You are entering an agreement with ${parties[0] || 'the other party'}. You will receive specified services or deliverables, but you must adhere to strict payment timelines and notice requirements. Be particularly careful with the termination and automatic renewal rules: if you fail to send written non-renewal notice within the required window, the agreement will continue automatically. Review the redline suggestions in the Risks tab before signing.`;
+  const plainEnglish = `In plain English: You are entering a binding contract with ${parties[0] || 'the counterparty'}. You receive designated services or software licenses, but you are bound by strict payment terms, notice windows, and liability boundaries. Be especially cautious of renewal deadlines: if you do not deliver formal written non-renewal notice within the specified window, the contract will roll over automatically. Review the counter-proposals in the Risks tab before signing.`;
 
   return {
     executiveSummary,

@@ -1,11 +1,12 @@
 /**
- * Legal AI Copilot Engine
- * Answers complex legal questions strictly grounded in extracted contract data:
+ * Enterprise Legal AI Copilot Engine
+ * Answers complex legal questions grounded strictly in contract analysis:
  * - "What are the biggest risks?"
- * - "Explain this clause"
- * - "Who benefits from this contract?"
  * - "What should I negotiate?"
- * - "Summarize in simple English"
+ * - "Summarize this in simple English."
+ * - "Which clauses favor the vendor?"
+ * - "What deadlines should I remember?"
+ * - "Who benefits most from this contract?"
  */
 
 const answerLegalCopilotQuery = async (question, documentText = '', documentAnalysis = {}, messageHistory = []) => {
@@ -27,31 +28,32 @@ const answerLegalCopilotQuery = async (question, documentText = '', documentAnal
     plainEnglish = ''
   } = documentAnalysis;
 
-  // 1. Check if OpenAI is configured for LLM reasoning
+  // 1. OpenAI Integration for LLM Reasoning if API key is provided
   if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY.startsWith('sk-')) {
     try {
       const { OpenAI } = require('openai');
       const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-      const systemPrompt = `You are LegalEase AI, an elite Legal Contract Intelligence Copilot.
-You analyze legal agreements, explain risks, suggest negotiation redlines, and summarize contractual obligations.
-You must answer strictly based on the contract context provided below.
+      const systemPrompt = `You are LegalEase AI, a Senior Principal Legal AI Architect and Enterprise Contract Specialist.
+You provide deep legal analysis, strategic negotiation redlines, and executive summaries.
+Answer the user's question with exceptional rigor based on the extracted contract context below.
 
-CONTRACT METADATA:
+CONTRACT CONTEXT:
 - Type: ${contractType}
 - Parties: ${parties.join(' and ')}
-- Risk Rating: ${documentAnalysis.overallRiskScore || 50}/100
-- Flagged Risks: ${risks.map(r => `${r.title} (${r.severity || r.level}): ${r.explanation}`).join('; ')}
-- Key Obligations: ${obligations.map(o => `${o.party} [${o.type}]: ${o.obligation}`).join('; ')}
+- Risk Score: ${documentAnalysis.overallRiskScore || 50}/100
+- Flagged Risks: ${risks.map(r => `[${r.severity || r.level}] ${r.title}: ${r.explanation || r.legalImpact}. Recommendation: ${r.recommendation}. Redline: "${r.saferAlternative || ''}"`).join('\n')}
+- Key Obligations: ${obligations.map(o => `${o.party} (${o.type}): ${o.obligation}`).join('; ')}
+- Timeline & Deadlines: ${deadlines.map(d => `${d.date} - ${d.title} [${d.urgency}]: ${d.description}`).join('; ')}
 
 VERBATIM CONTRACT TEXT:
-${documentText.substring(0, 20000)}
+${documentText.substring(0, 24000)}
 
-GUIDELINES:
-1. Provide concise, high-impact answers formatted in clear markdown.
-2. If the user asks what to negotiate, provide concrete redline wording.
-3. If the user asks who benefits, provide an objective legal power dynamic analysis.
-4. Do not hallucinate terms not present in the contract.`;
+INSTRUCTIONS:
+1. Provide structured, executive-grade legal advice in clean markdown.
+2. When asked what to negotiate, provide exact clause redlines and commercial arguments.
+3. When asked who benefits, analyze the legal leverage and asymmetric liability distribution.
+4. Base answers strictly on the contract terms.`;
 
       const completion = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
@@ -66,7 +68,7 @@ GUIDELINES:
       if (completion.choices && completion.choices[0] && completion.choices[0].message?.content) {
         return {
           content: completion.choices[0].message.content,
-          citations: ['OpenAI Legal Intelligence Reasoning Engine', `${contractType} Verified Context`]
+          citations: ['OpenAI Legal Intelligence Reasoning Engine', `${contractType} Context Index`]
         };
       }
     } catch (err) {
@@ -80,47 +82,50 @@ GUIDELINES:
   if (lowerQ.includes('risk') || lowerQ.includes('danger') || lowerQ.includes('trap') || lowerQ.includes('red flag') || lowerQ.includes('unfair')) {
     const highRisks = risks.filter(r => (r.level || r.severity || '').toLowerCase() === 'high' || (r.level || r.severity || '').toLowerCase() === 'critical');
     responseContent = `### 🚨 Top Identified Contractual Risks\n\n` +
-      `The Legal Risk Sentinel identified **${risks.length} total risk flags**, including **${highRisks.length} high-severity items** in this **${contractType}**:\n\n` +
+      `The Legal Risk Sentinel identified **${risks.length} total risk items**, including **${highRisks.length} critical high-severity exposures** in this **${contractType}**:\n\n` +
       risks.map((r, i) => (
         `#### ${i + 1}. ${r.title} [${(r.severity || r.level || 'medium').toUpperCase()} RISK]\n` +
         `- **Clause Reference**: ${r.clauseRef || 'Standard Section'}\n` +
+        `- **Why It Matters**: ${r.whyItMatters || r.legalImpact || r.explanation}\n` +
         `- **Legal Exposure**: ${r.legalImpact || r.explanation}\n` +
-        `- **Recommended Counter-Proposal**: *${r.recommendation}*\n` +
-        (r.saferAlternative ? `- **Safer Redline Language**: \n  > *"${r.saferAlternative}"*\n` : '')
+        `- **Negotiation Strategy**: *${r.recommendation}*\n` +
+        (r.saferAlternative ? `- **Safer Replacement Language**: \n  > *"${r.saferAlternative}"*\n` : '')
       )).join('\n');
     citations.push('AI Risk Assessment Sentinel', 'Clause Exposure Breakdown');
   }
 
-  // Query: Who benefits from this contract?
-  else if (lowerQ.includes('benefit') || lowerQ.includes('who wins') || lowerQ.includes('favorable') || lowerQ.includes('one-sided') || lowerQ.includes('advantage')) {
-    const isProviderFavored = risks.some(r => r.category.includes('Termination') || r.category.includes('Indemnif') || r.category.includes('Liability'));
+  // Query: Which clauses favor the vendor / Who benefits most?
+  else if (lowerQ.includes('favor') || lowerQ.includes('vendor') || lowerQ.includes('benefit') || lowerQ.includes('who wins') || lowerQ.includes('one-sided') || lowerQ.includes('advantage') || lowerQ.includes('leverage')) {
+    const isProviderFavored = risks.some(r => r.category.includes('Termination') || r.category.includes('Indemnif') || r.category.includes('Liability') || r.category.includes('Renewal'));
     const favoredParty = isProviderFavored ? parties[0] || 'Provider / Licensor' : 'Bilateral / Balanced';
 
     responseContent = `### ⚖️ Legal Leverage & Advantage Analysis\n\n` +
-      `Based on the structural clause distribution, this contract **substantially favors ${favoredParty}**.\n\n` +
-      `**Key Asymmetries Identified**:\n` +
-      `- **Liability Shielding**: Disclaims consequential damages while capping aggregate claims.\n` +
-      `- **Unilateral Protection**: Imposes strict indemnification on the customer without reciprocal IP defense.\n` +
-      `- **Termination Leverage**: Discretionary cancellation windows with strict penalties for early customer exit.\n` +
-      `- **Data & Intellectual Property**: Broad licensing grants over usage data and configuration derivatives.\n\n` +
-      `*Recommendation*: Use the Redline suggestions in the Risks tab to balance rights before signing.`;
-    citations.push('Contract Balance & Power Dynamics Analysis', 'Indemnity and Liability Clauses');
+      `Based on the structural clause distribution, this contract **heavily favors ${favoredParty}**.\n\n` +
+      `**Key Asymmetries Favoring ${favoredParty}**:\n` +
+      `- **Liability Shielding**: Caps vendor total financial damages to past nominal fees while customer liabilities remain uncapped.\n` +
+      `- **One-Sided Indemnity**: Mandates customer legal defense of vendor without reciprocal IP infringement indemnity.\n` +
+      `- **Unilateral Termination & Modification**: Grants vendor discretionary service alteration and immediate termination powers.\n` +
+      `- **Auto-Renewal & Price Escalation**: Locks the customer into recurring multi-year renewals unless strict notice deadlines are met.\n` +
+      `- **Data Exploitation Rights**: Claims broad licensing rights over telemetry and customer operational data.\n\n` +
+      `*Recommendation*: Use the Redline suggestions in the Risks tab to level the playing field before signing.`;
+    citations.push('Contract Power Dynamics Analysis', 'Indemnity and Liability Shielding Clauses');
   }
 
   // Query: What should I negotiate?
-  else if (lowerQ.includes('negotiate') || lowerQ.includes('redline') || lowerQ.includes('counter') || lowerQ.includes('change') || lowerQ.includes('push back')) {
+  else if (lowerQ.includes('negotiate') || lowerQ.includes('redline') || lowerQ.includes('counter') || lowerQ.includes('change') || lowerQ.includes('push back') || lowerQ.includes('priority')) {
     responseContent = `### 📝 Strategic Contract Negotiation Checklist\n\n` +
-      `Here are the highest-leverage provisions to redline before signing:\n\n` +
-      `1. **Cap Limitation of Liability**: Insert mutual liability caps and explicit carve-outs for confidentiality breaches and data security incidents.\n` +
-      `2. **Mutual Indemnification**: Require the vendor to defend you against third-party intellectual property infringement claims.\n` +
-      `3. **Opt-in Auto-Renewal**: Eliminate automatic rollover or shorten the mandatory non-renewal notice period to 30 days.\n` +
-      `4. **Cure Periods for Termination**: Mandate a 30-day written notice and cure period before either party can terminate for breach.\n` +
-      `5. **Grace Period for Invoicing**: Add a 10-business-day grace period following past-due notice before late payment interest accrues.`;
+      `Here is your executive redline playbook ranked by legal and financial impact:\n\n` +
+      `1. **Mutual Indemnification**: Require the vendor to defend you against third-party intellectual property infringement claims.\n` +
+      `2. **Reciprocal Liability Cap**: Insert a mutual liability ceiling with explicit carve-outs for data breaches and gross negligence.\n` +
+      `3. **Opt-In Auto-Renewal**: Eliminate automatic rollover or shorten the mandatory non-renewal notice period to 30 days.\n` +
+      `4. **Bilateral Termination for Cause**: Mandate a 30-day written notice and cure period before either party can terminate.\n` +
+      `5. **Data Protection & Purge**: Require certified permanent data deletion within 30 days of contract conclusion.\n` +
+      `6. **Grace Period for Invoicing**: Add a 15-business-day cure window following past-due notice before late interest applies.`;
     citations.push('Enterprise Negotiation Playbook', 'Standard Commercial Redline Framework');
   }
 
   // Query: Summarize in simple English
-  else if (lowerQ.includes('summar') || lowerQ.includes('simple') || lowerQ.includes('plain english') || lowerQ.includes('explain') || lowerQ.includes('overview')) {
+  else if (lowerQ.includes('summar') || lowerQ.includes('simple') || lowerQ.includes('plain english') || lowerQ.includes('explain') || lowerQ.includes('overview') || lowerQ.includes('break down')) {
     responseContent = `### 📋 Plain-English Contract Breakdown\n\n` +
       `**What this document is**: ${plainEnglish || executiveSummary}\n\n` +
       `**Core Commercial Terms**:\n` +
@@ -129,6 +134,15 @@ GUIDELINES:
       `- **Renewal & Expiration**: ${renewalConditions || 'Fixed term with automatic rollover unless cancelled with prior notice.'}\n` +
       `- **Governing Jurisdiction**: ${complianceRequirements || 'Designated state court or binding arbitration venue.'}`;
     citations.push('Plain-English Legal Translator', 'Executive Summary Module');
+  }
+
+  // Query: Deadlines / Dates to remember
+  else if (lowerQ.includes('deadline') || lowerQ.includes('date') || lowerQ.includes('when') || lowerQ.includes('timeline') || lowerQ.includes('expire') || lowerQ.includes('renew') || lowerQ.includes('remember')) {
+    responseContent = `### 📅 Critical Contract Milestones & Notice Windows\n\n` +
+      deadlines.map(d => (
+        `- **${d.date}** — *${d.title}* [${d.urgency} Urgency • ${d.category}]:\n  ${d.description}`
+      )).join('\n\n');
+    citations.push('Contract Notice & Expiry Timeline Engine');
   }
 
   // Query: Obligations / Duties
@@ -141,18 +155,8 @@ GUIDELINES:
     citations.push('Extracted Duties & Covenants Table', 'Operational Performance Clauses');
   }
 
-  // Query: Deadlines / Dates
-  else if (lowerQ.includes('deadline') || lowerQ.includes('date') || lowerQ.includes('when') || lowerQ.includes('timeline') || lowerQ.includes('expire') || lowerQ.includes('renew')) {
-    responseContent = `### 📅 Critical Contract Milestones & Notice Windows\n\n` +
-      deadlines.map(d => (
-        `- **${d.date}** — *${d.title}* [${d.urgency} Urgency • ${d.category}]:\n  ${d.description}`
-      )).join('\n\n');
-    citations.push('Contract Notice & Expiry Timeline Engine');
-  }
-
   // Generic / Specific clause search
   else {
-    // Search matching clauses in document text
     const matchedClause = clauses.find(c => lowerQ.split(' ').some(w => w.length > 3 && c.name?.toLowerCase().includes(w)));
 
     if (matchedClause) {
@@ -166,7 +170,7 @@ GUIDELINES:
         `Regarding your question in the context of this **${contractType}** between **${parties.join(' and ')}**:\n\n` +
         `- **Portfolio Risk Rating**: ${documentAnalysis.overallRiskScore || 50}/100\n` +
         `- **Summary**: ${executiveSummary || 'Standard commercial contract governing service access and legal liabilities.'}\n\n` +
-        `*Tip: You can ask specific questions such as "What are the biggest risks?", "What should I negotiate?", "Who benefits most?", or "List all payment deadlines."*`;
+        `*Tip: You can ask specific questions such as "What are the biggest risks?", "What should I negotiate?", "Which clauses favor the vendor?", or "List all payment deadlines."*`;
       citations.push('LegalEase AI Contract Index', 'General Document Metadata');
     }
   }
