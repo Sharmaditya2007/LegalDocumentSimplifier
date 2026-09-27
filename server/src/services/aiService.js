@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const { extractDocumentStructure } = require('./documentUnderstandingEngine');
-const { segmentDocumentIntoClauses, classifyClauseMeaning, detectAllContractRisks } = require('./clauseExtractionEngine');
+const { segmentDocumentIntoClauses, detectAllContractRisks } = require('./clauseExtractionEngine');
+const { analyzeContractClauses } = require('./legalReasoningEngine');
 const { calculateDynamicRiskScore } = require('./scoringEngine');
 const { extractContractTimeline } = require('./timelineEngine');
 const { extractContractObligations } = require('./obligationEngine');
@@ -61,16 +62,17 @@ const analyzeDocumentHeuristic = (text, fileName = '') => {
   // LAYER 2: Clause Segmentation
   const rawSegments = segmentDocumentIntoClauses(cleanText);
 
-  // LAYER 3 & 4: Multi-Risk Legal Reasoning across 30 Enterprise Risk Categories
-  // SINGLE SOURCE OF TRUTH: Detected once, shared everywhere
-  const detectedRisks = detectAllContractRisks(cleanText, fileName);
+  // LAYER 3: Structural Legal Reasoning & Asymmetry Analysis
+  // Decomposes clauses by subject, deontic modality, beneficiary, obligatedParty, riskBearingParty, asymmetryScore, exposureProfile
+  const analyzedClauses = analyzeContractClauses(rawSegments);
+
+  // LAYER 4: Multi-Risk Legal Reasoning across 30 Enterprise Risk Categories
+  // SINGLE SOURCE OF TRUTH: Passes structured clause analysis into risk detection
+  const detectedRisks = detectAllContractRisks(cleanText, fileName, analyzedClauses);
 
   // LAYER 5: Dynamic Risk Scoring & Profile
   const scoreResult = calculateDynamicRiskScore(detectedRisks, { contractType, parties });
   const { overallRiskScore, riskLevel, riskRating, exposureProfile, riskCounts, riskDistribution } = scoreResult;
-
-  // Classify Clauses with deep legal meaning
-  const clauses = rawSegments.map(seg => classifyClauseMeaning(seg, parties));
 
   // Extract Obligations
   const obligations = extractContractObligations(cleanText, parties);
@@ -112,7 +114,7 @@ const analyzeDocumentHeuristic = (text, fileName = '') => {
       renewalConditions,
       complianceRequirements,
       risks: detectedRisks, // Single Source of Truth
-      clauses,
+      clauses: analyzedClauses, // Structurally reasoned clauses with asymmetry & exposure metadata
       obligations,
       deadlines,
       structuredContract: docStructure

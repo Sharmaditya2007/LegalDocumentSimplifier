@@ -165,9 +165,15 @@ const classifyClauseMeaning = (clause, parties = ['Provider', 'Customer']) => {
 
 /**
  * Multi-Risk Detection Engine across all 30 Categories (Layer 4)
- * A single clause can trigger 0, 1, 2, 3, 5+ risks. Never stops after finding one.
+ * Consumes structurally analyzed clauses with:
+ * - clauseType
+ * - beneficiary
+ * - obligatedParty
+ * - riskBearingParty
+ * - asymmetryScore
+ * - exposureProfile
  */
-const detectAllContractRisks = (text, fileName = '') => {
+const detectAllContractRisks = (text, fileName = '', analyzedClauses = []) => {
   const cleanText = text || '';
   const sentences = cleanText.split(/(?<=[.?!])\s+(?=[A-Z0-9])/);
   const flaggedRisks = [];
@@ -176,20 +182,42 @@ const detectAllContractRisks = (text, fileName = '') => {
   for (const cat of ENTERPRISE_RISK_TAXONOMY) {
     let isMatched = false;
     let matchingSnippet = '';
+    let matchedClauseData = null;
 
-    // 1. Regex Pattern Matching
-    for (const pattern of cat.patterns) {
-      if (pattern.test(cleanText)) {
-        isMatched = true;
-        const sentence = sentences.find(s => pattern.test(s));
-        if (sentence && sentence.trim().length > 15) {
-          matchingSnippet = sentence.trim();
+    // 1. Check if any structurally analyzed clause aligns with this category
+    if (Array.isArray(analyzedClauses) && analyzedClauses.length > 0) {
+      for (const ac of analyzedClauses) {
+        const clauseFullText = ac.clauseText || ac.fullClauseText || '';
+        const clauseLower = clauseFullText.toLowerCase();
+
+        // Check if clause matches category patterns
+        const matchesPattern = cat.patterns.some(p => p.test(clauseFullText));
+        const matchesTrigger = cat.semanticTriggers && cat.semanticTriggers.some(t => clauseLower.includes(t.toLowerCase()));
+
+        if (matchesPattern || matchesTrigger) {
+          isMatched = true;
+          matchingSnippet = clauseFullText;
+          matchedClauseData = ac;
+          break;
         }
-        break;
       }
     }
 
-    // 2. Semantic Trigger Fallback
+    // 2. Document-level Regex Pattern Matching fallback
+    if (!isMatched) {
+      for (const pattern of cat.patterns) {
+        if (pattern.test(cleanText)) {
+          isMatched = true;
+          const sentence = sentences.find(s => pattern.test(s));
+          if (sentence && sentence.trim().length > 15) {
+            matchingSnippet = sentence.trim();
+          }
+          break;
+        }
+      }
+    }
+
+    // 3. Document-level Semantic Trigger Fallback
     if (!isMatched && cat.semanticTriggers) {
       const lowerDoc = cleanText.toLowerCase();
       for (const trigger of cat.semanticTriggers) {
@@ -208,11 +236,26 @@ const detectAllContractRisks = (text, fileName = '') => {
       matchedCategoryIds.add(cat.id);
 
       // Section Reference lookup
-      let clauseRef = `${cat.category} Provision`;
-      const nearbySection = cleanText.match(new RegExp(`(?:Section|Article|Clause)\\s*\\d+(?:\\.\\d+)?(?=[^\\n]*${cat.category.split(' ')[0]})`, 'i'));
-      if (nearbySection) {
-        clauseRef = nearbySection[0];
+      let clauseRef = matchedClauseData?.section || `${cat.category} Provision`;
+      if (!matchedClauseData?.section) {
+        const nearbySection = cleanText.match(new RegExp(`(?:Section|Article|Clause)\\s*\\d+(?:\\.\\d+)?(?=[^\\n]*${cat.category.split(' ')[0]})`, 'i'));
+        if (nearbySection) {
+          clauseRef = nearbySection[0];
+        }
       }
+
+      // Extract structural reasoning metadata if available from analyzed clauses
+      const beneficiary = matchedClauseData?.beneficiary || cat.beneficiary || 'Service Provider';
+      const obligatedParty = matchedClauseData?.obligatedParty || cat.obligatedParty || 'Customer';
+      const riskBearingParty = matchedClauseData?.riskBearingParty || cat.affectedParty || 'Customer / User';
+      const asymmetryScore = matchedClauseData?.asymmetryScore !== undefined ? matchedClauseData.asymmetryScore : (cat.severity === 'critical' ? 0.90 : cat.severity === 'high' ? 0.75 : 0.45);
+      const exposureProfile = matchedClauseData?.exposureProfile || {
+        legal: cat.severity === 'critical' ? 95 : cat.severity === 'high' ? 80 : 40,
+        financial: cat.severity === 'critical' ? 90 : cat.severity === 'high' ? 75 : 35,
+        operational: cat.severity === 'high' ? 70 : 40,
+        privacy: cat.category.toLowerCase().includes('data') || cat.category.toLowerCase().includes('privacy') ? 90 : 15
+      };
+      const clauseType = matchedClauseData?.clauseType || cat.category;
 
       flaggedRisks.push({
         id: 'risk_' + cat.id.toLowerCase() + '_' + uuidv4().substring(0, 4),
@@ -222,10 +265,17 @@ const detectAllContractRisks = (text, fileName = '') => {
         severity: cat.severity,
         level: cat.severity, // RiskBadge compatible
         points: cat.baseWeight,
-        affectedParty: cat.affectedParty || 'Customer / User',
+        affectedParty: riskBearingParty,
+        // Structural Legal Reasoning Engine attributes:
+        clauseType,
+        beneficiary,
+        obligatedParty,
+        riskBearingParty,
+        asymmetryScore,
+        exposureProfile,
         clauseRef,
         clauseText: matchingSnippet || `Relevant contract excerpt regarding ${cat.category.toLowerCase()}.`,
-        confidence: 96,
+        confidence: matchedClauseData?.confidence ? Math.round(matchedClauseData.confidence * 100) : 96,
         rationale: cat.whyItMatters || cat.legalImpact,
         whyItMatters: cat.whyItMatters,
         legalImpact: cat.legalImpact,
@@ -248,7 +298,14 @@ const detectAllContractRisks = (text, fileName = '') => {
       points: 3,
       clauseRef: 'General Terms',
       clauseText: cleanText.substring(0, 160) + '...',
+      clauseType: 'General Provisions',
+      beneficiary: 'Mutual / Both Parties',
+      obligatedParty: 'Both Parties',
+      riskBearingParty: 'Shared / Neutral',
+      asymmetryScore: 0.15,
+      exposureProfile: { legal: 20, financial: 20, operational: 20, privacy: 10 },
       confidence: 95,
+      affectedParty: 'Shared / Neutral',
       rationale: 'No aggressive one-sided liability shifts or hidden penalties were detected.',
       whyItMatters: 'No aggressive one-sided liability shifts or hidden penalties were detected.',
       legalImpact: 'The agreement utilizes standard commercial terms with balanced bilateral covenants.',

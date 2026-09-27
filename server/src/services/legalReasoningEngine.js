@@ -1,33 +1,384 @@
 /**
  * Legal Reasoning Engine
- * Deep Legal Semantic Intelligence & Asymmetry Analyzer
- *
- * Evaluates individual clauses for:
- * - Clause classification
- * - Obligated vs. Beneficiary vs. Risk-Bearing party dynamics
- * - Contractual asymmetry scoring
- * - Multi-vector exposure profiling (Legal, Financial, Operational, Privacy)
- * - Deep legal reasoning and confidence metrics
+ * 
+ * Structural Legal Relationship & Contractual Asymmetry Parser
+ * 
+ * Analyzes clauses through:
+ * 1. Subject extraction (Grammatical agent / entity)
+ * 2. Deontic modality analysis (Obligation vs. Discretionary Right vs. Prohibition vs. Disclaimer)
+ * 3. Transitive action & target extraction (Legal predicate & beneficiary)
+ * 4. Beneficiary, Obligated, and Risk-Bearing party resolution
+ * 5. Structural Asymmetry scoring
+ * 6. Multi-vector exposure profiling (Legal, Financial, Operational, Privacy)
  */
 
 const { v4: uuidv4 } = require('uuid');
 
+// Known legal entity aliases mapped to standardized party roles
+const PARTY_ROLES = {
+  CUSTOMER_SIDE: ['customer', 'client', 'buyer', 'licensee', 'subscriber', 'user', 'purchaser'],
+  VENDOR_SIDE: ['vendor', 'provider', 'supplier', 'licensor', 'company', 'contractor', 'seller', 'consultant'],
+  RECEIVING_SIDE: ['receiving party', 'recipient'],
+  DISCLOSING_SIDE: ['disclosing party', 'discloser'],
+  MUTUAL: ['either party', 'both parties', 'each party', 'the parties', 'neither party']
+};
+
 /**
- * Analyzes the semantic, legal, and risk profile of a contract clause.
+ * 1. Extract Grammatical Subject / Primary Actor
+ */
+function extractSubject(sentence) {
+  const s = sentence.trim();
+
+  // Check mutual first
+  for (const p of PARTY_ROLES.MUTUAL) {
+    const rx = new RegExp(`\\b${p}\\b`, 'i');
+    if (rx.test(s)) return { raw: p, role: 'MUTUAL', normalized: 'Either Party (Mutual)' };
+  }
+
+  // Look for subject position before modal auxiliary verbs (shall, may, must, agrees, etc.)
+  const modalSubjectMatch = s.match(/^\s*(?:(?:in the event|if|where)\s+[^,]+,\s*)?([a-z0-9\s,\/\(\)]+?)\s+(?:shall\s+not|shall|must\s+not|must|may\s+not|may|agrees?\s+to|will\s+not|will|is\s+required\s+to|reserves?\s+the\s+right\s+to|has\s+the\s+right\s+to|warrants?|disclaims?|hereby\s+assigns?|indemnifies?)\b/i);
+
+  if (modalSubjectMatch && modalSubjectMatch[1]) {
+    const candidate = modalSubjectMatch[1].trim().toLowerCase();
+
+    for (const v of PARTY_ROLES.VENDOR_SIDE) {
+      if (candidate.includes(v)) return { raw: candidate, role: 'VENDOR', normalized: 'Vendor / Provider' };
+    }
+    for (const c of PARTY_ROLES.CUSTOMER_SIDE) {
+      if (candidate.includes(c)) return { raw: candidate, role: 'CUSTOMER', normalized: 'Customer / Client' };
+    }
+    if (candidate.includes('receiving party') || candidate.includes('recipient')) {
+      return { raw: candidate, role: 'RECEIVING', normalized: 'Receiving Party' };
+    }
+    if (candidate.includes('disclosing party') || candidate.includes('discloser')) {
+      return { raw: candidate, role: 'DISCLOSING', normalized: 'Disclosing Party' };
+    }
+  }
+
+  // Heuristic fallback for general mention
+  for (const c of PARTY_ROLES.CUSTOMER_SIDE) {
+    if (new RegExp(`\\b${c}\\b`, 'i').test(s)) return { raw: c, role: 'CUSTOMER', normalized: 'Customer / Client' };
+  }
+  for (const v of PARTY_ROLES.VENDOR_SIDE) {
+    if (new RegExp(`\\b${v}\\b`, 'i').test(s)) return { raw: v, role: 'VENDOR', normalized: 'Vendor / Provider' };
+  }
+
+  return { raw: 'parties', role: 'MUTUAL', normalized: 'Mutual / Both Parties' };
+}
+
+/**
+ * 2. Deontic Modality & Action Intent Extraction
+ */
+function extractModalAndAction(sentence) {
+  const s = sentence.toLowerCase();
+
+  // Deontic force identification
+  let modality = 'NEUTRAL'; // OBLIGATION | RIGHT | PROHIBITION | DISCLAIMER | CAP | CONDITIONAL
+  if (/shall\s+not|must\s+not|may\s+not|will\s+not|is\s+prohibited\s+from/i.test(s)) {
+    modality = 'PROHIBITION';
+  } else if (/shall|must|will|is\s+required\s+to|agrees?\s+to|is\s+obligated\s+to|covenants\s+to/i.test(s)) {
+    modality = 'OBLIGATION';
+  } else if (/may|has\s+the\s+right\s+to|reserves?\s+the\s+right\s+to|at\s+its\s+(?:sole\s+)?(?:discretion|option)|is\s+entitled\s+to/i.test(s)) {
+    modality = 'RIGHT';
+  } else if (/in\s+no\s+event\s+shall|disclaims?|as\s+is|without\s+warranty|waives?/i.test(s)) {
+    modality = 'DISCLAIMER';
+  }
+
+  // Action / Legal predicate identification
+  let legalAction = 'GENERAL_COVENANT';
+  if (/indemnif|hold\s+harmless|defend\s+against/i.test(s)) {
+    legalAction = 'INDEMNIFY';
+  } else if (/terminat|cancel|expire/i.test(s)) {
+    legalAction = 'TERMINATE';
+  } else if (/limit(?:ation)?\s+(?:of\s+)?liabilit|aggregate\s+liability|damages\s+cap|maximum\s+liability/i.test(s)) {
+    legalAction = 'LIMIT_LIABILITY';
+  } else if (/auto(?:matic(?:ally)?)?\s*renew|evergreen|successive\s+terms/i.test(s)) {
+    legalAction = 'AUTO_RENEW';
+  } else if (/assign(?:s|ment)?|work\s+made\s+for\s+hire|intellectual\s+property|proprietary\s+rights|ownership\s+of\s+deliverables/i.test(s)) {
+    legalAction = 'ASSIGN_IP';
+  } else if (/confidential|trade\s+secret|non-disclosure/i.test(s)) {
+    legalAction = 'CONFIDENTIALITY';
+  } else if (/pay|invoice|fee|price\s+increase|escalat/i.test(s)) {
+    legalAction = 'PAYMENT';
+  } else if (/audit|inspect|books\s+and\s+records/i.test(s)) {
+    legalAction = 'AUDIT';
+  } else if (/non-compete|non-solicit|restrictive\s+covenant/i.test(s)) {
+    legalAction = 'RESTRICT_COMPETITION';
+  } else if (/data\s+protection|gdpr|ccpa|security\s+breach|personal\s+data/i.test(s)) {
+    legalAction = 'DATA_PROTECTION';
+  }
+
+  // Conditionality / Balance Modifiers
+  const isUnilateral = /at\s+any\s+time|without\s+cause|in\s+its\s+sole\s+discretion|unilaterally|without\s+liability|sole\s+option/i.test(s);
+  const hasNoticeOrCure = /\b\d+\s*days(?:\s+prior|\s+advance)?\s+notice|\bcure\s+period|\bmaterial\s+breach/i.test(s);
+
+  return {
+    modality,
+    legalAction,
+    isUnilateral,
+    hasNoticeOrCure
+  };
+}
+
+/**
+ * 3. Beneficiary & Target Resolution
+ */
+function extractTargetAndBeneficiary(sentence, subject, modalAction) {
+  const s = sentence.toLowerCase();
+  const { legalAction, modality, isUnilateral } = modalAction;
+
+  // Case A: Indemnification Relationship
+  if (legalAction === 'INDEMNIFY') {
+    // Check direct grammatical target of indemnification: "indemnify [Target]"
+    const targetMatch = s.match(/(?:indemnify|defend|hold\s+harmless)\s+([a-z0-9\s,\/\(\)]+?)(?:\s+from|\s+against|\s+and\s+its|\s+with\s+respect|$)/i);
+    const targetText = targetMatch ? targetMatch[1].trim() : '';
+
+    let beneficiaryRole = 'OTHER';
+    if (PARTY_ROLES.VENDOR_SIDE.some(v => targetText.includes(v))) {
+      beneficiaryRole = 'VENDOR';
+    } else if (PARTY_ROLES.CUSTOMER_SIDE.some(c => targetText.includes(c))) {
+      beneficiaryRole = 'CUSTOMER';
+    } else {
+      // Invert subject if target text is implicit
+      beneficiaryRole = subject.role === 'CUSTOMER' ? 'VENDOR' : (subject.role === 'VENDOR' ? 'CUSTOMER' : 'MUTUAL');
+    }
+
+    const beneficiary = beneficiaryRole === 'VENDOR' ? 'Vendor / Provider' : (beneficiaryRole === 'CUSTOMER' ? 'Customer / Client' : 'Mutual / Both Parties');
+    const obligatedParty = subject.normalized;
+    const riskBearingParty = subject.role === 'MUTUAL' ? 'Shared / Neutral' : subject.normalized;
+
+    return { beneficiary, obligatedParty, riskBearingParty, beneficiaryRole };
+  }
+
+  // Case B: Termination Rights
+  if (legalAction === 'TERMINATE') {
+    if (subject.role === 'MUTUAL') {
+      return {
+        beneficiary: 'Mutual / Both Parties',
+        obligatedParty: 'Both Parties',
+        riskBearingParty: 'Shared / Neutral',
+        beneficiaryRole: 'MUTUAL'
+      };
+    }
+
+    if (modality === 'RIGHT') {
+      const beneficiary = subject.normalized;
+      const counterRole = subject.role === 'VENDOR' ? 'CUSTOMER' : 'VENDOR';
+      const riskBearingParty = counterRole === 'CUSTOMER' ? 'Customer / Client' : 'Vendor / Provider';
+      return { beneficiary, obligatedParty: riskBearingParty, riskBearingParty, beneficiaryRole: subject.role };
+    }
+  }
+
+  // Case C: Limitation of Liability
+  if (legalAction === 'LIMIT_LIABILITY') {
+    if (subject.role === 'VENDOR' || s.includes('provider shall not be liable') || s.includes('vendor shall not be liable')) {
+      return {
+        beneficiary: 'Vendor / Provider',
+        obligatedParty: 'Customer / Client',
+        riskBearingParty: 'Customer / Client',
+        beneficiaryRole: 'VENDOR'
+      };
+    }
+    if (subject.role === 'MUTUAL' || s.includes('neither party')) {
+      return {
+        beneficiary: 'Mutual / Both Parties',
+        obligatedParty: 'Both Parties',
+        riskBearingParty: 'Claiming Party',
+        beneficiaryRole: 'MUTUAL'
+      };
+    }
+  }
+
+  // Case D: General Obligations (Default resolution)
+  if (modality === 'OBLIGATION' || modality === 'PROHIBITION') {
+    const counterRole = subject.role === 'CUSTOMER' ? 'VENDOR' : (subject.role === 'VENDOR' ? 'CUSTOMER' : 'MUTUAL');
+    const beneficiary = counterRole === 'VENDOR' ? 'Vendor / Provider' : (counterRole === 'CUSTOMER' ? 'Customer / Client' : 'Mutual / Both Parties');
+    return {
+      beneficiary,
+      obligatedParty: subject.normalized,
+      riskBearingParty: subject.role === 'MUTUAL' ? 'Shared / Neutral' : subject.normalized,
+      beneficiaryRole: counterRole
+    };
+  }
+
+  if (modality === 'RIGHT') {
+    const counterRole = subject.role === 'CUSTOMER' ? 'VENDOR' : (subject.role === 'VENDOR' ? 'CUSTOMER' : 'MUTUAL');
+    const riskBearingParty = counterRole === 'CUSTOMER' ? 'Customer / Client' : (counterRole === 'VENDOR' ? 'Vendor / Provider' : 'Shared / Neutral');
+    return {
+      beneficiary: subject.normalized,
+      obligatedParty: riskBearingParty,
+      riskBearingParty,
+      beneficiaryRole: subject.role
+    };
+  }
+
+  return {
+    beneficiary: 'Mutual / Both Parties',
+    obligatedParty: 'Both Parties',
+    riskBearingParty: 'Shared / Neutral',
+    beneficiaryRole: 'MUTUAL'
+  };
+}
+
+/**
+ * 4. Structural Asymmetry & Exposure Profile Calculation
+ */
+function computeStructuralAsymmetryAndExposure(subject, modalAction, targetData) {
+  const { legalAction, modality, isUnilateral, hasNoticeOrCure } = modalAction;
+  const { beneficiaryRole } = targetData;
+
+  let asymmetryScore = 0.20; // 0.00 (Balanced) to 1.00 (Severe Imbalance)
+  let clauseType = 'Operational & Commercial Terms';
+  let exposureProfile = { legal: 20, financial: 20, operational: 25, privacy: 15 };
+  let reasoningDetails = [];
+
+  switch (legalAction) {
+    case 'INDEMNIFY':
+      clauseType = 'Indemnification & Third-Party Claims Allocation';
+      if (subject.role === 'CUSTOMER' && beneficiaryRole === 'VENDOR') {
+        asymmetryScore = 0.88;
+        exposureProfile = { legal: 95, financial: 92, operational: 45, privacy: 35 };
+        reasoningDetails.push('Customer assumes unilateral third-party defense and indemnification burdens, shielding Vendor from downstream financial and legal liabilities without reciprocal indemnity.');
+      } else if (subject.role === 'VENDOR' && beneficiaryRole === 'CUSTOMER') {
+        asymmetryScore = 0.18;
+        exposureProfile = { legal: 25, financial: 30, operational: 20, privacy: 25 };
+        reasoningDetails.push('Vendor provides affirmative indemnification to Customer against infringement or breach claims, allocating primary liability to the service provider.');
+      } else {
+        asymmetryScore = 0.35;
+        exposureProfile = { legal: 60, financial: 55, operational: 30, privacy: 30 };
+        reasoningDetails.push('Bilateral indemnification obligations allocating third-party liabilities mutually based on respective breach or negligence.');
+      }
+      break;
+
+    case 'TERMINATE':
+      clauseType = 'Termination Rights & Cancellation Lifecycle';
+      if (isUnilateral && subject.role === 'VENDOR') {
+        asymmetryScore = 0.85;
+        exposureProfile = { legal: 80, financial: 70, operational: 90, privacy: 15 };
+        reasoningDetails.push('Vendor holds unilateral, at-will termination privileges without mandatory notice, posing severe operational continuity and switching risks for Customer.');
+      } else if (subject.role === 'MUTUAL' && hasNoticeOrCure) {
+        asymmetryScore = 0.12;
+        exposureProfile = { legal: 30, financial: 35, operational: 40, privacy: 10 };
+        reasoningDetails.push('Bilateral convenience termination governed by balanced advance written notice periods, preserving mutual procedural fairness.');
+      } else if (isUnilateral) {
+        asymmetryScore = 0.75;
+        exposureProfile = { legal: 70, financial: 60, operational: 80, privacy: 15 };
+        reasoningDetails.push('Unilateral cancellation right lacking reciprocal termination rights or adequate transition periods.');
+      } else {
+        asymmetryScore = 0.30;
+        exposureProfile = { legal: 45, financial: 40, operational: 50, privacy: 10 };
+        reasoningDetails.push('Standard termination framework conditioned on breach or defined lifecycle events.');
+      }
+      break;
+
+    case 'LIMIT_LIABILITY':
+      clauseType = 'Limitation of Liability & Damages Exclusion';
+      if (beneficiaryRole === 'VENDOR') {
+        asymmetryScore = 0.82;
+        exposureProfile = { legal: 85, financial: 95, operational: 50, privacy: 60 };
+        reasoningDetails.push('Vendor damages are strictly capped while consequential and indirect damages are waived, shifting catastrophic failure risks to Customer.');
+      } else {
+        asymmetryScore = 0.40;
+        exposureProfile = { legal: 65, financial: 70, operational: 35, privacy: 35 };
+        reasoningDetails.push('Mutual damages limitation capping aggregate liability equally across both contracting parties.');
+      }
+      break;
+
+    case 'AUTO_RENEW':
+      clauseType = 'Term & Automatic Evergreen Renewal';
+      asymmetryScore = 0.72;
+      exposureProfile = { legal: 45, financial: 80, operational: 60, privacy: 10 };
+      reasoningDetails.push('Mandatory automatic renewal mechanism imposing ongoing recurring financial obligations unless timely cancellation is served.');
+      break;
+
+    case 'ASSIGN_IP':
+      clauseType = 'Intellectual Property Ownership & Assignment';
+      if (subject.role === 'CUSTOMER') {
+        asymmetryScore = 0.80;
+        exposureProfile = { legal: 88, financial: 75, operational: 70, privacy: 25 };
+        reasoningDetails.push('Comprehensive transfer or assignment of work product and intellectual property rights from Customer to Vendor.');
+      } else {
+        asymmetryScore = 0.35;
+        exposureProfile = { legal: 55, financial: 45, operational: 40, privacy: 20 };
+        reasoningDetails.push('Preservation of background IP with defined, non-exclusive license rights.');
+      }
+      break;
+
+    case 'DATA_PROTECTION':
+      clauseType = 'Data Protection, Security & Breach Covenants';
+      asymmetryScore = 0.45;
+      exposureProfile = { legal: 80, financial: 70, operational: 65, privacy: 95 };
+      reasoningDetails.push('Regulated data privacy standards governing breach notifications, technical safeguards, and statutory compliance (GDPR/CCPA).');
+      break;
+
+    case 'CONFIDENTIALITY':
+      clauseType = 'Confidentiality & Non-Disclosure';
+      if (subject.role === 'MUTUAL') {
+        asymmetryScore = 0.18;
+        exposureProfile = { legal: 40, financial: 30, operational: 25, privacy: 50 };
+        reasoningDetails.push('Bilateral non-disclosure covenants protecting proprietary trade secrets equally for both parties.');
+      } else {
+        asymmetryScore = 0.65;
+        exposureProfile = { legal: 65, financial: 45, operational: 40, privacy: 65 };
+        reasoningDetails.push('Unilateral non-disclosure obligations binding the receiving party without reciprocal disclosure safeguards.');
+      }
+      break;
+
+    case 'RESTRICT_COMPETITION':
+      clauseType = 'Restrictive Covenants & Non-Compete';
+      asymmetryScore = 0.85;
+      exposureProfile = { legal: 85, financial: 65, operational: 90, privacy: 15 };
+      reasoningDetails.push('Restrains commercial business activities and counterparty hiring, introducing severe market operational restraints.');
+      break;
+
+    case 'PAYMENT':
+      clauseType = 'Payment Terms, Invoicing & Escalation';
+      asymmetryScore = isUnilateral ? 0.70 : 0.35;
+      exposureProfile = { legal: 35, financial: 85, operational: 45, privacy: 10 };
+      reasoningDetails.push('Establishes billing schedules, late fee penalties, and contractual payment enforcement mechanisms.');
+      break;
+
+    default:
+      clauseType = 'General Commercial Provisions';
+      asymmetryScore = 0.20;
+      exposureProfile = { legal: 20, financial: 20, operational: 25, privacy: 10 };
+      reasoningDetails.push('Standard procedural and operational terms establishing contractual baseline conditions.');
+      break;
+  }
+
+  // Adjust asymmetry based on extreme unilateral discretionary indicators
+  if (isUnilateral && asymmetryScore < 0.75) {
+    asymmetryScore = Math.min(0.95, asymmetryScore + 0.20);
+  }
+
+  return {
+    clauseType,
+    asymmetryScore: Number(asymmetryScore.toFixed(2)),
+    exposureProfile,
+    reasoningText: reasoningDetails.join(' ')
+  };
+}
+
+/**
+ * Primary Analysis Function
+ * Evaluates clause structure, relationship vectors, and asymmetry.
  * 
- * @param {Object|string} clause - Clause object or raw clause text string
- * @returns {Object} Legal reasoning and exposure analysis
+ * @param {Object|string} clause - Clause object or raw string
+ * @returns {Object} Structured legal reasoning output
  */
 function analyzeClauseMeaning(clause) {
-  // 1. Normalize clause input
   let clauseId = 'cls_' + (uuidv4 ? uuidv4().substring(0, 8) : Math.random().toString(36).substring(2, 10));
   let clauseText = '';
+  let section = 'General';
+  let title = 'Commercial Covenant';
 
   if (typeof clause === 'string') {
     clauseText = clause.trim();
   } else if (clause && typeof clause === 'object') {
     clauseId = clause.id || clause.clauseId || clause._id || clauseId;
     clauseText = clause.fullText || clause.text || clause.bodyText || clause.clauseText || '';
+    section = clause.section || section;
+    title = clause.title || clause.name || title;
   }
 
   if (!clauseText) {
@@ -39,286 +390,86 @@ function analyzeClauseMeaning(clause) {
       obligatedParty: 'Both Parties',
       riskBearingParty: 'Shared / Neutral',
       asymmetryScore: 0.0,
-      exposureProfile: {
-        legal: 10,
-        financial: 10,
-        operational: 10,
-        privacy: 5
-      },
+      exposureProfile: { legal: 0, financial: 0, operational: 0, privacy: 0 },
       reasoning: 'No operative legal language detected in the provided clause.',
-      confidence: 0.5
+      confidence: 0.50,
+      // Frontend backwards compatibility:
+      id: clauseId,
+      section,
+      title,
+      name: title,
+      summary: 'No operative legal language detected.',
+      fullClauseText: '',
+      legalMeaning: 'No operative legal language detected.',
+      riskSeverity: 'Low'
     };
   }
 
-  const lower = clauseText.toLowerCase();
+  // Step 1: Subject extraction
+  const subject = extractSubject(clauseText);
 
-  // 2. Identify Clause Type & Core Classification
-  let clauseType = 'Operational & Commercial Terms';
-  let beneficiary = 'Mutual / Both Parties';
-  let obligatedParty = 'Both Parties';
-  let riskBearingParty = 'Shared / Neutral';
-  let asymmetryScore = 0.15; // 0.0 (perfectly mutual) to 1.0 (extremely one-sided)
-  
-  let exposureProfile = {
-    legal: 20,
-    financial: 20,
-    operational: 25,
-    privacy: 10
-  };
+  // Step 2: Modal & Action extraction
+  const modalAction = extractModalAndAction(clauseText);
 
-  let reasoning = '';
-  let confidence = 0.88;
+  // Step 3: Beneficiary & Target detection
+  const targetData = extractTargetAndBeneficiary(clauseText, subject, modalAction);
 
-  // Pattern tests
-  const isIndemnity = /indemnif|hold harmless|defend\s+against|indemnity/i.test(lower);
-  const isLimitationLiability = /limitation of liability|aggregate liability|consequential damages|indirect damages|in no event shall.*liable|cap on liability|maximum liability/i.test(lower);
-  const isTermination = /terminat(ion|e)|cancel(lation)?|for convenience|immediate termination|cure period|material breach/i.test(lower);
-  const isAutoRenewal = /auto(matic(ally)?)?\s*renew(al)?|evergreen|successive.*terms|prior written notice.*renew/i.test(lower);
-  const isIPOwnership = /intellectual property|work made for hire|assignment of inventions|all right, title and interest|proprietary rights|ownership of deliverables/i.test(lower);
-  const isConfidentiality = /confidential(ity)?|non-disclosure|proprietary information|trade secret/i.test(lower);
-  const isDataPrivacy = /gdpr|ccpa|personal data|data protection|security breach|pii|subprocessor|data security/i.test(lower);
-  const isNonCompete = /non-compete|covenant not to compete|restrictive covenant|restraint of trade/i.test(lower);
-  const isNonSolicit = /non-solicit|solicit.*employees|solicit.*customers|poaching/i.test(lower);
-  const isPayment = /payment terms|late payment|interest rate|net \d+|invoic(e|ing)|price escalation|fee adjustment/i.test(lower);
-  const isAudit = /audit rights|books and records|inspect.*premises|access to logs|accounting records/i.test(lower);
-  const isWarranty = /as is|without warranty|disclaims all warranties|merchantability|fitness for a particular purpose|express or implied/i.test(lower);
-  const isDispute = /governing law|jurisdiction|arbitration|exclusive venue|waiver of jury trial|class action waiver/i.test(lower);
-  const isForceMajeure = /force majeure|acts of god|war, terrorism|unforeseeable circumstances|beyond reasonable control/i.test(lower);
-  const isExclusivity = /exclusiv(e|ity)|sole and exclusive|most favored nation|mfn/i.test(lower);
+  // Step 4: Asymmetry & Multi-Vector Exposure calculation
+  const { clauseType, asymmetryScore, exposureProfile, reasoningText } = computeStructuralAsymmetryAndExposure(
+    subject,
+    modalAction,
+    targetData
+  );
 
-  // Unilateral vs Mutual Indicators
-  const isUnilateral = /sole discretion|unilateral(ly)?|at any time without|without liability|at its option|reserves the right/i.test(lower);
-  const isCustomerNamed = /customer|client|buyer|licensee|user/i.test(lower);
-  const isProviderNamed = /vendor|provider|licensor|supplier|company/i.test(lower);
+  // Synthesize complete structural legal reasoning
+  const relationshipSummary = `[Structural Analysis] Subject: ${subject.normalized} | Deontic Force: ${modalAction.modality} | Action: ${modalAction.legalAction} | Target Beneficiary: ${targetData.beneficiary}.`;
+  const fullReasoning = `${relationshipSummary} ${reasoningText}`;
 
-  // --- Classification & Semantic Reasoning Rules ---
+  // Confidence metric based on grammatical parse resolution
+  let confidence = 0.82;
+  if (subject.role !== 'MUTUAL') confidence += 0.08;
+  if (modalAction.modality !== 'NEUTRAL') confidence += 0.05;
+  if (modalAction.legalAction !== 'GENERAL_COVENANT') confidence += 0.04;
+  confidence = Math.min(0.99, Number(confidence.toFixed(2)));
 
-  if (isIndemnity) {
-    clauseType = 'Indemnification & Defense of Claims';
-    const isUnilateralIndemnity = /customer shall indemnify|client shall defend|user agrees to indemnify|licensee shall hold harmless/i.test(lower) && !/vendor shall indemnify|provider shall indemnify/i.test(lower);
-
-    if (isUnilateralIndemnity) {
-      beneficiary = 'Service Provider / Licensor';
-      obligatedParty = 'Customer / Licensee';
-      riskBearingParty = 'Customer / Licensee';
-      asymmetryScore = 0.90;
-      exposureProfile = { legal: 95, financial: 90, operational: 45, privacy: 35 };
-      reasoning = 'Creates unilateral third-party indemnification, requiring the customer to bear unbounded legal defense fees, settlements, and damage awards without reciprocal protection.';
-      confidence = 0.96;
-    } else {
-      beneficiary = 'Mutual / Both Parties';
-      obligatedParty = 'Breaching / Indemnifying Party';
-      riskBearingParty = 'At-Fault Party';
-      asymmetryScore = 0.35;
-      exposureProfile = { legal: 75, financial: 70, operational: 30, privacy: 25 };
-      reasoning = 'Standard mutual indemnification covenant allocating third-party infringement and gross negligence liabilities to the responsible party.';
-      confidence = 0.92;
-    }
-  } else if (isLimitationLiability) {
-    clauseType = 'Limitation of Liability & Consequential Damages Waiver';
-    const isOneSidedCap = /in no event shall (provider|vendor|company|licensor) be liable/i.test(lower) && !/neither party/i.test(lower);
-    const hasNominalCap = /fees paid (in|during) the (preceding|prior|last) \d+ months|total fees paid under this agreement|\$100|amount actually paid/i.test(lower);
-
-    if (isOneSidedCap || hasNominalCap) {
-      beneficiary = 'Service Provider / Licensor';
-      obligatedParty = 'Aggrieved Party / Customer';
-      riskBearingParty = 'Customer / Licensee';
-      asymmetryScore = 0.85;
-      exposureProfile = { legal: 88, financial: 95, operational: 50, privacy: 60 };
-      reasoning = 'Caps recoverable damages to nominal past fees while waiving consequential, indirect, and lost profit damages, effectively shielding the vendor from meaningful default liability.';
-      confidence = 0.95;
-    } else {
-      beneficiary = 'Mutual / Both Parties';
-      obligatedParty = 'Both Parties';
-      riskBearingParty = 'Claiming Party';
-      asymmetryScore = 0.40;
-      exposureProfile = { legal: 70, financial: 80, operational: 40, privacy: 40 };
-      reasoning = 'Bilateral liability limitation capping monetary exposure and disclaiming consequential damages equally for both contracting entities.';
-      confidence = 0.91;
-    }
-  } else if (isAutoRenewal) {
-    clauseType = 'Term & Automatic Evergreen Renewal';
-    beneficiary = 'Service Provider / Licensor';
-    obligatedParty = 'Customer / Licensee';
-    riskBearingParty = 'Customer / Licensee';
-    asymmetryScore = 0.75;
-    exposureProfile = { legal: 50, financial: 85, operational: 65, privacy: 15 };
-    reasoning = 'Imposes automatic contractual rollover unless affirmative written cancellation is served within a strict advance window, creating recurring lock-in risk.';
-    confidence = 0.94;
-  } else if (isTermination) {
-    clauseType = 'Termination Rights & Default Remedies';
-    if (isUnilateral) {
-      beneficiary = 'Terminating / Drafting Party';
-      obligatedParty = 'Counterparty';
-      riskBearingParty = 'Counterparty';
-      asymmetryScore = 0.80;
-      exposureProfile = { legal: 80, financial: 65, operational: 85, privacy: 20 };
-      reasoning = 'Grants discretionary or unilateral termination privileges to one party without affording equal convenience rights or adequate cure periods to the other.';
-      confidence = 0.93;
-    } else {
-      beneficiary = 'Mutual / Both Parties';
-      obligatedParty = 'Both Parties';
-      riskBearingParty = 'Breaching Party';
-      asymmetryScore = 0.25;
-      exposureProfile = { legal: 50, financial: 45, operational: 60, privacy: 20 };
-      reasoning = 'Standard mutual termination framework permitting cancellation for uncured material breach, insolvency, or defined commercial triggers.';
-      confidence = 0.90;
-    }
-  } else if (isIPOwnership) {
-    clauseType = 'Intellectual Property Ownership & Assignment';
-    const isBroadAssignment = /assigns? all right, title|work made for hire|exclusive property of vendor|exclusive property of company/i.test(lower);
-    if (isBroadAssignment) {
-      beneficiary = 'Licensor / Assignee';
-      obligatedParty = 'Assignor / Creator';
-      riskBearingParty = 'Assignor / Creator';
-      asymmetryScore = 0.78;
-      exposureProfile = { legal: 90, financial: 70, operational: 75, privacy: 30 };
-      reasoning = 'Transfers proprietary developments, modifications, or derivatives exclusively to one entity, potentially extinguishing residual pre-existing rights.';
-      confidence = 0.94;
-    } else {
-      beneficiary = 'Respective Rights Holders';
-      obligatedParty = 'Both Parties';
-      riskBearingParty = 'Licensee';
-      asymmetryScore = 0.30;
-      exposureProfile = { legal: 60, financial: 50, operational: 40, privacy: 20 };
-      reasoning = 'Preserves background intellectual property while granting defined, non-exclusive operational usage licenses.';
-      confidence = 0.89;
-    }
-  } else if (isDataPrivacy) {
-    clauseType = 'Data Privacy, Security & Breach Notification';
-    beneficiary = 'Data Subject / Customer';
-    obligatedParty = 'Data Processor / Vendor';
-    riskBearingParty = 'Data Processor / Vendor';
-    asymmetryScore = 0.45;
-    exposureProfile = { legal: 85, financial: 75, operational: 70, privacy: 95 };
-    reasoning = 'Mandates technical and organizational safeguards, regulatory compliance (GDPR/CCPA), and strict incident reporting timelines for security breaches.';
-    confidence = 0.95;
-  } else if (isConfidentiality) {
-    clauseType = 'Confidentiality & Non-Disclosure';
-    const isUnilateralConf = /recipient shall keep confidential/i.test(lower) && !/each party/i.test(lower);
-    if (isUnilateralConf) {
-      beneficiary = 'Disclosing Party';
-      obligatedParty = 'Receiving Party';
-      riskBearingParty = 'Receiving Party';
-      asymmetryScore = 0.70;
-      exposureProfile = { legal: 70, financial: 50, operational: 45, privacy: 60 };
-      reasoning = 'Imposes one-way secrecy covenants with injunctive relief remedies upon the receiving party without reciprocal disclosure protections.';
-      confidence = 0.91;
-    } else {
-      beneficiary = 'Mutual / Both Parties';
-      obligatedParty = 'Both Parties';
-      riskBearingParty = 'Receiving Party';
-      asymmetryScore = 0.20;
-      exposureProfile = { legal: 45, financial: 35, operational: 30, privacy: 45 };
-      reasoning = 'Bilateral non-disclosure obligations protecting proprietary trade secrets with standard carve-outs for public domain or subpoenaed information.';
-      confidence = 0.93;
-    }
-  } else if (isNonCompete || isNonSolicit) {
-    clauseType = isNonCompete ? 'Non-Competition Restrictive Covenant' : 'Non-Solicitation Covenant';
-    beneficiary = 'Protected Business / Employer';
-    obligatedParty = 'Restricted Party';
-    riskBearingParty = 'Restricted Party';
-    asymmetryScore = 0.82;
-    exposureProfile = { legal: 85, financial: 65, operational: 90, privacy: 15 };
-    reasoning = 'Restrains competitive operations, talent recruitment, or counterparty hiring, potentially triggering enforceability challenges under regional restraint-of-trade doctrines.';
-    confidence = 0.93;
-  } else if (isPayment) {
-    clauseType = 'Payment Terms, Pricing & Escalation';
-    beneficiary = 'Payee / Service Provider';
-    obligatedParty = 'Payer / Customer';
-    riskBearingParty = 'Payer / Customer';
-    asymmetryScore = isUnilateral ? 0.75 : 0.40;
-    exposureProfile = { legal: 40, financial: 85, operational: 50, privacy: 10 };
-    reasoning = 'Governs billing cycles, late payment interest fees, invoicing disputes, and discretionary price increase mechanisms.';
-    confidence = 0.90;
-  } else if (isWarranty) {
-    clauseType = 'Warranties & Disclaimer of Guarantees';
-    beneficiary = 'Provider / Seller';
-    obligatedParty = 'Buyer / Customer';
-    riskBearingParty = 'Buyer / Customer';
-    asymmetryScore = 0.75;
-    exposureProfile = { legal: 80, financial: 70, operational: 65, privacy: 10 };
-    reasoning = 'Disclaims express and implied statutory warranties of merchantability and fitness, shifting operational performance risks entirely to the recipient.';
-    confidence = 0.92;
-  } else if (isAudit) {
-    clauseType = 'Audit & Inspection Rights';
-    beneficiary = 'Auditing Party';
-    obligatedParty = 'Audited Party';
-    riskBearingParty = 'Audited Party';
-    asymmetryScore = 0.65;
-    exposureProfile = { legal: 60, financial: 55, operational: 80, privacy: 50 };
-    reasoning = 'Authorizes inspections of operational infrastructure, accounting ledgers, and systems, creating compliance overhead and potential operational disruption.';
-    confidence = 0.89;
-  } else if (isDispute) {
-    clauseType = 'Governing Law, Jurisdiction & Dispute Resolution';
-    beneficiary = 'Drafting Party / Local Entity';
-    obligatedParty = 'Both Parties';
-    riskBearingParty = 'Foreign / Out-of-State Party';
-    asymmetryScore = 0.50;
-    exposureProfile = { legal: 75, financial: 60, operational: 35, privacy: 10 };
-    reasoning = 'Establishes forum selection, choice of applicable law, mandatory arbitration forums, or jury waivers impacting legal defense convenience and cost.';
-    confidence = 0.94;
-  } else if (isForceMajeure) {
-    clauseType = 'Force Majeure & Excused Performance';
-    beneficiary = 'Impacted / Non-Performing Party';
-    obligatedParty = 'Both Parties';
-    riskBearingParty = 'Dependent Party';
-    asymmetryScore = 0.30;
-    exposureProfile = { legal: 45, financial: 50, operational: 75, privacy: 10 };
-    reasoning = 'Suspends contractual obligations during extraordinary external catastrophes without constituting a compensable breach of contract.';
-    confidence = 0.90;
-  } else if (isExclusivity) {
-    clauseType = 'Exclusivity & Restrictive Covenants';
-    beneficiary = 'Beneficiary Entity';
-    obligatedParty = 'Restricted Entity';
-    riskBearingParty = 'Restricted Entity';
-    asymmetryScore = 0.85;
-    exposureProfile = { legal: 75, financial: 85, operational: 90, privacy: 15 };
-    reasoning = 'Precludes engagement with alternative market competitors, creating severe operational dependencies and commercial opportunity costs.';
-    confidence = 0.92;
-  } else {
-    // Default fallback analysis for standard commercial provisions
-    clauseType = 'General Commercial Provisions';
-    beneficiary = 'Mutual / Both Parties';
-    obligatedParty = 'Both Parties';
-    riskBearingParty = 'Shared / Neutral';
-    asymmetryScore = 0.20;
-    exposureProfile = { legal: 25, financial: 25, operational: 30, privacy: 15 };
-    reasoning = 'Standard administrative or boiler-plate contractual covenant establishing baseline operational rules and definitions.';
-    confidence = 0.85;
-  }
-
-  // 3. Fine-tune asymmetry and exposure if severe one-sided phrasing exists
-  if (/sole and absolute discretion|waives all claims|irrevocable waiver|unconditional defense/i.test(lower)) {
-    asymmetryScore = Math.min(1.0, asymmetryScore + 0.15);
-    exposureProfile.legal = Math.min(100, exposureProfile.legal + 10);
-    exposureProfile.financial = Math.min(100, exposureProfile.financial + 10);
+  // Risk severity rating derived from asymmetry and exposure
+  let riskSeverity = 'Low';
+  if (asymmetryScore >= 0.70 || exposureProfile.legal >= 80 || exposureProfile.financial >= 80) {
+    riskSeverity = 'High';
+  } else if (asymmetryScore >= 0.40 || exposureProfile.legal >= 50 || exposureProfile.financial >= 50) {
+    riskSeverity = 'Medium';
   }
 
   return {
     clauseId,
     clauseText,
     clauseType,
-    beneficiary,
-    obligatedParty,
-    riskBearingParty,
-    asymmetryScore: Number(asymmetryScore.toFixed(2)),
-    exposureProfile: {
-      legal: Math.round(exposureProfile.legal),
-      financial: Math.round(exposureProfile.financial),
-      operational: Math.round(exposureProfile.operational),
-      privacy: Math.round(exposureProfile.privacy)
-    },
-    reasoning,
-    confidence: Number(confidence.toFixed(2))
+    beneficiary: targetData.beneficiary,
+    obligatedParty: targetData.obligatedParty,
+    riskBearingParty: targetData.riskBearingParty,
+    asymmetryScore,
+    exposureProfile,
+    reasoning: fullReasoning,
+    confidence,
+    // Frontend compatibility properties:
+    id: clauseId,
+    section,
+    title,
+    name: title,
+    category: clauseType,
+    fullClauseText: clauseText,
+    legalMeaning: reasoningText,
+    summary: reasoningText,
+    riskSeverity,
+    impact: riskSeverity === 'High' ? 'High Burden' : riskSeverity === 'Medium' ? 'Moderate Obligation' : 'Standard'
   };
 }
 
 /**
- * Analyzes a collection of contract clauses in batch.
- *
+ * Batch analysis of extracted clauses
+ * 
  * @param {Array<Object|string>} clauses
- * @returns {Array<Object>} Array of clause reasoning analyses
+ * @returns {Array<Object>}
  */
 function analyzeContractClauses(clauses = []) {
   if (!Array.isArray(clauses)) return [];
@@ -327,5 +478,8 @@ function analyzeContractClauses(clauses = []) {
 
 module.exports = {
   analyzeClauseMeaning,
-  analyzeContractClauses
+  analyzeContractClauses,
+  extractSubject,
+  extractModalAndAction,
+  extractTargetAndBeneficiary
 };
