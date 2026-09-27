@@ -91,32 +91,42 @@ const DashboardPage = () => {
     if (!files || files.length === 0) return;
     const file = files[0];
     const formData = new FormData();
+    formData.append('file', file);
     formData.append('document', file);
+    formData.append('title', file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' '));
 
     setUploading(true);
-    addToast('Uploading and analyzing document with AI...', 'info');
+    addToast({
+      title: 'Uploading Contract',
+      message: `Analyzing "${file.name}" with AI Legal Engine...`,
+      type: 'info'
+    });
 
     try {
       const res = await api.post('/documents/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      if (res.data.success) {
-        addToast('Document analyzed successfully!', 'success');
+      if (res.data?.success && res.data.document) {
+        addToast({
+          title: 'Analysis Complete',
+          message: `Successfully audited "${res.data.document.title}".`,
+          type: 'success'
+        });
         navigate(`/documents/${res.data.document._id}`);
+      } else {
+        throw new Error(res.data?.message || 'Failed to upload document');
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Error uploading document';
-      addToast(errorMsg, 'error');
+      const errorMsg = err.response?.data?.message || err.message || 'Error uploading document';
+      addToast({
+        title: 'Upload Failed',
+        message: errorMsg,
+        type: 'error'
+      });
     } finally {
       setUploading(false);
     }
-  };
-
-  const handleLoadSample = (sampleType) => {
-    const mock = sampleType === 'saas' ? MOCK_DOCUMENTS[0] : MOCK_DOCUMENTS[1];
-    setDocuments((prev) => [mock, ...prev]);
-    addToast(`Loaded ${mock.title} into your dashboard!`, 'success');
   };
 
   const handleDrag = (e) => {
@@ -259,40 +269,6 @@ const DashboardPage = () => {
           icon={CalendarClock}
           subtitle="Notice windows & milestones"
         />
-      </div>
-
-      {/* 1-Click Sample Contracts Testing Bar */}
-      <div className="p-6 sm:p-8 rounded-3xl glass-luxury flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-2xl bg-white/[0.04] border border-white/10 text-white flex items-center justify-center">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-white">
-              Instant Sample Evaluation
-            </h3>
-            <p className="text-xs text-slate-400 mt-0.5 font-normal">
-              Test AI Clause Extraction, Risk Sentinel, and Plain-English Translator:
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            onClick={() => handleLoadSample('saas')}
-            disabled={uploading}
-            className="px-4 py-2 rounded-full text-xs font-medium bg-rose-500/10 text-rose-300 border border-rose-500/20 hover:bg-rose-500/20 transition-all"
-          >
-            Test SaaS MSA (High Risk)
-          </button>
-          <button
-            onClick={() => handleLoadSample('nda')}
-            disabled={uploading}
-            className="px-4 py-2 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all"
-          >
-            Test Standard NDA (Safe)
-          </button>
-        </div>
       </div>
 
       {/* Main Visualizations: Risk Distribution & Audit Trends */}

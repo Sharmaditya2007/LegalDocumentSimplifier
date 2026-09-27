@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middleware/upload');
+const { uploadSingleContract } = require('../middleware/upload');
 const { protect } = require('../middleware/auth');
 const {
   uploadDocument,
@@ -15,7 +15,7 @@ const {
 
 router.use(protect);
 
-router.post('/upload', upload.single('file'), uploadDocument);
+router.post('/upload', uploadSingleContract, uploadDocument);
 router.post('/sample', loadSampleContract);
 router.get('/', getDocuments);
 router.get('/timeline/all', getAllDeadlines);

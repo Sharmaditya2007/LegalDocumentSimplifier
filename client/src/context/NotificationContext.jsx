@@ -10,7 +10,23 @@ export const NotificationProvider = ({ children }) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const addToast = useCallback(({ title, message, type = 'info', duration = 4500 }) => {
+  const addToast = useCallback((firstArg, secondArg) => {
+    let title = '';
+    let message = '';
+    let type = 'info';
+    let duration = 4500;
+
+    if (typeof firstArg === 'string') {
+      message = firstArg;
+      type = secondArg || 'info';
+      title = type === 'error' ? 'Error' : type === 'success' ? 'Success' : type === 'warning' ? 'Warning' : 'Information';
+    } else if (firstArg && typeof firstArg === 'object') {
+      title = firstArg.title || '';
+      message = firstArg.message || '';
+      type = firstArg.type || 'info';
+      duration = firstArg.duration !== undefined ? firstArg.duration : 4500;
+    }
+
     const id = Date.now() + Math.random().toString(36).substring(2, 5);
     const newToast = { id, title, message, type };
 
